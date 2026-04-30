@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   if (!ALLOWED_TYPES.includes(file.type)) return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
 
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "png";
-  const filename = `${type}.${ext}`;
+  const filename = `${type}-${Date.now()}.${ext}`;
 
   const bytes = await file.arrayBuffer();
   const db = getAdminClient();
