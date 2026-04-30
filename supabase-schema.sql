@@ -77,6 +77,29 @@ CREATE POLICY "Public read about_content" ON about_content
 
 -- Service role bypasses RLS (admin mutations use service role key)
 
+CREATE TABLE IF NOT EXISTS site_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL DEFAULT '',
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+
+-- Public can read site settings (needed for layout metadata + homepage background)
+CREATE POLICY "Public read site_settings" ON site_settings
+  FOR SELECT USING (true);
+
+-- Default site settings
+INSERT INTO site_settings (key, value) VALUES
+  ('seo_title', 'Mad Hatter Comedy Club | Chicago'),
+  ('seo_description', 'Chicago''s premier comedy club. Live stand-up, improv, and more in the heart of the city.'),
+  ('seo_keywords', 'comedy club, Chicago, stand-up, improv, live comedy, Mad Hatter'),
+  ('og_title', 'Mad Hatter Comedy Club | Chicago'),
+  ('og_description', 'Chicago''s premier comedy club.'),
+  ('favicon_url', ''),
+  ('background_url', '')
+ON CONFLICT (key) DO NOTHING;
+
 -- ============================================
 -- DEFAULT ABOUT CONTENT
 -- ============================================

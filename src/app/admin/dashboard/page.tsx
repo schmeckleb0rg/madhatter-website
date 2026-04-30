@@ -30,6 +30,7 @@ export default async function DashboardPage() {
     { href: "/admin/past-events/new", label: "Add Past Show", icon: "+" },
     { href: "/admin/inquiries", label: "View Inquiries", icon: "✉" },
     { href: "/admin/about", label: "Edit About Page", icon: "✏" },
+    { href: "/admin/site", label: "Site Settings", icon: "⚙" },
   ];
 
   return (

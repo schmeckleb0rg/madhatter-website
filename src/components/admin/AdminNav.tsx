@@ -10,6 +10,7 @@ const navItems = [
   { href: "/admin/past-events", label: "Past Shows" },
   { href: "/admin/inquiries", label: "Inquiries" },
   { href: "/admin/about", label: "About" },
+  { href: "/admin/site", label: "Site" },
 ];
 
 export default function AdminNav() {
