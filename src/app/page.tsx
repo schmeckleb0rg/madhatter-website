@@ -22,19 +22,6 @@ export default async function HomePage() {
     backgroundColor: "#000",
   };
   return (
-    <>
-      {/* Mobile */}
-      <img
-        src="/madhatter_mobileComingsoon.svg"
-        alt=""
-        className="sm:hidden"
-        style={{ position: "fixed", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-      />
-      {/* Desktop */}
-      <div
-        className="hidden sm:block"
-        style={{ ...bgStyle, backgroundImage: `url('${background}')` }}
-      />
-    </>
+    <div style={{ ...bgStyle, backgroundImage: `url('${background}')` }} />
   );
 }
