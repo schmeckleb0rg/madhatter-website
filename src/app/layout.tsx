@@ -22,6 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: s.og_title || s.seo_title || "Mad Hatter Comedy Club | Chicago",
       description: s.og_description || s.seo_description || "Chicago's premier comedy club.",
       type: "website",
+      images: s.og_image_url ? [{ url: s.og_image_url, width: 1200, height: 630 }] : undefined,
     },
   };
 }
