@@ -22,6 +22,17 @@ export default async function HomePage() {
     backgroundColor: "#000",
   };
   return (
-    <div style={{ ...bgStyle, backgroundImage: `url('${background}')` }} />
+    <>
+      {/* Mobile */}
+      <div
+        className="sm:hidden"
+        style={{ ...bgStyle, backgroundImage: "url('/Mad%20Hatter_mobilebackgroung.png')" }}
+      />
+      {/* Desktop */}
+      <div
+        className="hidden sm:block"
+        style={{ ...bgStyle, backgroundImage: `url('${background}')` }}
+      />
+    </>
   );
 }
