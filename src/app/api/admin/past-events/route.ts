@@ -13,7 +13,9 @@ const schema = z.object({
 });
 
 async function requireAuth() {
-  return (await auth()) ?? null;
+  const session = await auth();
+  if (!session || !(session as { isAdmin?: boolean }).isAdmin) return null;
+  return session;
 }
 
 export async function POST(request: Request) {

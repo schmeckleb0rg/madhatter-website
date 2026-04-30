@@ -19,7 +19,7 @@ const schema = z.object({
 
 async function requireAuth() {
   const session = await auth();
-  if (!session) return null;
+  if (!session || !(session as { isAdmin?: boolean }).isAdmin) return null;
   return session;
 }
 
