@@ -13,28 +13,27 @@ async function getBackground(): Promise<string> {
 
 export default async function HomePage() {
   const background = await getBackground();
+  const bgStyle = {
+    position: "fixed" as const,
+    inset: 0,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundColor: "#000",
+  };
   return (
     <>
-      <style>{`
-        #coming-soon-bg {
-          background-image: url('/madhatter_mobileComingsoon.svg');
-        }
-        @media (min-width: 640px) {
-          #coming-soon-bg {
-            background-image: url('${background}');
-          }
-        }
-      `}</style>
+      {/* Mobile */}
+      <img
+        src="/madhatter_mobileComingsoon.svg"
+        alt=""
+        className="sm:hidden"
+        style={{ position: "fixed", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+      />
+      {/* Desktop */}
       <div
-        id="coming-soon-bg"
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundColor: "#000",
-        }}
+        className="hidden sm:block"
+        style={{ ...bgStyle, backgroundImage: `url('${background}')` }}
       />
     </>
   );
