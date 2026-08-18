@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdminClient } from "@/lib/supabase";
 import { z } from "zod";
 import { sanitizeText } from "@/lib/security";
+import { notifyContactMessage } from "@/lib/email";
 
 const schema = z.object({
   name: z.string().min(1).max(100),
@@ -35,6 +36,14 @@ export async function POST(request: Request) {
   if (error) {
     return NextResponse.json({ error: "Failed to send message." }, { status: 500 });
   }
+
+  // Send email notification (non-blocking)
+  notifyContactMessage({
+    name: d.name,
+    email: d.email,
+    subject: d.subject ?? null,
+    message: d.message,
+  });
 
   return NextResponse.json({ success: true }, { status: 201 });
 }

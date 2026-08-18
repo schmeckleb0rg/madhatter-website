@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { supabase } from "@/lib/supabase";
+import { LocalBusinessSchema } from "@/components/StructuredData";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const revalidate = 60;
 
@@ -39,6 +41,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <GoogleAnalytics />
+        <LocalBusinessSchema />
         <main>{children}</main>
       </body>
     </html>

@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import type { Event } from "@/lib/supabase";
 import EventCard from "@/components/EventCard";
+import { EventSchema } from "@/components/StructuredData";
 
 export const revalidate = 60;
 
@@ -45,11 +46,16 @@ export default async function EventsPage() {
             <p className="text-gray-600 text-sm mt-2">Check back soon — something&apos;s always brewing.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {events.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
             {events.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventSchema key={`schema-${event.id}`} event={event} />
             ))}
-          </div>
+          </>
         )}
       </div>
     </div>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { supabase } from "@/lib/supabase";
 import { rateLimit, sanitizeText, getClientIp } from "@/lib/security";
+import { notifyTicketInquiry } from "@/lib/email";
 
 const schema = z.object({
   name: z.string().min(1).max(100),
@@ -47,6 +48,23 @@ export async function POST(request: Request) {
     console.error("Inquiry insert error:", error);
     return NextResponse.json({ error: "Failed to submit." }, { status: 500 });
   }
+
+  // Resolve event title for email notification
+  let eventTitle: string | null = null;
+  if (data.event_id) {
+    const { data: event } = await supabase.from("events").select("title").eq("id", data.event_id).single();
+    eventTitle = event?.title ?? null;
+  }
+
+  // Send email notification (non-blocking)
+  notifyTicketInquiry({
+    name: data.name,
+    email: data.email,
+    phone: data.phone ?? null,
+    partySize: data.party_size,
+    eventTitle,
+    message: data.message ?? null,
+  });
 
   return NextResponse.json({ success: true }, { status: 201 });
 }
