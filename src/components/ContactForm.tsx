@@ -36,17 +36,16 @@ export default function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="bg-club-card border border-club-gold/30 rounded-lg p-10 text-center">
-        <div className="text-4xl mb-4">🎩</div>
-        <h3 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair)" }}>
+      <div className="bg-off-white-2 border border-gold/30 p-10 text-center">
+        <h3 className="font-display text-xl font-semibold text-charcoal mb-2">
           Message Sent!
         </h3>
-        <p className="text-gray-400 text-sm">
+        <p className="text-muted text-sm">
           Thanks for reaching out. We&apos;ll get back to you soon.
         </p>
         <button
           onClick={() => setStatus("idle")}
-          className="mt-6 text-sm text-club-red hover:underline"
+          className="mt-6 text-sm text-gold hover:underline"
         >
           Send another message
         </button>
@@ -55,15 +54,15 @@ export default function ContactForm() {
   }
 
   const inputClass =
-    "w-full bg-club-bg border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors";
-  const labelClass = "block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2";
+    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
+  const labelClass = "block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className={labelClass}>
-            Name <span className="text-club-red">*</span>
+            Name <span className="text-gold">*</span>
           </label>
           <input
             type="text"
@@ -77,7 +76,7 @@ export default function ContactForm() {
         </div>
         <div>
           <label className={labelClass}>
-            Email <span className="text-club-red">*</span>
+            Email <span className="text-gold">*</span>
           </label>
           <input
             type="email"
@@ -105,7 +104,7 @@ export default function ContactForm() {
 
       <div>
         <label className={labelClass}>
-          Message <span className="text-club-red">*</span>
+          Message <span className="text-gold">*</span>
         </label>
         <textarea
           rows={5}
@@ -118,12 +117,12 @@ export default function ContactForm() {
         />
       </div>
 
-      {errorMsg && <p className="text-club-red text-sm">{errorMsg}</p>}
+      {errorMsg && <p className="text-sm" style={{ color: "#9C4A38" }}>{errorMsg}</p>}
 
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full py-4 bg-club-red text-white font-bold rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+        className="w-full py-4 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
       >
         {status === "loading" ? "Sending..." : "Send Message"}
       </button>

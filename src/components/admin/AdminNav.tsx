@@ -22,22 +22,21 @@ export default function AdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a] border-b border-club-border">
+    <nav className="fixed top-0 w-full z-50 bg-charcoal border-b border-off-white/10">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         <div className="flex items-center gap-6">
           <Link href="/admin/dashboard" className="flex items-center gap-2">
-            <span className="text-club-gold">🎩</span>
-            <span className="text-sm font-bold text-white">Mad Hatter Admin</span>
+            <span className="font-display text-sm font-semibold text-off-white">Mad Hatter Admin</span>
           </Link>
           <div className="hidden sm:flex items-center gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-3 py-1.5 text-xs rounded transition-colors ${
+                className={`px-3 py-1.5 text-xs transition-colors ${
                   pathname.startsWith(item.href)
-                    ? "bg-club-card text-white"
-                    : "text-gray-500 hover:text-white"
+                    ? "bg-charcoal-2 text-off-white"
+                    : "text-muted-dark hover:text-off-white"
                 }`}
               >
                 {item.label}
@@ -50,13 +49,13 @@ export default function AdminNav() {
           <Link
             href="/"
             target="_blank"
-            className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+            className="text-xs text-muted-dark hover:text-off-white transition-colors"
           >
-            View Site ↗
+            View Site
           </Link>
           <button
             onClick={() => signOut({ callbackUrl: "/admin/login" })}
-            className="text-xs text-gray-600 hover:text-club-red transition-colors"
+            className="text-xs text-muted-dark hover:text-gold transition-colors"
           >
             Sign Out
           </button>

@@ -18,15 +18,11 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-club-bg/90 backdrop-blur-md border-b border-club-border">
+    <nav className="fixed top-0 w-full z-50 bg-off-white/90 backdrop-blur border-b border-charcoal/10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <span className="text-club-gold text-2xl">🎩</span>
-          <span
-            className="font-display text-xl font-bold text-white tracking-wide"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
+          <span className="font-display text-xl font-semibold text-charcoal tracking-wide">
             Mad Hatter
           </span>
         </Link>
@@ -37,10 +33,10 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors ${
+              className={`text-sm font-medium transition-colors relative ${
                 pathname === link.href
-                  ? "text-club-gold"
-                  : "text-gray-400 hover:text-white"
+                  ? "text-charcoal after:absolute after:left-0 after:-bottom-1 after:w-full after:h-0.5 after:bg-gold"
+                  : "text-muted hover:text-charcoal"
               }`}
             >
               {link.label}
@@ -48,7 +44,7 @@ export default function Navbar() {
           ))}
           <Link
             href="/tickets"
-            className="px-4 py-2 bg-club-red text-white text-sm font-semibold rounded hover:bg-red-700 transition-colors"
+            className="px-4 py-2 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 transition-colors"
           >
             Book Now
           </Link>
@@ -56,7 +52,7 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden text-gray-400 hover:text-white"
+          className="md:hidden text-muted hover:text-charcoal"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -72,13 +68,13 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-club-card border-t border-club-border px-4 py-4 flex flex-col gap-4">
+        <div className="md:hidden bg-off-white border-t border-charcoal/10 px-4 py-4 flex flex-col gap-4">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={`text-sm font-medium ${
-                pathname === link.href ? "text-club-gold" : "text-gray-400"
+                pathname === link.href ? "text-charcoal" : "text-muted"
               }`}
               onClick={() => setOpen(false)}
             >
@@ -87,7 +83,7 @@ export default function Navbar() {
           ))}
           <Link
             href="/tickets"
-            className="px-4 py-2 bg-club-red text-white text-sm font-semibold rounded text-center"
+            className="px-4 py-2 bg-charcoal text-off-white text-sm font-semibold text-center"
             onClick={() => setOpen(false)}
           >
             Book Now

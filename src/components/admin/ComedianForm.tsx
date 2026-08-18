@@ -67,8 +67,8 @@ export default function ComedianForm({ initialData, id }: ComedianFormProps) {
   }
 
   const inputClass =
-    "w-full bg-[#0a0a0a] border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors";
-  const labelClass = "block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2";
+    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
+  const labelClass = "block font-mono text-xs uppercase tracking-widest text-muted mb-2";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -133,24 +133,24 @@ export default function ComedianForm({ initialData, id }: ComedianFormProps) {
 
       {/* Featured toggle */}
       <div className="flex gap-6">
-        <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+        <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
           <input
             type="checkbox"
             checked={form.featured}
             onChange={(e) => setForm({ ...form, featured: e.target.checked })}
-            className="accent-club-gold"
+            className="accent-gold"
           />
           Featured
         </label>
       </div>
 
-      {error && <p className="text-club-red text-sm">{error}</p>}
+      {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
 
       <div className="flex gap-3 pt-2">
         <button
           type="submit"
           disabled={status === "loading"}
-          className="flex-1 py-3 bg-club-red text-white font-bold rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+          className="flex-1 py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
         >
           {status === "loading" ? "Saving..." : id ? "Update" : "Create"}
         </button>
@@ -158,7 +158,7 @@ export default function ComedianForm({ initialData, id }: ComedianFormProps) {
           <button
             type="button"
             onClick={handleDelete}
-            className="px-6 py-3 border border-red-900/50 text-red-500 rounded hover:bg-red-900/20 transition-colors text-sm"
+            className="px-6 py-3 border border-red-200 text-red-600 hover:bg-red-50 transition-colors text-sm"
           >
             Delete
           </button>
@@ -166,7 +166,7 @@ export default function ComedianForm({ initialData, id }: ComedianFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-3 border border-club-border text-gray-400 rounded hover:text-white transition-colors text-sm"
+          className="px-6 py-3 border border-charcoal/10 text-muted hover:text-charcoal transition-colors text-sm"
         >
           Cancel
         </button>

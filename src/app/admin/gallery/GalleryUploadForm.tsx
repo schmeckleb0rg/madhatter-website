@@ -38,7 +38,7 @@ export default function GalleryUploadForm() {
   }
 
   const inputClass =
-    "w-full bg-club-bg border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors";
+    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
@@ -47,7 +47,7 @@ export default function GalleryUploadForm() {
         type="file"
         accept="image/png,image/jpeg,image/webp,image/gif"
         required
-        className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border file:border-club-border file:text-sm file:font-semibold file:bg-club-card file:text-gray-300 hover:file:bg-club-border file:cursor-pointer file:transition-colors"
+        className="text-sm text-muted file:mr-4 file:py-2 file:px-4 file:border file:border-charcoal/10 file:text-sm file:font-semibold file:bg-off-white-2 file:text-charcoal hover:file:bg-charcoal/5 file:cursor-pointer file:transition-colors"
       />
       <input
         type="text"
@@ -60,11 +60,11 @@ export default function GalleryUploadForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="px-6 py-3 bg-club-red text-white text-sm font-semibold rounded hover:bg-red-700 disabled:opacity-50 transition-colors flex-shrink-0"
+        className="px-6 py-3 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors flex-shrink-0"
       >
         {status === "loading" ? "Uploading..." : "Upload"}
       </button>
-      {error && <p className="text-club-red text-sm self-center">{error}</p>}
+      {error && <p className="text-sm self-center" style={{ color: "#9C4A38" }}>{error}</p>}
     </form>
   );
 }

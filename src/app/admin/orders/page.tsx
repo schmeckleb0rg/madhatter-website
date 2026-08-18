@@ -22,11 +22,11 @@ export default async function AdminOrdersPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-playfair)" }}>
+          <h1 className="text-2xl font-bold text-charcoal font-display">
             Orders
           </h1>
           {completedOrders.length > 0 && (
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-muted mt-1">
               {completedOrders.length} completed — ${(totalRevenue / 100).toFixed(2)} total revenue
             </p>
           )}
@@ -34,7 +34,7 @@ export default async function AdminOrdersPage() {
       </div>
 
       {orders.length === 0 ? (
-        <div className="text-center py-20 text-gray-600">No orders yet.</div>
+        <div className="text-center py-20 text-muted">No orders yet.</div>
       ) : (
         <div className="space-y-2">
           {orders.map((order) => {
@@ -50,32 +50,32 @@ export default async function AdminOrdersPage() {
             return (
               <div
                 key={order.id}
-                className="flex items-center justify-between bg-club-card border border-club-border rounded-lg px-5 py-4"
+                className="flex items-center justify-between bg-white border border-charcoal/10 px-5 py-4"
               >
                 <div className="flex items-center gap-4 min-w-0">
                   <div className="min-w-0">
-                    <div className="text-sm font-semibold text-white truncate">{eventTitle}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-sm font-semibold text-charcoal truncate">{eventTitle}</div>
+                    <div className="text-xs text-muted">
                       {order.email} — {order.quantity} ticket{order.quantity > 1 ? "s" : ""}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className="text-sm font-semibold text-white">{amount}</span>
+                  <span className="text-sm font-semibold text-charcoal">{amount}</span>
                   <span
-                    className={`text-xs px-2 py-0.5 rounded ${
+                    className={`text-xs px-2 py-0.5 ${
                       order.status === "completed"
-                        ? "bg-green-900/30 text-green-400"
+                        ? "bg-green-50 text-green-700"
                         : order.status === "pending"
-                          ? "bg-yellow-900/30 text-yellow-400"
+                          ? "bg-yellow-50 text-yellow-700"
                           : order.status === "refunded"
-                            ? "bg-blue-900/30 text-blue-400"
-                            : "bg-red-900/30 text-club-red"
+                            ? "bg-blue-50 text-blue-700"
+                            : "bg-red-50 text-red-700"
                     }`}
                   >
                     {order.status}
                   </span>
-                  <span className="text-xs text-gray-600">{date}</span>
+                  <span className="text-xs text-muted">{date}</span>
                 </div>
               </div>
             );

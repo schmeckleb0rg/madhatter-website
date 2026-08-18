@@ -19,26 +19,26 @@ export default async function AdminGalleryPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-playfair)" }}>
+          <h1 className="text-2xl font-bold text-charcoal font-display">
             Gallery
           </h1>
-          <p className="text-sm text-gray-500 mt-1">{images.length} image{images.length !== 1 ? "s" : ""}</p>
+          <p className="text-sm text-muted mt-1">{images.length} image{images.length !== 1 ? "s" : ""}</p>
         </div>
       </div>
 
       {/* Upload */}
-      <div className="bg-club-card border border-club-border rounded-lg p-6 mb-8">
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Upload New Image</h2>
+      <div className="bg-white border border-charcoal/10 p-6 mb-8">
+        <h2 className="font-mono text-xs uppercase tracking-widest text-muted mb-4">Upload New Image</h2>
         <GalleryUploadForm />
       </div>
 
       {/* Grid */}
       {images.length === 0 ? (
-        <div className="text-center py-20 text-gray-600">No gallery images yet.</div>
+        <div className="text-center py-20 text-muted">No gallery images yet.</div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((img) => (
-            <div key={img.id} className="bg-club-card border border-club-border rounded-lg overflow-hidden group relative">
+            <div key={img.id} className="bg-white border border-charcoal/10 overflow-hidden group relative">
               <div className="aspect-[4/3] relative">
                 <Image
                   src={img.image_url}
@@ -49,7 +49,7 @@ export default async function AdminGalleryPage() {
                 />
               </div>
               <div className="p-3 flex items-center justify-between">
-                <p className="text-xs text-gray-500 truncate">{img.caption ?? "No caption"}</p>
+                <p className="text-xs text-muted truncate">{img.caption ?? "No caption"}</p>
                 <DeleteGalleryButton id={img.id} />
               </div>
             </div>

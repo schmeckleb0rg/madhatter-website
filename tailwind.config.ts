@@ -9,21 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        club: {
-          bg: "#0d0d0d",
-          card: "#161616",
-          border: "#2a2a2a",
-          red: "#c41e3a",
-          gold: "#d4af37",
-          muted: "#888888",
-        },
+        "off-white": "#F6F2E9",
+        "off-white-2": "#EDE6D6",
+        charcoal: "#1B1A17",
+        "charcoal-2": "#252420",
+        gold: "#B8934A",
+        "gold-soft": "#D9C9A3",
+        muted: "#6E6759",
+        "muted-dark": "#A8A092",
       },
       fontFamily: {
-        display: ["var(--font-playfair)", "Georgia", "serif"],
-        body: ["var(--font-inter)", "system-ui", "sans-serif"],
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        display: ["var(--font-display)", "serif"],
+        body: ["var(--font-body)", "sans-serif"],
+        mono: ["var(--font-mono)", "monospace"],
       },
     },
   },

@@ -29,65 +29,60 @@ export default async function PastEventsPage() {
   const events = await getPastEvents();
 
   return (
-    <div className="pt-24 pb-20 min-h-screen">
+    <div className="pt-24 pb-20 min-h-screen bg-off-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
-          <p className="text-club-gold text-xs font-bold tracking-widest uppercase mb-3">
+          <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
             The Archives
           </p>
-          <h1
-            className="text-4xl sm:text-5xl font-black text-white"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
+          <h1 className="font-display text-4xl sm:text-5xl font-semibold text-charcoal">
             Past Shows
           </h1>
-          <p className="mt-4 text-gray-500 max-w-lg mx-auto">
+          <p className="mt-4 text-muted max-w-lg mx-auto">
             A look back at the legends who&apos;ve graced our stage.
           </p>
-          <div className="mt-4 text-club-gold tracking-widest opacity-30">♠ ♥ ♣ ♦</div>
+          <div className="w-16 h-0.5 bg-gold mt-4 mx-auto" />
         </div>
 
         {events.length === 0 ? (
           <div className="text-center py-20">
-            <div className="text-6xl mb-6 opacity-20">🎩</div>
-            <p className="text-gray-500 text-lg">No past shows yet.</p>
+            <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
+              The Archives
+            </p>
+            <p className="text-muted text-lg">No past shows yet.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event) => (
               <div
                 key={event.id}
-                className="bg-club-card border border-club-border rounded-lg overflow-hidden group"
+                className="bg-white border border-charcoal/10 overflow-hidden group"
               >
-                <div className="relative h-44 bg-club-bg">
+                <div className="relative h-44 bg-off-white-2">
                   {event.image_url ? (
                     <Image
                       src={event.image_url}
                       alt={event.title}
                       fill
-                      className="object-cover opacity-70 group-hover:opacity-90 transition-opacity"
+                      className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                     />
                   ) : (
-                    <div className="h-full flex items-center justify-center">
-                      <span className="text-5xl opacity-10">🎩</span>
+                    <div className="h-full flex items-center justify-center bg-off-white-2">
+                      <span className="font-display text-2xl text-muted/30">MH</span>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-club-card/80 to-transparent" />
                 </div>
                 <div className="p-5">
-                  <p className="text-xs text-club-gold mb-1">{formatDate(event.date)}</p>
-                  <h3
-                    className="font-semibold text-white"
-                    style={{ fontFamily: "var(--font-playfair)" }}
-                  >
+                  <p className="font-mono text-xs text-gold mb-1">{formatDate(event.date)}</p>
+                  <h3 className="font-display font-semibold text-charcoal">
                     {event.title}
                   </h3>
                   {event.performer && (
-                    <p className="text-sm text-gray-400 mt-1">{event.performer}</p>
+                    <p className="text-sm text-muted mt-1">{event.performer}</p>
                   )}
                   {event.description && (
-                    <p className="text-xs text-gray-600 mt-2 line-clamp-2">{event.description}</p>
+                    <p className="text-xs text-muted mt-2 line-clamp-2">{event.description}</p>
                   )}
                 </div>
               </div>

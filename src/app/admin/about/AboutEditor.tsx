@@ -28,18 +28,18 @@ export default function AboutEditor({ section }: { section: AboutContent }) {
   }
 
   const inputClass =
-    "w-full bg-[#0a0a0a] border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors";
+    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
 
   return (
-    <div className="bg-club-card border border-club-border rounded-lg p-5">
+    <div className="bg-white border border-charcoal/10 p-5">
       <div className="flex items-center justify-between mb-4">
-        <code className="text-xs text-club-gold bg-club-gold/10 px-2 py-1 rounded">{section.section_key}</code>
+        <code className="text-xs text-gold bg-gold/10 px-2 py-1">{section.section_key}</code>
         <button
           onClick={handleSave}
           disabled={status === "saving"}
-          className="text-xs px-4 py-1.5 bg-club-red text-white rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+          className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
         >
-          {status === "saving" ? "Saving..." : status === "saved" ? "Saved ✓" : "Save"}
+          {status === "saving" ? "Saving..." : status === "saved" ? "Saved" : "Save"}
         </button>
       </div>
       <div className="space-y-3">
@@ -58,7 +58,7 @@ export default function AboutEditor({ section }: { section: AboutContent }) {
           placeholder="Section content"
         />
       </div>
-      {status === "error" && <p className="text-club-red text-xs mt-2">Failed to save.</p>}
+      {status === "error" && <p className="text-xs mt-2" style={{ color: "#9C4A38" }}>Failed to save.</p>}
     </div>
   );
 }

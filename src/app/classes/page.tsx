@@ -55,23 +55,20 @@ const classes = [
 
 export default function ClassesPage() {
   return (
-    <div className="pt-24 pb-20 min-h-screen">
+    <div className="pt-24 pb-20 min-h-screen bg-off-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
-          <p className="text-club-gold text-xs font-bold tracking-widest uppercase mb-3">
+          <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
             Learn the Craft
           </p>
-          <h1
-            className="text-4xl sm:text-5xl font-black text-white"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
+          <h1 className="font-display text-4xl sm:text-5xl font-semibold text-charcoal">
             Comedy Classes
           </h1>
-          <p className="mt-4 text-gray-500 max-w-xl mx-auto">
+          <p className="mt-4 text-muted max-w-xl mx-auto">
             Whether you&apos;re a first-timer or a working comic, our classes will sharpen your skills and get you stage-ready.
           </p>
-          <div className="mt-4 text-club-gold tracking-widest opacity-30">&#9824; &#9829; &#9827; &#9830;</div>
+          <div className="w-16 h-0.5 bg-gold mt-4 mx-auto" />
         </div>
 
         {/* Classes */}
@@ -79,41 +76,38 @@ export default function ClassesPage() {
           {classes.map((cls) => (
             <div
               key={cls.title}
-              className="bg-club-card border border-club-border rounded-lg overflow-hidden"
+              className="bg-white border border-charcoal/10 overflow-hidden"
             >
               <div className="p-6 sm:p-8">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                   <div>
-                    <h2
-                      className="text-xl font-bold text-white"
-                      style={{ fontFamily: "var(--font-playfair)" }}
-                    >
+                    <h2 className="font-display text-xl font-semibold text-charcoal">
                       {cls.title}
                     </h2>
-                    <p className="text-sm text-club-gold">{cls.subtitle}</p>
+                    <p className="text-sm text-gold">{cls.subtitle}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-playfair)" }}>
+                    <div className="font-display text-2xl font-semibold text-charcoal">
                       {cls.price}
                     </div>
                   </div>
                 </div>
 
-                <p className="text-gray-400 text-sm leading-relaxed mb-5">{cls.description}</p>
+                <p className="text-muted text-sm leading-relaxed mb-5">{cls.description}</p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
                   {cls.highlights.map((h) => (
-                    <div key={h} className="flex items-start gap-2 text-sm text-gray-400">
-                      <span className="text-club-gold mt-0.5 flex-shrink-0">&#10003;</span>
+                    <div key={h} className="flex items-start gap-2 text-sm text-muted">
+                      <span className="text-gold mt-0.5 flex-shrink-0">&#10003;</span>
                       {h}
                     </div>
                   ))}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 border-t border-club-border pt-4">
-                  <span>{cls.duration}</span>
-                  <span className="text-club-border">|</span>
-                  <span>{cls.schedule}</span>
+                <div className="flex flex-wrap items-center gap-4 text-xs text-muted border-t border-charcoal/10 pt-4">
+                  <span className="font-mono">{cls.duration}</span>
+                  <span className="text-charcoal/20">|</span>
+                  <span className="font-mono">{cls.schedule}</span>
                 </div>
               </div>
             </div>
@@ -121,45 +115,39 @@ export default function ClassesPage() {
         </div>
 
         {/* Why take a class */}
-        <div className="bg-club-card border border-club-border rounded-lg p-6 sm:p-8 mb-10">
-          <h3
-            className="text-lg font-bold text-white mb-6"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
+        <div className="bg-off-white-2 border border-charcoal/10 p-6 sm:p-8 mb-10">
+          <h3 className="font-display text-lg font-semibold text-charcoal mb-6">
             Why Learn at Mad Hatter?
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
             <div>
-              <div className="text-3xl mb-3">🎭</div>
-              <div className="text-white text-sm font-semibold mb-1">Real Stage Time</div>
-              <p className="text-gray-500 text-xs">Perform on the same stage as the pros. Every class ends with a live show.</p>
+              <div className="font-display text-gold text-lg font-semibold mb-1">Real Stage Time</div>
+              <p className="text-muted text-xs">Perform on the same stage as the pros. Every class ends with a live show.</p>
             </div>
             <div>
-              <div className="text-3xl mb-3">🎓</div>
-              <div className="text-white text-sm font-semibold mb-1">Industry Instructors</div>
-              <p className="text-gray-500 text-xs">Learn from working comedians who&apos;ve toured nationally and appeared on TV.</p>
+              <div className="font-display text-gold text-lg font-semibold mb-1">Industry Instructors</div>
+              <p className="text-muted text-xs">Learn from working comedians who&apos;ve toured nationally and appeared on TV.</p>
             </div>
             <div>
-              <div className="text-3xl mb-3">🤝</div>
-              <div className="text-white text-sm font-semibold mb-1">Community</div>
-              <p className="text-gray-500 text-xs">Join a network of comics. Many of our students go on to perform regularly at the club.</p>
+              <div className="font-display text-gold text-lg font-semibold mb-1">Community</div>
+              <p className="text-muted text-xs">Join a network of comics. Many of our students go on to perform regularly at the club.</p>
             </div>
           </div>
         </div>
 
         {/* CTA */}
         <div className="text-center">
-          <p className="text-gray-500 text-sm mb-4">Ready to enroll? Reach out and we&apos;ll save your spot.</p>
+          <p className="text-muted text-sm mb-4">Ready to enroll? Reach out and we&apos;ll save your spot.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/contact"
-              className="px-8 py-3 bg-club-red text-white font-bold rounded hover:bg-red-700 transition-colors"
+              className="px-8 py-3 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 transition-colors"
             >
               Enroll Now
             </Link>
             <Link
               href="/open-mic"
-              className="px-8 py-3 border border-club-border text-gray-400 rounded hover:text-white hover:border-club-gold/30 transition-colors"
+              className="px-8 py-3 border border-charcoal/20 text-muted hover:text-charcoal hover:border-charcoal/40 transition-colors"
             >
               Try Open Mic First
             </Link>

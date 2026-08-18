@@ -18,7 +18,7 @@ export default function DeleteMessageButton({ id }: { id: string }) {
     <button
       onClick={handleDelete}
       disabled={loading}
-      className="flex-shrink-0 text-xs px-3 py-1.5 border border-club-border text-gray-600 rounded hover:border-club-red/30 hover:text-club-red transition-colors disabled:opacity-50"
+      className="flex-shrink-0 text-xs px-3 py-1.5 border border-charcoal/10 text-muted hover:border-charcoal/30 hover:text-charcoal transition-colors disabled:opacity-50"
     >
       {loading ? "..." : "Delete"}
     </button>

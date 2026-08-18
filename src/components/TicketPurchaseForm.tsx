@@ -41,8 +41,8 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining }: T
   }
 
   const inputClass =
-    "w-full bg-[#0a0a0a] border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors";
-  const labelClass = "block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2";
+    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
+  const labelClass = "block text-xs font-semibold text-muted uppercase tracking-wide mb-2";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -88,22 +88,22 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining }: T
       </div>
 
       {/* Subtotal */}
-      <div className="flex items-center justify-between py-3 border-t border-club-border">
-        <span className="text-sm text-gray-400">Subtotal</span>
-        <span className="text-lg font-bold text-white">${subtotal.toFixed(2)}</span>
+      <div className="flex items-center justify-between py-3 border-t border-charcoal/10">
+        <span className="text-sm text-muted">Subtotal</span>
+        <span className="text-lg font-bold text-charcoal">${subtotal.toFixed(2)}</span>
       </div>
 
-      {error && <p className="text-club-red text-sm">{error}</p>}
+      {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
 
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full py-3 bg-club-red text-white font-bold rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+        className="w-full py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
       >
         {status === "loading" ? "Redirecting to checkout..." : `Checkout — $${subtotal.toFixed(2)}`}
       </button>
 
-      <p className="text-xs text-gray-600 text-center">
+      <p className="text-xs text-muted text-center">
         You&apos;ll be redirected to Stripe&apos;s secure checkout to complete your purchase.
       </p>
     </form>

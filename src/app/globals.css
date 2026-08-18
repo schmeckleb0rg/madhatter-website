@@ -2,17 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-playfair: "Playfair Display", Georgia, serif;
-  --font-inter: "Inter", system-ui, sans-serif;
-}
-
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #000;
-  color: #f5f5f5;
-  font-family: var(--font-inter);
+  background-color: #F6F2E9;
+  color: #1B1A17;
 }
 
 /* Custom scrollbar */
@@ -20,19 +14,12 @@ html, body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #161616;
+  background: #EDE6D6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
+  background: #A8A092;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #d4af37;
-}
-
-/* Suit decoration */
-.suit-decoration::before {
-  content: "♠ ♥ ♣ ♦";
-  letter-spacing: 0.5em;
-  opacity: 0.15;
+  background: #B8934A;
 }

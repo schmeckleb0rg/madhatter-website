@@ -7,7 +7,6 @@ export const metadata = {
 
 const policies = [
   {
-    icon: "🎟",
     title: "Tickets & Reservations",
     items: [
       "All ticket sales are final — no refunds or exchanges",
@@ -17,7 +16,6 @@ const policies = [
     ],
   },
   {
-    icon: "🔞",
     title: "Age Policy",
     items: [
       "Most shows are 21+ with valid ID required at the door",
@@ -26,7 +24,6 @@ const policies = [
     ],
   },
   {
-    icon: "🍸",
     title: "Food & Drink",
     items: [
       "Full bar available with craft cocktails, beer, and wine",
@@ -35,7 +32,6 @@ const policies = [
     ],
   },
   {
-    icon: "🅿️",
     title: "Parking & Transit",
     items: [
       "Street parking available on Madison St and surrounding blocks",
@@ -45,7 +41,6 @@ const policies = [
     ],
   },
   {
-    icon: "♿",
     title: "Accessibility",
     items: [
       "The venue is ADA accessible with ground-level entry",
@@ -55,7 +50,6 @@ const policies = [
     ],
   },
   {
-    icon: "📱",
     title: "During the Show",
     items: [
       "Phones must be silenced during performances",
@@ -65,7 +59,6 @@ const policies = [
     ],
   },
   {
-    icon: "👔",
     title: "Dress Code",
     items: [
       "Smart casual — come as you are, just look like you tried a little",
@@ -73,7 +66,6 @@ const policies = [
     ],
   },
   {
-    icon: "🎂",
     title: "Private Events & Groups",
     items: [
       "Groups of 10+ should contact us in advance for reserved seating",
@@ -89,34 +81,30 @@ export default function VisitorInfoPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
-          <p className="text-club-gold text-xs font-bold tracking-widest uppercase mb-3">
+          <p className="text-gold text-xs font-bold tracking-widest uppercase mb-3">
             Before You Visit
           </p>
-          <h1
-            className="text-4xl sm:text-5xl font-black text-white"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
+          <h1 className="text-4xl sm:text-5xl font-black text-charcoal font-display">
             Visitor Info & Policies
           </h1>
-          <p className="mt-4 text-gray-500 max-w-xl mx-auto">
+          <p className="mt-4 text-muted max-w-xl mx-auto">
             Everything you need to know for a great night at Mad Hatter.
           </p>
-          <div className="mt-4 text-club-gold tracking-widest opacity-30">&#9824; &#9829; &#9827; &#9830;</div>
         </div>
 
         {/* Location card */}
-        <div className="bg-club-card border border-club-border rounded-lg p-6 sm:p-8 mb-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+        <div className="bg-white border border-charcoal/10 p-6 sm:p-8 mb-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div>
-            <div className="text-club-gold text-sm font-semibold mb-1">Address</div>
-            <p className="text-gray-400 text-sm">123 W Madison St, Chicago, IL 60602</p>
+            <div className="text-gold text-sm font-semibold mb-1">Address</div>
+            <p className="text-muted text-sm">123 W Madison St, Chicago, IL 60602</p>
           </div>
           <div>
-            <div className="text-club-gold text-sm font-semibold mb-1">Box Office</div>
-            <p className="text-gray-400 text-sm">Opens 1 hour before showtime</p>
+            <div className="text-gold text-sm font-semibold mb-1">Box Office</div>
+            <p className="text-muted text-sm">Opens 1 hour before showtime</p>
           </div>
           <div>
-            <div className="text-club-gold text-sm font-semibold mb-1">Doors</div>
-            <p className="text-gray-400 text-sm">Open 30 min before showtime</p>
+            <div className="text-gold text-sm font-semibold mb-1">Doors</div>
+            <p className="text-muted text-sm">Open 30 min before showtime</p>
           </div>
         </div>
 
@@ -125,21 +113,17 @@ export default function VisitorInfoPage() {
           {policies.map((section) => (
             <div
               key={section.title}
-              className="bg-club-card border border-club-border rounded-lg p-6"
+              className="bg-white border border-charcoal/10 p-6"
             >
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">{section.icon}</span>
-                <h2
-                  className="text-lg font-bold text-white"
-                  style={{ fontFamily: "var(--font-playfair)" }}
-                >
+                <h2 className="text-lg font-bold text-charcoal font-display">
                   {section.title}
                 </h2>
               </div>
               <ul className="space-y-2">
                 {section.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-gray-400">
-                    <span className="text-club-gold mt-0.5 flex-shrink-0">&#8226;</span>
+                  <li key={item} className="flex items-start gap-2 text-sm text-muted">
+                    <span className="text-gold mt-0.5 flex-shrink-0">&#8226;</span>
                     {item}
                   </li>
                 ))}
@@ -150,10 +134,10 @@ export default function VisitorInfoPage() {
 
         {/* CTA */}
         <div className="mt-12 text-center">
-          <p className="text-gray-500 text-sm mb-4">Still have questions?</p>
+          <p className="text-muted text-sm mb-4">Still have questions?</p>
           <Link
             href="/contact"
-            className="inline-block px-8 py-3 bg-club-red text-white font-bold rounded hover:bg-red-700 transition-colors"
+            className="inline-block px-8 py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 transition-colors"
           >
             Contact Us
           </Link>

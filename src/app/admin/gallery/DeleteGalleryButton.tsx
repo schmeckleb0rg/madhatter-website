@@ -18,7 +18,7 @@ export default function DeleteGalleryButton({ id }: { id: string }) {
     <button
       onClick={handleDelete}
       disabled={loading}
-      className="text-xs text-gray-600 hover:text-club-red transition-colors disabled:opacity-50 flex-shrink-0"
+      className="text-xs text-muted hover:text-charcoal transition-colors disabled:opacity-50 flex-shrink-0"
     >
       {loading ? "..." : "Delete"}
     </button>

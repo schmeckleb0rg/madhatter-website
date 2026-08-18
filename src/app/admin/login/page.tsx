@@ -37,7 +37,7 @@ function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+        <label className="block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2">
           Admin Password
         </label>
         <input
@@ -46,17 +46,17 @@ function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoFocus
-          className="w-full bg-[#0a0a0a] border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors"
+          className="w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors"
           placeholder="Enter password"
         />
       </div>
 
-      {error && <p className="text-club-red text-sm">{error}</p>}
+      {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 bg-club-red text-white font-bold rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+        className="w-full py-3 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
       >
         {loading ? "Signing in..." : "Sign In"}
       </button>
@@ -66,16 +66,15 @@ function LoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-off-white flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="text-club-gold text-4xl mb-3">🎩</div>
-          <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-playfair)" }}>
+          <h1 className="font-display text-2xl font-semibold text-charcoal">
             Admin Access
           </h1>
-          <p className="text-xs text-gray-600 mt-2">Mad Hatter Comedy Club</p>
+          <p className="text-xs text-muted mt-2">Mad Hatter Comedy Club</p>
         </div>
-        <div className="bg-club-card border border-club-border rounded-lg p-8">
+        <div className="bg-white border border-charcoal/10 p-8">
           <Suspense fallback={null}>
             <LoginForm />
           </Suspense>

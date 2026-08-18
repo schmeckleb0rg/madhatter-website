@@ -64,13 +64,13 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
   }
 
   const inputClass =
-    "w-full bg-club-bg border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors";
-  const labelClass = "block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2";
+    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
+  const labelClass = "block font-mono text-xs uppercase tracking-widest text-muted mb-2";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className={labelClass}>Name <span className="text-club-red">*</span></label>
+        <label className={labelClass}>Name <span style={{ color: "#9C4A38" }}>*</span></label>
         <input
           type="text"
           required
@@ -84,7 +84,7 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className={labelClass}>Price (cents) <span className="text-club-red">*</span></label>
+          <label className={labelClass}>Price (cents) <span style={{ color: "#9C4A38" }}>*</span></label>
           <input
             type="number"
             required
@@ -96,7 +96,7 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
             placeholder="3000 = $30.00"
           />
           {form.price_cents && (
-            <p className="text-xs text-gray-500 mt-1">= ${(Number(form.price_cents) / 100).toFixed(2)}</p>
+            <p className="text-xs text-muted mt-1">= ${(Number(form.price_cents) / 100).toFixed(2)}</p>
           )}
         </div>
         <div>
@@ -133,12 +133,12 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
             type="file"
             accept="image/png,image/jpeg,image/webp,image/gif"
             onChange={handleUpload}
-            className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border file:border-club-border file:text-sm file:font-semibold file:bg-club-card file:text-gray-300 hover:file:bg-club-border file:cursor-pointer file:transition-colors"
+            className="text-sm text-muted file:mr-4 file:py-2 file:px-4 file:border file:border-charcoal/10 file:text-sm file:font-semibold file:bg-off-white-2 file:text-charcoal hover:file:bg-charcoal/5 file:cursor-pointer file:transition-colors"
           />
-          {uploading && <span className="text-xs text-club-gold">Uploading...</span>}
+          {uploading && <span className="text-xs text-gold">Uploading...</span>}
         </div>
         {form.image_url && (
-          <div className="mt-3 relative w-32 h-32 rounded-lg overflow-hidden border border-club-border">
+          <div className="mt-3 relative w-32 h-32 overflow-hidden border border-charcoal/10">
             <Image src={form.image_url} alt="Preview" fill className="object-cover" sizes="128px" />
           </div>
         )}
@@ -157,25 +157,25 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
           type="checkbox"
           checked={form.is_active}
           onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
-          className="rounded border-club-border bg-club-bg text-club-red focus:ring-club-gold/30"
+          className="border-charcoal/10 bg-off-white text-gold focus:ring-gold/30"
         />
-        <span className="text-sm text-gray-400">Active (visible on public merch page)</span>
+        <span className="text-sm text-muted">Active (visible on public merch page)</span>
       </label>
 
-      {error && <p className="text-club-red text-sm">{error}</p>}
+      {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
 
       <div className="flex gap-3 pt-2">
         <button
           type="submit"
           disabled={status === "loading"}
-          className="flex-1 py-3 bg-club-red text-white font-bold rounded hover:bg-red-700 disabled:opacity-50 transition-colors text-sm"
+          className="flex-1 py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 disabled:opacity-50 transition-colors text-sm"
         >
           {status === "loading" ? "Saving..." : id ? "Update Item" : "Add Item"}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-3 border border-club-border text-gray-400 rounded hover:text-white transition-colors text-sm"
+          className="px-6 py-3 border border-charcoal/10 text-muted hover:text-charcoal transition-colors text-sm"
         >
           Cancel
         </button>

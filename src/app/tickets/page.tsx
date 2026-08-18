@@ -23,41 +23,38 @@ export default async function TicketsPage() {
   const events = await getUpcomingEvents();
 
   return (
-    <div className="pt-24 pb-20 min-h-screen">
+    <div className="pt-24 pb-20 min-h-screen bg-off-white">
       <div className="max-w-2xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <p className="text-club-red text-xs font-bold tracking-widest uppercase mb-3">
+          <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
             Join Us
           </p>
-          <h1
-            className="text-4xl sm:text-5xl font-black text-white"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
+          <h1 className="font-display text-4xl sm:text-5xl font-semibold text-charcoal">
             Request Tickets
           </h1>
-          <p className="mt-4 text-gray-500">
+          <p className="mt-4 text-muted">
             Fill out the form below and we&apos;ll be in touch to confirm your reservation.
           </p>
-          <div className="mt-4 text-club-gold tracking-widest opacity-30">♠ ♥ ♣ ♦</div>
+          <div className="w-16 h-0.5 bg-gold mt-4 mx-auto" />
         </div>
 
-        <div className="bg-club-card border border-club-border rounded-lg p-6 sm:p-8">
-          <Suspense fallback={<div className="text-gray-500 text-sm">Loading form...</div>}>
+        <div className="bg-white border border-charcoal/10 p-6 sm:p-8">
+          <Suspense fallback={<div className="text-muted text-sm">Loading form...</div>}>
             <InquiryForm events={events} />
           </Suspense>
         </div>
 
         {/* Info */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600">
-          <div className="bg-club-card border border-club-border rounded p-4">
-            <div className="text-club-gold mb-2">📍 Location</div>
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-muted">
+          <div className="bg-off-white-2 border border-charcoal/10 p-4">
+            <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Location</div>
             <p>123 W Madison St</p>
             <p>Chicago, IL 60602</p>
           </div>
-          <div className="bg-club-card border border-club-border rounded p-4">
-            <div className="text-club-gold mb-2">📧 Questions?</div>
-            <a href="mailto:hello@madhattercomedy.com" className="hover:text-white transition-colors">
+          <div className="bg-off-white-2 border border-charcoal/10 p-4">
+            <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Questions?</div>
+            <a href="mailto:hello@madhattercomedy.com" className="hover:text-charcoal transition-colors">
               hello@madhattercomedy.com
             </a>
           </div>

@@ -21,27 +21,26 @@ export default async function ComediansPage() {
   const comedians = await getComedians();
 
   return (
-    <div className="pt-24 pb-20 min-h-screen">
+    <div className="pt-24 pb-20 min-h-screen bg-off-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
-          <p className="text-club-red text-xs font-bold tracking-widest uppercase mb-3">
+          <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
             The Lineup
           </p>
-          <h1
-            className="text-4xl sm:text-5xl font-black text-white"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
+          <h1 className="font-display text-4xl sm:text-5xl font-semibold text-charcoal">
             Our Comedians
           </h1>
-          <div className="mt-4 text-club-gold tracking-widest opacity-30">♠ ♥ ♣ ♦</div>
+          <div className="w-16 h-0.5 bg-gold mt-4 mx-auto" />
         </div>
 
         {comedians.length === 0 ? (
           <div className="text-center py-20">
-            <div className="text-6xl mb-6 opacity-20">🎩</div>
-            <p className="text-gray-500 text-lg">No comedians listed yet.</p>
-            <p className="text-gray-600 text-sm mt-2">Check back soon — the lineup is always growing.</p>
+            <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
+              The Lineup
+            </p>
+            <p className="text-muted text-lg">No comedians listed yet.</p>
+            <p className="text-muted text-sm mt-2">Check back soon — the lineup is always growing.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

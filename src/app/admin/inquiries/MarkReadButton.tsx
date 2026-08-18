@@ -17,7 +17,7 @@ export default function MarkReadButton({ id }: { id: string }) {
     <button
       onClick={markRead}
       disabled={loading}
-      className="flex-shrink-0 text-xs px-3 py-1.5 border border-club-gold/30 text-club-gold rounded hover:bg-club-gold/10 transition-colors disabled:opacity-50"
+      className="flex-shrink-0 text-xs px-3 py-1.5 border border-gold/30 text-gold hover:bg-gold/10 transition-colors disabled:opacity-50"
     >
       {loading ? "..." : "Mark Read"}
     </button>

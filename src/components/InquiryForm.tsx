@@ -55,17 +55,16 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
 
   if (status === "success") {
     return (
-      <div className="bg-club-card border border-club-gold/30 rounded-lg p-10 text-center">
-        <div className="text-4xl mb-4">🎩</div>
-        <h3 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair)" }}>
+      <div className="bg-off-white-2 border border-gold/30 p-10 text-center">
+        <h3 className="font-display text-xl font-semibold text-charcoal mb-2">
           Request Received!
         </h3>
-        <p className="text-gray-400 text-sm">
+        <p className="text-muted text-sm">
           We&apos;ll be in touch soon to confirm your tickets.
         </p>
         <button
           onClick={() => setStatus("idle")}
-          className="mt-6 text-sm text-club-red hover:underline"
+          className="mt-6 text-sm text-gold hover:underline"
         >
           Submit another request
         </button>
@@ -73,13 +72,17 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
     );
   }
 
+  const inputClass =
+    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
+  const labelClass = "block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Name + Email */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
-            Name <span className="text-club-red">*</span>
+          <label className={labelClass}>
+            Name <span className="text-gold">*</span>
           </label>
           <input
             type="text"
@@ -87,13 +90,13 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
             maxLength={100}
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="w-full bg-club-bg border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors"
+            className={inputClass}
             placeholder="Your name"
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
-            Email <span className="text-club-red">*</span>
+          <label className={labelClass}>
+            Email <span className="text-gold">*</span>
           </label>
           <input
             type="email"
@@ -101,7 +104,7 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
             maxLength={200}
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full bg-club-bg border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors"
+            className={inputClass}
             placeholder="you@example.com"
           />
         </div>
@@ -110,7 +113,7 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
       {/* Phone + Party Size */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+          <label className={labelClass}>
             Phone
           </label>
           <input
@@ -118,12 +121,12 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
             maxLength={20}
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            className="w-full bg-club-bg border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors"
+            className={inputClass}
             placeholder="(312) 555-0100"
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+          <label className={labelClass}>
             Party Size
           </label>
           <input
@@ -132,7 +135,7 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
             max={20}
             value={form.party_size}
             onChange={(e) => setForm({ ...form, party_size: e.target.value })}
-            className="w-full bg-club-bg border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors"
+            className={inputClass}
           />
         </div>
       </div>
@@ -140,13 +143,13 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
       {/* Event */}
       {events.length > 0 && (
         <div>
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+          <label className={labelClass}>
             Show
           </label>
           <select
             value={form.event_id}
             onChange={(e) => setForm({ ...form, event_id: e.target.value })}
-            className="w-full bg-club-bg border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors"
+            className={inputClass}
           >
             <option value="">Select a show (optional)</option>
             {events.map((ev) => (
@@ -160,7 +163,7 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
 
       {/* Message */}
       <div>
-        <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+        <label className={labelClass}>
           Message
         </label>
         <textarea
@@ -168,19 +171,19 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
           maxLength={1000}
           value={form.message}
           onChange={(e) => setForm({ ...form, message: e.target.value })}
-          className="w-full bg-club-bg border border-club-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-club-gold/50 transition-colors resize-none"
+          className={`${inputClass} resize-none`}
           placeholder="Any questions or special requests?"
         />
       </div>
 
       {errorMsg && (
-        <p className="text-club-red text-sm">{errorMsg}</p>
+        <p className="text-sm" style={{ color: "#9C4A38" }}>{errorMsg}</p>
       )}
 
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full py-4 bg-club-red text-white font-bold rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+        className="w-full py-4 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
       >
         {status === "loading" ? "Sending..." : "Request Tickets"}
       </button>
