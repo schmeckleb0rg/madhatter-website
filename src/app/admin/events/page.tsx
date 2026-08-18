@@ -54,6 +54,13 @@ export default async function AdminEventsPage() {
                 </div>
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
+                {event.ticket_capacity ? (
+                  <span className="text-xs px-2 py-0.5 bg-club-card border border-club-border text-gray-400 rounded">
+                    {event.tickets_sold ?? 0}/{event.ticket_capacity} sold
+                  </span>
+                ) : (
+                  <span className="text-xs px-2 py-0.5 text-gray-600 rounded">Inquiry only</span>
+                )}
                 {event.is_featured && (
                   <span className="text-xs px-2 py-0.5 bg-club-gold/10 text-club-gold rounded">Featured</span>
                 )}

@@ -63,7 +63,11 @@ export default function EventCard({ event }: { event: Event }) {
           )}
           <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
             {event.show_time && <span>Show: {event.show_time}</span>}
-            {event.ticket_price && <span>{event.ticket_price}</span>}
+            {event.ticket_price_cents ? (
+              <span>${(event.ticket_price_cents / 100).toFixed(2)}</span>
+            ) : (
+              event.ticket_price && <span>{event.ticket_price}</span>
+            )}
           </div>
         </div>
       </div>
@@ -71,12 +75,28 @@ export default function EventCard({ event }: { event: Event }) {
       {/* CTA */}
       {!event.is_sold_out && (
         <div className="px-5 pb-5">
-          <Link
-            href={`/tickets?event=${event.id}`}
-            className="block w-full text-center py-2 bg-club-red/10 border border-club-red/30 text-club-red text-sm font-semibold rounded hover:bg-club-red hover:text-white transition-all duration-200"
-          >
-            Request Tickets
-          </Link>
+          {event.ticket_price_cents && event.ticket_capacity ? (
+            <>
+              <Link
+                href={`/tickets/${event.id}`}
+                className="block w-full text-center py-2 bg-club-red text-white text-sm font-semibold rounded hover:bg-red-700 transition-all duration-200"
+              >
+                Buy Tickets — ${(event.ticket_price_cents / 100).toFixed(2)}
+              </Link>
+              {event.ticket_capacity - (event.tickets_sold ?? 0) <= Math.ceil(event.ticket_capacity * 0.2) && (
+                <p className="text-xs text-club-red text-center mt-2">
+                  Only {event.ticket_capacity - (event.tickets_sold ?? 0)} left!
+                </p>
+              )}
+            </>
+          ) : (
+            <Link
+              href={`/tickets?event=${event.id}`}
+              className="block w-full text-center py-2 bg-club-red/10 border border-club-red/30 text-club-red text-sm font-semibold rounded hover:bg-club-red hover:text-white transition-all duration-200"
+            >
+              Request Tickets
+            </Link>
+          )}
         </div>
       )}
     </div>

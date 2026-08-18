@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-club-card border-t border-club-border mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-3">
@@ -24,17 +24,43 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links */}
+          {/* Shows */}
           <div>
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">
-              Navigate
+              Shows
             </h3>
             <ul className="space-y-2">
               {[
                 { href: "/events", label: "Upcoming Events" },
+                { href: "/comedians", label: "Comedians" },
                 { href: "/past-events", label: "Past Shows" },
-                { href: "/tickets", label: "Ticket Inquiry" },
-                { href: "/about", label: "About Us" },
+                { href: "/open-mic", label: "Open Mic" },
+                { href: "/tickets", label: "Tickets" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* More */}
+          <div>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">
+              More
+            </h3>
+            <ul className="space-y-2">
+              {[
+                { href: "/classes", label: "Comedy Classes" },
+                { href: "/merch", label: "Merch" },
+                { href: "/press", label: "Media & Press" },
+                { href: "/visitor-info", label: "Visitor Info" },
+                { href: "/about", label: "About" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -63,6 +89,14 @@ export default function Footer() {
                 >
                   hello@madhattercomedy.com
                 </a>
+              </p>
+              <p className="mt-2">
+                <Link
+                  href="/contact"
+                  className="text-club-red hover:underline"
+                >
+                  Contact Us
+                </Link>
               </p>
             </address>
           </div>

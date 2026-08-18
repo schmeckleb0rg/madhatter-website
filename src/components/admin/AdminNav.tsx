@@ -7,8 +7,13 @@ import { signOut } from "next-auth/react";
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard" },
   { href: "/admin/events", label: "Events" },
+  { href: "/admin/comedians", label: "Comedians" },
   { href: "/admin/past-events", label: "Past Shows" },
+  { href: "/admin/merch", label: "Merch" },
+  { href: "/admin/gallery", label: "Gallery" },
+  { href: "/admin/orders", label: "Orders" },
   { href: "/admin/inquiries", label: "Inquiries" },
+  { href: "/admin/messages", label: "Messages" },
   { href: "/admin/about", label: "About" },
   { href: "/admin/site", label: "Site" },
 ];

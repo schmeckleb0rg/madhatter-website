@@ -12,7 +12,9 @@ const schema = z.object({
   doors_time: z.string().max(20).optional(),
   show_time: z.string().max(20).optional(),
   image_url: z.string().url().optional().or(z.literal("")),
-  ticket_price: z.string().max(50).optional(),
+  ticket_price: z.string().max(50).optional().nullable(),
+  ticket_price_cents: z.number().int().min(0).optional().nullable(),
+  ticket_capacity: z.number().int().min(0).optional().nullable(),
   is_sold_out: z.boolean().default(false),
   is_featured: z.boolean().default(false),
 });
@@ -43,6 +45,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       description: d.description ? sanitizeText(d.description) : null,
       performer: d.performer ? sanitizeText(d.performer) : null,
       image_url: d.image_url || null,
+      ticket_price: d.ticket_price ? sanitizeText(d.ticket_price) : null,
+      ticket_price_cents: d.ticket_price_cents ?? null,
+      ticket_capacity: d.ticket_capacity ?? null,
     })
     .eq("id", id)
     .select()

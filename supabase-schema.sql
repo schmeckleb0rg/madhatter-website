@@ -110,3 +110,110 @@ INSERT INTO about_content (section_key, title, content) VALUES
   ('venue', 'The Venue', 'Our intimate 200-seat theater creates an electric atmosphere where every seat is a great seat. With a full bar, premium sound, and sight lines designed for comedy, Mad Hatter delivers an unforgettable night out.'),
   ('address', 'Find Us', '123 W Madison St, Chicago, IL 60602')
 ON CONFLICT (section_key) DO NOTHING;
+
+-- ============================================
+-- COMEDIANS
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS comedians (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  bio TEXT,
+  headshot_url TEXT,
+  social_links JSONB,
+  featured BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE comedians ENABLE ROW LEVEL SECURITY;
+
+-- Public can read comedians
+CREATE POLICY "Public read comedians" ON comedians
+  FOR SELECT USING (true);
+
+-- ============================================
+-- TICKETING & ORDERS
+-- ============================================
+
+-- Migration to add ticketing columns to events:
+-- ALTER TABLE events ADD COLUMN IF NOT EXISTS ticket_price_cents INTEGER;
+-- ALTER TABLE events ADD COLUMN IF NOT EXISTS ticket_capacity INTEGER;
+-- ALTER TABLE events ADD COLUMN IF NOT EXISTS tickets_sold INTEGER DEFAULT 0;
+
+CREATE TABLE IF NOT EXISTS orders (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id UUID REFERENCES events(id) ON DELETE SET NULL,
+  email TEXT NOT NULL,
+  name TEXT,
+  quantity INTEGER NOT NULL DEFAULT 1,
+  amount_cents INTEGER NOT NULL,
+  currency TEXT NOT NULL DEFAULT 'usd',
+  stripe_checkout_session_id TEXT UNIQUE,
+  stripe_payment_intent_id TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+-- No public access — all operations via service role from API routes
+
+-- ============================================
+-- CONTACT MESSAGES
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  subject TEXT,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+
+-- Public can submit contact messages
+CREATE POLICY "Public insert contact_messages" ON contact_messages
+  FOR INSERT WITH CHECK (true);
+
+-- ============================================
+-- GALLERY
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS gallery_images (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  image_url TEXT NOT NULL,
+  caption TEXT,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE gallery_images ENABLE ROW LEVEL SECURITY;
+
+-- Public can view gallery
+CREATE POLICY "Public read gallery_images" ON gallery_images
+  FOR SELECT USING (true);
+
+-- ============================================
+-- MERCH
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS merch_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  description TEXT,
+  price_cents INTEGER NOT NULL DEFAULT 0,
+  image_url TEXT,
+  tag TEXT,
+  is_active BOOLEAN DEFAULT true,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE merch_items ENABLE ROW LEVEL SECURITY;
+
+-- Public can view active merch
+CREATE POLICY "Public read merch_items" ON merch_items
+  FOR SELECT USING (is_active = true);

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
 export const revalidate = 60;
@@ -32,6 +33,13 @@ export default async function HomePage() {
       <div
         className="hidden sm:block"
         style={{ ...bgStyle, backgroundImage: `url('${background}')` }}
+      />
+
+      {/* Hidden access link */}
+      <Link
+        href="/events"
+        aria-label="View site"
+        className="fixed bottom-4 left-4 z-50 block h-[18px] w-[18px] rounded opacity-0 transition-opacity duration-200 hover:opacity-15 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-[#B8934A]"
       />
     </>
   );

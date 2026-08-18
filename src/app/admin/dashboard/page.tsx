@@ -5,14 +5,20 @@ import Link from "next/link";
 
 async function getStats() {
   const db = getAdminClient();
-  const [{ count: eventCount }, { count: pastCount }, { count: inquiryCount }, { count: unreadCount }] =
+  const [{ count: eventCount }, { count: comedianCount }, { count: pastCount }, { count: orderCount }, { count: inquiryCount }, { count: unreadCount }, { count: messageCount }, { count: unreadMessages }, { count: merchCount }, { count: galleryCount }] =
     await Promise.all([
       db.from("events").select("*", { count: "exact", head: true }).gte("date", new Date().toISOString()),
+      db.from("comedians").select("*", { count: "exact", head: true }),
       db.from("past_events").select("*", { count: "exact", head: true }),
+      db.from("orders").select("*", { count: "exact", head: true }).eq("status", "completed"),
       db.from("ticket_inquiries").select("*", { count: "exact", head: true }),
       db.from("ticket_inquiries").select("*", { count: "exact", head: true }).eq("is_read", false),
+      db.from("contact_messages").select("*", { count: "exact", head: true }),
+      db.from("contact_messages").select("*", { count: "exact", head: true }).eq("is_read", false),
+      db.from("merch_items").select("*", { count: "exact", head: true }),
+      db.from("gallery_images").select("*", { count: "exact", head: true }),
     ]);
-  return { eventCount, pastCount, inquiryCount, unreadCount };
+  return { eventCount, comedianCount, pastCount, orderCount, inquiryCount, unreadCount, messageCount, unreadMessages, merchCount, galleryCount };
 }
 
 export default async function DashboardPage() {
@@ -20,15 +26,24 @@ export default async function DashboardPage() {
 
   const tiles = [
     { label: "Upcoming Shows", value: stats.eventCount ?? 0, href: "/admin/events", color: "text-club-red" },
+    { label: "Comedians", value: stats.comedianCount ?? 0, href: "/admin/comedians", color: "text-green-400" },
+    { label: "Ticket Orders", value: stats.orderCount ?? 0, href: "/admin/orders", color: "text-emerald-400" },
     { label: "Past Shows", value: stats.pastCount ?? 0, href: "/admin/past-events", color: "text-club-gold" },
-    { label: "Total Inquiries", value: stats.inquiryCount ?? 0, href: "/admin/inquiries", color: "text-blue-400" },
     { label: "Unread Inquiries", value: stats.unreadCount ?? 0, href: "/admin/inquiries", color: "text-yellow-400" },
+    { label: "Unread Messages", value: stats.unreadMessages ?? 0, href: "/admin/messages", color: "text-orange-400" },
+    { label: "Merch Items", value: stats.merchCount ?? 0, href: "/admin/merch", color: "text-purple-400" },
+    { label: "Gallery Photos", value: stats.galleryCount ?? 0, href: "/admin/gallery", color: "text-blue-400" },
   ];
 
   const quickLinks = [
     { href: "/admin/events/new", label: "Add New Event", icon: "+" },
+    { href: "/admin/comedians/new", label: "Add Comedian", icon: "+" },
     { href: "/admin/past-events/new", label: "Add Past Show", icon: "+" },
+    { href: "/admin/merch/new", label: "Add Merch Item", icon: "+" },
+    { href: "/admin/gallery", label: "Upload Photos", icon: "📷" },
+    { href: "/admin/orders", label: "View Orders", icon: "💳" },
     { href: "/admin/inquiries", label: "View Inquiries", icon: "✉" },
+    { href: "/admin/messages", label: "View Messages", icon: "📬" },
     { href: "/admin/about", label: "Edit About Page", icon: "✏" },
     { href: "/admin/site", label: "Site Settings", icon: "⚙" },
   ];
@@ -43,7 +58,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
         {tiles.map((tile) => (
           <Link
             key={tile.label}

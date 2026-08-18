@@ -25,9 +25,13 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
     doors_time: (initialData as Partial<Event>)?.doors_time ?? "",
     show_time: (initialData as Partial<Event>)?.show_time ?? "",
     ticket_price: (initialData as Partial<Event>)?.ticket_price ?? "",
+    ticket_price_cents: (initialData as Partial<Event>)?.ticket_price_cents ?? "",
+    ticket_capacity: (initialData as Partial<Event>)?.ticket_capacity ?? "",
     is_sold_out: (initialData as Partial<Event>)?.is_sold_out ?? false,
     is_featured: (initialData as Partial<Event>)?.is_featured ?? false,
   });
+
+  const ticketsSold = isEvent ? ((initialData as Partial<Event>)?.tickets_sold ?? 0) : 0;
 
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
@@ -37,8 +41,16 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
     setStatus("loading");
     setError("");
 
+    const eventPayload = {
+      ...form,
+      ticket_price_cents: form.ticket_price_cents ? Number(form.ticket_price_cents) : null,
+      ticket_capacity: form.ticket_capacity ? Number(form.ticket_capacity) : null,
+      // Auto-generate display price from cents
+      ticket_price: form.ticket_price_cents ? `$${(Number(form.ticket_price_cents) / 100).toFixed(2)}` : form.ticket_price || null,
+    };
+
     const payload = isEvent
-      ? form
+      ? eventPayload
       : { title: form.title, description: form.description, performer: form.performer, date: form.date, image_url: form.image_url };
 
     const res = await fetch(id ? `${apiBase}/${id}` : apiBase, {
@@ -139,6 +151,52 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
               placeholder="$20"
             />
           </div>
+        </div>
+      )}
+
+      {/* Ticketing (event-only) */}
+      {isEvent && (
+        <div className="border border-club-border rounded-lg p-5 space-y-5">
+          <div className="text-xs font-semibold text-club-gold uppercase tracking-wide">Online Ticketing</div>
+          <p className="text-xs text-gray-600 -mt-3">Set both price and capacity to enable online ticket sales via Stripe.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className={labelClass}>Ticket Price (cents)</label>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                value={form.ticket_price_cents}
+                onChange={(e) => setForm({ ...form, ticket_price_cents: e.target.value })}
+                className={inputClass}
+                placeholder="2000 = $20.00"
+              />
+              {form.ticket_price_cents && (
+                <p className="text-xs text-gray-500 mt-1">= ${(Number(form.ticket_price_cents) / 100).toFixed(2)}</p>
+              )}
+            </div>
+            <div>
+              <label className={labelClass}>Ticket Capacity</label>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                value={form.ticket_capacity}
+                onChange={(e) => setForm({ ...form, ticket_capacity: e.target.value })}
+                className={inputClass}
+                placeholder="Total tickets available"
+              />
+            </div>
+          </div>
+          {id && isEvent && (
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-gray-500">Tickets Sold:</span>
+              <span className="text-white font-semibold">{ticketsSold}</span>
+              {form.ticket_capacity && (
+                <span className="text-gray-600">/ {form.ticket_capacity}</span>
+              )}
+            </div>
+          )}
         </div>
       )}
 
