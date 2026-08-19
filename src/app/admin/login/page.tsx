@@ -21,16 +21,25 @@ function LoginForm() {
     setLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn("credentials", {
+        password,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      setError("Incorrect password. Try again.");
+      if (result?.error) {
+        setError("Incorrect password. Try again.");
+        setLoading(false);
+      } else if (result?.ok) {
+        router.push(callbackUrl);
+      } else {
+        setError("Login failed. Please try again.");
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Sign-in error:", err);
+      setError("Connection error. Please try again.");
       setLoading(false);
-    } else {
-      router.push(callbackUrl);
     }
   }
 

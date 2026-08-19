@@ -4,7 +4,6 @@ import "./globals.css";
 import { supabase } from "@/lib/supabase";
 import { LocalBusinessSchema } from "@/components/StructuredData";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-import SiteShell from "@/components/SiteShell";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -56,9 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-body">
         <GoogleAnalytics />
         <LocalBusinessSchema />
-        <SiteShell>
-          <main>{children}</main>
-        </SiteShell>
+        {children}
       </body>
     </html>
   );
