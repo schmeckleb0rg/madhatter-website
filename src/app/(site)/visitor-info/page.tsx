@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { getVenueInfo, fullAddress } from "@/lib/venue";
+
+export const revalidate = 300;
 
 export const metadata = {
   title: "Visitor Info & Policies | Mad Hatter Comedy Club",
@@ -70,12 +73,13 @@ const policies = [
     items: [
       "Groups of 10+ should contact us in advance for reserved seating",
       "Private event packages available for birthdays, corporate events, and celebrations",
-      "Email events@madhattercomedy.com for group and private bookings",
     ],
   },
 ];
 
-export default function VisitorInfoPage() {
+export default async function VisitorInfoPage() {
+  const venue = await getVenueInfo();
+
   return (
     <div className="pt-24 pb-20 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
@@ -96,7 +100,7 @@ export default function VisitorInfoPage() {
         <div className="bg-white border border-charcoal/10 p-6 sm:p-8 mb-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div>
             <div className="text-gold text-sm font-semibold mb-1">Address</div>
-            <p className="text-muted text-sm">123 W Madison St, Chicago, IL 60602</p>
+            <p className="text-muted text-sm">{fullAddress(venue)}</p>
           </div>
           <div>
             <div className="text-gold text-sm font-semibold mb-1">Box Office</div>

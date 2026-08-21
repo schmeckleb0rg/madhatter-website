@@ -38,8 +38,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt",
     maxAge: 8 * 60 * 60, // 8 hours
+    updateAge: 60 * 60,  // Re-issue token every hour
+  },
+  cookies: {
+    sessionToken: {
+      name: "__Secure-next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "strict",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Only allow redirects to same origin /admin paths
+      if (url.startsWith("/admin")) return url;
+      if (url.startsWith(baseUrl)) return url;
+      return `${baseUrl}/admin/dashboard`;
+    },
     async jwt({ token, user }) {
       if (user) token.isAdmin = true;
       return token;

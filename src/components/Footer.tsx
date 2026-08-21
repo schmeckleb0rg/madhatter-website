@@ -1,6 +1,7 @@
 import Link from "next/link";
+import type { VenueInfo } from "@/lib/venue";
 
-export default function Footer() {
+export default function Footer({ venue }: { venue: VenueInfo }) {
   return (
     <footer className="bg-charcoal mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
@@ -13,7 +14,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-muted-dark leading-relaxed">
-              Chicago&apos;s premier comedy club. Laugh like you mean it.
+              {venue.city}&apos;s premier comedy club. Laugh like you mean it.
             </p>
             {/* Social links */}
             <div className="mt-4 flex items-center gap-4">
@@ -112,14 +113,14 @@ export default function Footer() {
               Find Us
             </h3>
             <address className="not-italic text-sm text-muted-dark space-y-1">
-              <p>123 W Madison St</p>
-              <p>Chicago, IL 60602</p>
+              <p>{venue.street}</p>
+              <p>{venue.city}, {venue.state} {venue.zip}</p>
               <p className="mt-3">
                 <a
-                  href="mailto:hello@madhattercomedy.com"
+                  href={`mailto:${venue.email}`}
                   className="hover:text-off-white transition-colors"
                 >
-                  hello@madhattercomedy.com
+                  {venue.email}
                 </a>
               </p>
               <p className="mt-2">

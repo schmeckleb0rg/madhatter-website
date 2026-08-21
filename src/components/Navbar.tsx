@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
@@ -15,14 +15,32 @@ const navLinks = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
-    <nav className="fixed top-0 w-full z-50 bg-off-white/90 backdrop-blur border-b border-charcoal/10">
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-off-white/95 backdrop-blur-md border-b border-charcoal/10 shadow-sm"
+          : "bg-off-white/90 backdrop-blur border-b border-charcoal/10"
+      }`}
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <span className="font-display text-xl font-semibold text-charcoal tracking-wide">
+          <span className="font-display text-xl font-semibold text-charcoal tracking-wide group-hover:text-gold transition-colors duration-300">
             Mad Hatter
           </span>
         </Link>
@@ -33,10 +51,10 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors relative ${
+              className={`text-sm font-medium relative pb-0.5 after:absolute after:left-0 after:-bottom-0.5 after:h-px after:bg-gold after:transition-all after:duration-300 ${
                 pathname === link.href
-                  ? "text-charcoal after:absolute after:left-0 after:-bottom-1 after:w-full after:h-0.5 after:bg-gold"
-                  : "text-muted hover:text-charcoal"
+                  ? "text-charcoal after:w-full"
+                  : "text-muted hover:text-charcoal after:w-0 hover:after:w-full"
               }`}
             >
               {link.label}
@@ -44,7 +62,7 @@ export default function Navbar() {
           ))}
           <Link
             href="/tickets"
-            className="px-4 py-2 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 transition-colors"
+            className="px-4 py-2 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
             Book Now
           </Link>
@@ -52,7 +70,7 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden text-muted hover:text-charcoal"
+          className="md:hidden text-muted hover:text-charcoal transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -66,15 +84,19 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden bg-off-white border-t border-charcoal/10 px-4 py-4 flex flex-col gap-4">
+      {/* Mobile menu — animated slide */}
+      <div
+        className={`md:hidden bg-off-white border-t border-charcoal/10 px-4 overflow-hidden transition-all duration-300 ease-in-out ${
+          open ? "max-h-96 py-4 opacity-100" : "max-h-0 py-0 opacity-0"
+        }`}
+      >
+        <div className="flex flex-col gap-4">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium ${
-                pathname === link.href ? "text-charcoal" : "text-muted"
+              className={`text-sm font-medium transition-colors ${
+                pathname === link.href ? "text-charcoal" : "text-muted hover:text-charcoal"
               }`}
               onClick={() => setOpen(false)}
             >
@@ -89,7 +111,7 @@ export default function Navbar() {
             Book Now
           </Link>
         </div>
-      )}
+      </div>
     </nav>
   );
 }

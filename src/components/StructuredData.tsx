@@ -1,24 +1,26 @@
-export function LocalBusinessSchema() {
+import type { VenueInfo } from "@/lib/venue";
+
+export function LocalBusinessSchema({ venue }: { venue: VenueInfo }) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "ComedyClub",
     name: "Mad Hatter Comedy Club",
-    description: "Chicago's premier comedy club. Live stand-up, improv, and more.",
+    description: `${venue.city}'s premier comedy club. Live stand-up, improv, and more.`,
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://madhattercomedy.com",
-    telephone: "(312) 555-0100",
-    email: "hello@madhattercomedy.com",
+    telephone: venue.phone,
+    email: venue.email,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "123 W Madison St",
-      addressLocality: "Chicago",
-      addressRegion: "IL",
-      postalCode: "60602",
+      streetAddress: venue.street,
+      addressLocality: venue.city,
+      addressRegion: venue.state,
+      postalCode: venue.zip,
       addressCountry: "US",
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: 41.8819,
-      longitude: -87.6318,
+      latitude: parseFloat(venue.mapLat) || 41.8819,
+      longitude: parseFloat(venue.mapLng) || -87.6318,
     },
     openingHoursSpecification: [
       { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday"], opens: "18:00", closes: "23:00" },
@@ -27,7 +29,7 @@ export function LocalBusinessSchema() {
     ],
     priceRange: "$$",
     servesCuisine: "Bar",
-    hasMap: "https://maps.google.com/?q=123+W+Madison+St+Chicago+IL+60602",
+    hasMap: `https://maps.google.com/?q=${encodeURIComponent(`${venue.street} ${venue.city} ${venue.state} ${venue.zip}`)}`,
   };
 
   return (
@@ -58,13 +60,6 @@ export function EventSchema({ event }: {
     location: {
       "@type": "Place",
       name: "Mad Hatter Comedy Club",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "123 W Madison St",
-        addressLocality: "Chicago",
-        addressRegion: "IL",
-        postalCode: "60602",
-      },
     },
     ...(event.performer && {
       performer: {

@@ -2,16 +2,7 @@
 
 import { useState, useRef } from "react";
 
-type Settings = {
-  seo_title?: string;
-  seo_description?: string;
-  seo_keywords?: string;
-  og_title?: string;
-  og_description?: string;
-  og_image_url?: string;
-  favicon_url?: string;
-  background_url?: string;
-};
+type Settings = Record<string, string | undefined>;
 
 export default function SiteSettingsForm({ initial }: { initial: Settings }) {
   const [seo, setSeo] = useState({
@@ -22,6 +13,23 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
     og_description: initial.og_description ?? "",
   });
   const [seoStatus, setSeoStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  const [venue, setVenue] = useState({
+    venue_street: initial.venue_street ?? "",
+    venue_city: initial.venue_city ?? "",
+    venue_state: initial.venue_state ?? "",
+    venue_zip: initial.venue_zip ?? "",
+    venue_phone: initial.venue_phone ?? "",
+    venue_email: initial.venue_email ?? "",
+    venue_events_email: initial.venue_events_email ?? "",
+    venue_merch_email: initial.venue_merch_email ?? "",
+    venue_map_lat: initial.venue_map_lat ?? "",
+    venue_map_lng: initial.venue_map_lng ?? "",
+    hours_mon_thu: initial.hours_mon_thu ?? "",
+    hours_fri_sat: initial.hours_fri_sat ?? "",
+    hours_sun: initial.hours_sun ?? "",
+  });
+  const [venueStatus, setVenueStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   const [faviconUrl, setFaviconUrl] = useState(initial.favicon_url ?? "");
   const [faviconStatus, setFaviconStatus] = useState<"idle" | "uploading" | "done" | "error">("idle");
@@ -49,6 +57,17 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
     if (res.ok) setTimeout(() => setSeoStatus("idle"), 2000);
   }
 
+  async function saveVenue() {
+    setVenueStatus("saving");
+    const res = await fetch("/api/admin/site", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(venue),
+    });
+    setVenueStatus(res.ok ? "saved" : "error");
+    if (res.ok) setTimeout(() => setVenueStatus("idle"), 2000);
+  }
+
   async function uploadFile(file: File, type: "favicon" | "background" | "og_image") {
     const setStatus = type === "favicon" ? setFaviconStatus : type === "og_image" ? setOgImageStatus : setBgStatus;
     setStatus("uploading");
@@ -72,6 +91,128 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
 
   return (
     <div className="space-y-8">
+
+      {/* Venue Address & Contact */}
+      <div className="bg-white border border-charcoal/10 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-base font-bold text-charcoal">Venue Address & Contact</h2>
+            <p className="text-xs text-muted mt-0.5">Updates the address, phone, email, and hours shown across the site.</p>
+          </div>
+          <button
+            onClick={saveVenue}
+            disabled={venueStatus === "saving"}
+            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
+          >
+            {venueStatus === "saving" ? "Saving..." : venueStatus === "saved" ? "Saved" : "Save"}
+          </button>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Street Address</label>
+            <input type="text" maxLength={200} value={venue.venue_street}
+              onChange={(e) => setVenue({ ...venue, venue_street: e.target.value })} className={inputClass}
+              placeholder="123 W Madison St" />
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">City</label>
+              <input type="text" maxLength={100} value={venue.venue_city}
+                onChange={(e) => setVenue({ ...venue, venue_city: e.target.value })} className={inputClass}
+                placeholder="Chicago" />
+            </div>
+            <div>
+              <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">State</label>
+              <input type="text" maxLength={50} value={venue.venue_state}
+                onChange={(e) => setVenue({ ...venue, venue_state: e.target.value })} className={inputClass}
+                placeholder="IL" />
+            </div>
+            <div>
+              <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Zip</label>
+              <input type="text" maxLength={20} value={venue.venue_zip}
+                onChange={(e) => setVenue({ ...venue, venue_zip: e.target.value })} className={inputClass}
+                placeholder="60602" />
+            </div>
+          </div>
+
+          <div className="border-t border-charcoal/10 pt-4">
+            <p className="text-xs text-muted mb-3">Contact Information</p>
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Phone</label>
+                  <input type="text" maxLength={30} value={venue.venue_phone}
+                    onChange={(e) => setVenue({ ...venue, venue_phone: e.target.value })} className={inputClass}
+                    placeholder="(312) 555-0100" />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">General Email</label>
+                  <input type="text" maxLength={200} value={venue.venue_email}
+                    onChange={(e) => setVenue({ ...venue, venue_email: e.target.value })} className={inputClass}
+                    placeholder="hello@madhattercomedy.com" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Events Email</label>
+                  <input type="text" maxLength={200} value={venue.venue_events_email}
+                    onChange={(e) => setVenue({ ...venue, venue_events_email: e.target.value })} className={inputClass}
+                    placeholder="events@madhattercomedy.com" />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Merch Email</label>
+                  <input type="text" maxLength={200} value={venue.venue_merch_email}
+                    onChange={(e) => setVenue({ ...venue, venue_merch_email: e.target.value })} className={inputClass}
+                    placeholder="merch@madhattercomedy.com" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-charcoal/10 pt-4">
+            <p className="text-xs text-muted mb-3">Map Coordinates (for Google Maps embed & structured data)</p>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Latitude</label>
+                <input type="text" maxLength={20} value={venue.venue_map_lat}
+                  onChange={(e) => setVenue({ ...venue, venue_map_lat: e.target.value })} className={inputClass}
+                  placeholder="41.8819" />
+              </div>
+              <div>
+                <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Longitude</label>
+                <input type="text" maxLength={20} value={venue.venue_map_lng}
+                  onChange={(e) => setVenue({ ...venue, venue_map_lng: e.target.value })} className={inputClass}
+                  placeholder="-87.6318" />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-charcoal/10 pt-4">
+            <p className="text-xs text-muted mb-3">Business Hours</p>
+            <div className="space-y-3">
+              <div>
+                <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Mon - Thu</label>
+                <input type="text" maxLength={50} value={venue.hours_mon_thu}
+                  onChange={(e) => setVenue({ ...venue, hours_mon_thu: e.target.value })} className={inputClass}
+                  placeholder="6 PM – 11 PM" />
+              </div>
+              <div>
+                <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Fri - Sat</label>
+                <input type="text" maxLength={50} value={venue.hours_fri_sat}
+                  onChange={(e) => setVenue({ ...venue, hours_fri_sat: e.target.value })} className={inputClass}
+                  placeholder="6 PM – 1 AM" />
+              </div>
+              <div>
+                <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Sunday</label>
+                <input type="text" maxLength={50} value={venue.hours_sun}
+                  onChange={(e) => setVenue({ ...venue, hours_sun: e.target.value })} className={inputClass}
+                  placeholder="5 PM – 10 PM" />
+              </div>
+            </div>
+          </div>
+        </div>
+        {venueStatus === "error" && <p className="text-xs mt-3" style={{ color: "#9C4A38" }}>Failed to save.</p>}
+      </div>
 
       {/* SEO & OG Tags */}
       <div className="bg-white border border-charcoal/10 p-6">

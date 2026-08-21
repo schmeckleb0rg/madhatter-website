@@ -4,6 +4,7 @@ import "./globals.css";
 import { supabase } from "@/lib/supabase";
 import { LocalBusinessSchema } from "@/components/StructuredData";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { getVenueInfo } from "@/lib/venue";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -49,12 +50,14 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const venue = await getVenueInfo();
+
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable} ${plexMono.variable}`}>
       <body className="font-body">
         <GoogleAnalytics />
-        <LocalBusinessSchema />
+        <LocalBusinessSchema venue={venue} />
         {children}
       </body>
     </html>

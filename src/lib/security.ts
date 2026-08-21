@@ -33,9 +33,30 @@ setInterval(() => {
   }
 }, 5 * 60_000);
 
-// Sanitize text input — strip HTML tags
+// Sanitize text input — strip HTML tags, event handlers, and dangerous protocols
 export function sanitizeText(input: string): string {
-  return input.replace(/<[^>]*>/g, "").trim();
+  return input
+    .replace(/<[^>]*>/g, "")           // strip HTML tags
+    .replace(/javascript:/gi, "")       // strip javascript: protocol
+    .replace(/on\w+\s*=/gi, "")         // strip event handlers (onclick=, etc.)
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "") // strip control characters
+    .trim();
+}
+
+// Validate and sanitize URLs — only allow HTTPS from trusted hosts
+export function sanitizeUrl(input: string): string | null {
+  try {
+    const url = new URL(input);
+    if (url.protocol !== "https:") return null;
+    const allowedHosts = [
+      /^[a-z0-9-]+\.supabase\.co$/,
+      /^placehold\.co$/,
+    ];
+    if (!allowedHosts.some((pattern) => pattern.test(url.hostname))) return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
 }
 
 // Get client IP from request headers

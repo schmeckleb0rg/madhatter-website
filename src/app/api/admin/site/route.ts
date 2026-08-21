@@ -17,6 +17,21 @@ const schema = z.object({
   seo_keywords: z.string().max(500).optional(),
   og_title: z.string().max(200).optional(),
   og_description: z.string().max(500).optional(),
+  // Address & contact info
+  venue_street: z.string().max(200).optional(),
+  venue_city: z.string().max(100).optional(),
+  venue_state: z.string().max(50).optional(),
+  venue_zip: z.string().max(20).optional(),
+  venue_phone: z.string().max(30).optional(),
+  venue_email: z.string().max(200).optional(),
+  venue_events_email: z.string().max(200).optional(),
+  venue_merch_email: z.string().max(200).optional(),
+  venue_map_lat: z.string().max(20).optional(),
+  venue_map_lng: z.string().max(20).optional(),
+  // Hours
+  hours_mon_thu: z.string().max(50).optional(),
+  hours_fri_sat: z.string().max(50).optional(),
+  hours_sun: z.string().max(50).optional(),
 });
 
 export async function GET() {
@@ -52,6 +67,9 @@ export async function PUT(request: Request) {
   if (error) return NextResponse.json({ error: "Save failed" }, { status: 500 });
 
   revalidatePath("/");
+  revalidatePath("/contact");
+  revalidatePath("/visitor-info");
+  revalidatePath("/about");
   revalidatePath("/admin/site");
 
   return NextResponse.json({ success: true });

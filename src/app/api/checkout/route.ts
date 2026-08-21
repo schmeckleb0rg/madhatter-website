@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAdminClient } from "@/lib/supabase";
 import { getStripe } from "@/lib/stripe";
-import { sanitizeText } from "@/lib/security";
+import { sanitizeText, rateLimit, getClientIp } from "@/lib/security";
 
 const schema = z.object({
   event_id: z.string().uuid(),
@@ -12,6 +12,16 @@ const schema = z.object({
 });
 
 export async function POST(request: Request) {
+  // Rate limit checkout attempts
+  const ip = getClientIp(request);
+  const { allowed } = rateLimit(ip, 3, 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait before trying again." },
+      { status: 429 }
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();

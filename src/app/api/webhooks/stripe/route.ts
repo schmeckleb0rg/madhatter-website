@@ -30,6 +30,17 @@ export async function POST(request: Request) {
     const session = event.data.object;
     const db = getAdminClient();
 
+    // Idempotency: check if already processed
+    const { data: existingOrder } = await db
+      .from("orders")
+      .select("status")
+      .eq("stripe_checkout_session_id", session.id)
+      .single();
+
+    if (existingOrder?.status === "completed") {
+      return NextResponse.json({ received: true, skipped: "already_processed" });
+    }
+
     // Update order status
     const { data: order } = await db
       .from("orders")

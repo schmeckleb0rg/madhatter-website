@@ -6,8 +6,14 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
       },
     ],
+    minimumCacheTTL: 60,
   },
   async headers() {
     return [
@@ -18,18 +24,22 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-DNS-Prefetch-Control", value: "off" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(self)" },
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com",
-              "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://analytics.google.com",
+              "font-src 'self' https://fonts.gstatic.com data:",
+              "img-src 'self' data: blob: https://*.supabase.co https://placehold.co https://www.google-analytics.com https://www.googletagmanager.com",
+              "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com",
               "frame-src https://www.google.com",
               "frame-ancestors 'none'",
+              "base-uri 'self'",
+              "form-action 'self' https://checkout.stripe.com",
+              "object-src 'none'",
+              "upgrade-insecure-requests",
             ].join("; "),
           },
           {

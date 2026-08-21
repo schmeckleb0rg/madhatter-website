@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { getAdminClient } from "@/lib/supabase";
 
 export async function POST(req: Request) {
+  // SECURITY: Block in production — this route deletes all data
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Not available" }, { status: 404 });
+  }
+
   const { searchParams } = new URL(req.url);
   const key = searchParams.get("key");
 
