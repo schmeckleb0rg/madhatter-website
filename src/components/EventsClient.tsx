@@ -49,7 +49,7 @@ export default function EventsClient({
         ];
 
   return (
-    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white dark:bg-[#0D0C0A]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <Reveal>
@@ -58,13 +58,13 @@ export default function EventsClient({
               {subtitle}
             </p>
             <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-light leading-none tracking-tight">
-              <span className="font-display italic text-muted block">{titleLine1}</span>
-              <span className="font-display font-semibold text-charcoal block">{titleLine2}</span>
+              <span className="font-display italic text-muted block dark:text-[#7A7264]">{titleLine1}</span>
+              <span className="font-display font-semibold text-charcoal block dark:text-[#F0ECE3]">{titleLine2}</span>
             </h1>
             <div className="flex items-center gap-4 mt-6 justify-center">
-              <div className="w-12 h-px bg-charcoal/10" />
+              <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
               <span className="font-mono text-xs tracking-widest uppercase text-gold">{badge}</span>
-              <div className="w-12 h-px bg-charcoal/10" />
+              <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
             </div>
           </div>
         </Reveal>
@@ -76,8 +76,8 @@ export default function EventsClient({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 1.5a3 3 0 013 3v6a3 3 0 01-6 0v-6a3 3 0 013-3z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5A7.5 7.5 0 0112 18m0 0v3m0 0H9m3 0h3" />
               </svg>
-              <p className="text-muted text-lg">No shows on the calendar right now.</p>
-              <p className="text-muted text-sm mt-2">Check back soon — new dates go up regularly.</p>
+              <p className="text-muted text-lg dark:text-[#7A7264]">No shows on the calendar right now.</p>
+              <p className="text-muted text-sm mt-2 dark:text-[#7A7264]">Check back soon — new dates go up regularly.</p>
             </div>
           </Reveal>
         ) : (
@@ -111,8 +111,8 @@ export default function EventsClient({
                   onClick={() => setViewMode("list")}
                   className={`font-mono text-xs tracking-wide px-3 py-2 sm:py-1.5 transition-colors ${
                     viewMode === "list"
-                      ? "bg-charcoal text-off-white"
-                      : "border border-charcoal/20 text-muted hover:text-charcoal"
+                      ? "bg-charcoal text-off-white dark:bg-gold dark:text-[#0D0C0A]"
+                      : "border border-charcoal/20 text-muted hover:text-charcoal dark:border-gold/20 dark:text-[#7A7264] dark:hover:text-[#F0ECE3]"
                   }`}
                 >
                   List View
@@ -121,8 +121,8 @@ export default function EventsClient({
                   onClick={() => setViewMode("calendar")}
                   className={`font-mono text-xs tracking-wide px-3 py-2 sm:py-1.5 transition-colors ${
                     viewMode === "calendar"
-                      ? "bg-charcoal text-off-white"
-                      : "border border-charcoal/20 text-muted hover:text-charcoal"
+                      ? "bg-charcoal text-off-white dark:bg-gold dark:text-[#0D0C0A]"
+                      : "border border-charcoal/20 text-muted hover:text-charcoal dark:border-gold/20 dark:text-[#7A7264] dark:hover:text-[#F0ECE3]"
                   }`}
                 >
                   Calendar View

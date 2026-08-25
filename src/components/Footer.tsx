@@ -16,7 +16,7 @@ export default function Footer({
   socialLinks?: SocialLinks;
 }) {
   return (
-    <footer className="bg-charcoal mt-16 sm:mt-24">
+    <footer className="bg-charcoal dark:bg-[#080706] mt-16 sm:mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10">
           {/* Brand — full width on mobile */}
@@ -157,7 +157,7 @@ export default function Footer({
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-off-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-10 pt-6 border-t border-off-white/10 dark:border-gold/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-dark">
             &copy; {new Date().getFullYear()} Mad Hatter Comedy Club. All rights reserved.
           </p>

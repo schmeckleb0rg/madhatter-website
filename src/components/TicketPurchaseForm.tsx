@@ -41,8 +41,8 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining }: T
   }
 
   const inputClass =
-    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
-  const labelClass = "block text-xs font-semibold text-muted uppercase tracking-wide mb-2";
+    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors dark:bg-[#161412] dark:border-gold/10 dark:text-[#F0ECE3] dark:placeholder:text-[#7A7264]/50";
+  const labelClass = "block text-xs font-semibold text-muted uppercase tracking-wide mb-2 dark:text-[#7A7264]";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -88,9 +88,9 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining }: T
       </div>
 
       {/* Subtotal */}
-      <div className="flex items-center justify-between py-3 border-t border-charcoal/10">
-        <span className="text-sm text-muted">Subtotal</span>
-        <span className="text-lg font-bold text-charcoal">${subtotal.toFixed(2)}</span>
+      <div className="flex items-center justify-between py-3 border-t border-charcoal/10 dark:border-gold/10">
+        <span className="text-sm text-muted dark:text-[#7A7264]">Subtotal</span>
+        <span className="text-lg font-bold text-charcoal dark:text-[#F0ECE3]">${subtotal.toFixed(2)}</span>
       </div>
 
       {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
@@ -98,12 +98,12 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining }: T
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
+        className="w-full py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 disabled:opacity-50 transition-colors dark:bg-gold dark:text-[#0D0C0A] dark:hover:bg-[#D4A84B] btn-shimmer"
       >
         {status === "loading" ? "Redirecting to checkout..." : `Checkout — $${subtotal.toFixed(2)}`}
       </button>
 
-      <p className="text-xs text-muted text-center">
+      <p className="text-xs text-muted text-center dark:text-[#7A7264]">
         You&apos;ll be redirected to Stripe&apos;s secure checkout to complete your purchase.
       </p>
     </form>

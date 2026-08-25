@@ -30,7 +30,7 @@ export default function MediaSlideshow({ slides, speed = 5 }: MediaSlideshowProp
   if (slides.length === 0) return null;
 
   return (
-    <div className="relative overflow-hidden bg-off-white-2 border border-charcoal/10">
+    <div className="relative overflow-hidden bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10">
       {/* Slides — taller ratio on mobile for better viewing */}
       <div className="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-[16/7]">
         {slides.map((slide, i) => (
@@ -65,7 +65,7 @@ export default function MediaSlideshow({ slides, speed = 5 }: MediaSlideshowProp
               key={i}
               onClick={() => setCurrent(i)}
               className={`h-2 rounded-full transition-all duration-300 ${
-                i === current ? "bg-gold w-6 sm:w-6" : "w-2 bg-off-white/50 hover:bg-off-white/80"
+                i === current ? "bg-gold w-6 sm:w-6" : "w-2 bg-off-white/50 dark:bg-[#7A7264]/50 hover:bg-off-white/80"
               }`}
               aria-label={`Go to slide ${i + 1}`}
             />

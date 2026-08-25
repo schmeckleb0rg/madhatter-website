@@ -22,7 +22,7 @@ export default async function RoomsPage() {
   const rooms = await getRooms();
 
   return (
-    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white dark:bg-[#0D0C0A]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <Reveal>
@@ -31,13 +31,13 @@ export default async function RoomsPage() {
               Our Spaces
             </p>
             <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-light leading-none tracking-tight">
-              <span className="font-display italic text-muted block">The</span>
-              <span className="font-display font-semibold text-charcoal block">Rooms</span>
+              <span className="font-display italic text-muted dark:text-[#7A7264] block">The</span>
+              <span className="font-display font-semibold text-charcoal dark:text-[#F0ECE3] block">Rooms</span>
             </h1>
             <div className="flex items-center gap-4 mt-6 justify-center">
-              <div className="w-12 h-px bg-charcoal/10" />
+              <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
               <span className="font-mono text-xs tracking-widest uppercase text-gold">Explore</span>
-              <div className="w-12 h-px bg-charcoal/10" />
+              <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
             </div>
           </div>
         </Reveal>
@@ -48,18 +48,18 @@ export default async function RoomsPage() {
               <svg className="w-12 h-12 text-gold/30 mx-auto mb-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21" />
               </svg>
-              <p className="text-muted text-lg">Room details coming soon.</p>
-              <p className="text-muted text-sm mt-2">We&apos;re preparing our spaces for you.</p>
+              <p className="text-muted dark:text-[#7A7264] text-lg">Room details coming soon.</p>
+              <p className="text-muted dark:text-[#7A7264] text-sm mt-2">We&apos;re preparing our spaces for you.</p>
             </div>
           </Reveal>
         ) : (
           <div className="space-y-6 sm:space-y-10">
             {rooms.map((room, i) => (
               <Reveal key={room.id} delay={i * 100}>
-                <div className="bg-white border border-charcoal/10 overflow-hidden">
+                <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 overflow-hidden">
                   <div className="grid grid-cols-1 md:grid-cols-2">
                     {/* Image */}
-                    <div className="relative aspect-[4/3] md:aspect-auto bg-off-white-2 overflow-hidden">
+                    <div className="relative aspect-[4/3] md:aspect-auto bg-off-white-2 dark:bg-[#161412] overflow-hidden">
                       {room.image_url ? (
                         <Image
                           src={room.image_url}
@@ -81,7 +81,7 @@ export default async function RoomsPage() {
                     {/* Details */}
                     <div className="p-6 sm:p-8 flex flex-col justify-center">
                       <div className="flex items-center gap-3 mb-3">
-                        <h2 className="font-display text-2xl font-semibold text-charcoal tracking-tight">
+                        <h2 className="font-display text-2xl font-semibold text-charcoal dark:text-[#F0ECE3] tracking-tight">
                           {room.name}
                         </h2>
                         {room.capacity && (
@@ -92,7 +92,7 @@ export default async function RoomsPage() {
                       </div>
 
                       {room.description && (
-                        <p className="text-muted leading-relaxed mb-5">{room.description}</p>
+                        <p className="text-muted dark:text-[#C4BDA8] leading-relaxed mb-5">{room.description}</p>
                       )}
 
                       {room.features && room.features.length > 0 && (
@@ -100,7 +100,7 @@ export default async function RoomsPage() {
                           <h3 className="font-mono text-xs tracking-widest uppercase text-gold mb-3">Features</h3>
                           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             {room.features.map((feature, fi) => (
-                              <li key={fi} className="flex items-center gap-2 text-sm text-muted">
+                              <li key={fi} className="flex items-center gap-2 text-sm text-muted dark:text-[#C4BDA8]">
                                 <svg className="w-4 h-4 text-gold flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                 </svg>

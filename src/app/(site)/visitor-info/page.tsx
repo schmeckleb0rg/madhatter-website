@@ -81,34 +81,34 @@ export default async function VisitorInfoPage() {
   const venue = await getVenueInfo();
 
   return (
-    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen dark:bg-[#0D0C0A]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
           <p className="text-gold text-xs font-bold tracking-widest uppercase mb-3">
             Before You Visit
           </p>
-          <h1 className="text-3xl sm:text-5xl font-black text-charcoal font-display">
+          <h1 className="text-3xl sm:text-5xl font-black text-charcoal dark:text-[#F0ECE3] font-display">
             Visitor Info & Policies
           </h1>
-          <p className="mt-4 text-muted max-w-xl mx-auto">
+          <p className="mt-4 text-muted dark:text-[#7A7264] max-w-xl mx-auto">
             Everything you need to know for a great night at Mad Hatter.
           </p>
         </div>
 
         {/* Location card */}
-        <div className="bg-white border border-charcoal/10 p-6 sm:p-8 mb-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+        <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6 sm:p-8 mb-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div>
             <div className="text-gold text-sm font-semibold mb-1">Address</div>
-            <p className="text-muted text-sm">{fullAddress(venue)}</p>
+            <p className="text-muted dark:text-[#7A7264] text-sm">{fullAddress(venue)}</p>
           </div>
           <div>
             <div className="text-gold text-sm font-semibold mb-1">Box Office</div>
-            <p className="text-muted text-sm">Opens 1 hour before showtime</p>
+            <p className="text-muted dark:text-[#7A7264] text-sm">Opens 1 hour before showtime</p>
           </div>
           <div>
             <div className="text-gold text-sm font-semibold mb-1">Doors</div>
-            <p className="text-muted text-sm">Open 30 min before showtime</p>
+            <p className="text-muted dark:text-[#7A7264] text-sm">Open 30 min before showtime</p>
           </div>
         </div>
 
@@ -117,16 +117,16 @@ export default async function VisitorInfoPage() {
           {policies.map((section) => (
             <div
               key={section.title}
-              className="bg-white border border-charcoal/10 p-6"
+              className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6"
             >
               <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-lg font-bold text-charcoal font-display">
+                <h2 className="text-lg font-bold text-charcoal dark:text-[#F0ECE3] font-display">
                   {section.title}
                 </h2>
               </div>
               <ul className="space-y-2">
                 {section.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-muted">
+                  <li key={item} className="flex items-start gap-2 text-sm text-muted dark:text-[#7A7264]">
                     <span className="text-gold mt-0.5 flex-shrink-0">&#8226;</span>
                     {item}
                   </li>
@@ -138,10 +138,10 @@ export default async function VisitorInfoPage() {
 
         {/* CTA */}
         <div className="mt-12 text-center">
-          <p className="text-muted text-sm mb-4">Still have questions?</p>
+          <p className="text-muted dark:text-[#7A7264] text-sm mb-4">Still have questions?</p>
           <Link
             href="/contact"
-            className="inline-block px-8 py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 transition-colors"
+            className="inline-block px-8 py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 transition-colors dark:bg-gold dark:text-[#0D0C0A] btn-shimmer"
           >
             Contact Us
           </Link>

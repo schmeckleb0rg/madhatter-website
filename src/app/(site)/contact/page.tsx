@@ -51,17 +51,17 @@ export default async function ContactPage() {
     "Questions about shows, private events, or just want to say hello? We'd love to hear from you.";
 
   return (
-    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen dark:bg-[#0D0C0A]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
           <p className="text-gold text-xs font-bold tracking-widest uppercase mb-3 font-mono">
             {headerSubtitle}
           </p>
-          <h1 className="text-3xl sm:text-5xl font-black text-charcoal font-display">
+          <h1 className="text-3xl sm:text-5xl font-black text-charcoal dark:text-[#F0ECE3] font-display">
             {headerTitle}
           </h1>
-          <p className="mt-4 text-muted max-w-xl mx-auto">
+          <p className="mt-4 text-muted dark:text-[#7A7264] max-w-xl mx-auto">
             {headerDescription}
           </p>
         </div>
@@ -70,28 +70,28 @@ export default async function ContactPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
           <Link
             href="/private-events"
-            className="bg-white border border-charcoal/10 p-5 text-center group hover:border-gold/30 transition-colors"
+            className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-5 text-center group hover:border-gold/30 transition-colors"
           >
             <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Hosting?</div>
-            <p className="text-sm font-semibold text-charcoal group-hover:text-gold transition-colors">
+            <p className="text-sm font-semibold text-charcoal dark:text-[#F0ECE3] group-hover:text-gold transition-colors">
               Private Events
             </p>
           </Link>
           <Link
             href="/tickets"
-            className="bg-white border border-charcoal/10 p-5 text-center group hover:border-gold/30 transition-colors"
+            className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-5 text-center group hover:border-gold/30 transition-colors"
           >
             <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Need Help?</div>
-            <p className="text-sm font-semibold text-charcoal group-hover:text-gold transition-colors">
+            <p className="text-sm font-semibold text-charcoal dark:text-[#F0ECE3] group-hover:text-gold transition-colors">
               Ticket Questions
             </p>
           </Link>
           <a
             href={`mailto:${venue.merchEmail}`}
-            className="bg-white border border-charcoal/10 p-5 text-center group hover:border-gold/30 transition-colors"
+            className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-5 text-center group hover:border-gold/30 transition-colors"
           >
             <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Merch?</div>
-            <p className="text-sm font-semibold text-charcoal group-hover:text-gold transition-colors">
+            <p className="text-sm font-semibold text-charcoal dark:text-[#F0ECE3] group-hover:text-gold transition-colors">
               Merch Inquiries
             </p>
           </a>
@@ -100,60 +100,60 @@ export default async function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10">
           {/* Form */}
           <div className="lg:col-span-3">
-            <div className="bg-white border border-charcoal/10 p-6 sm:p-8">
+            <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6 sm:p-8">
               <ContactForm />
             </div>
           </div>
 
           {/* Info sidebar */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-white border border-charcoal/10 p-6">
+            <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6">
               <div className="text-gold text-sm font-semibold mb-3">Location</div>
-              <p className="text-muted text-sm">{venue.street}</p>
-              <p className="text-muted text-sm">{venue.city}, {venue.state} {venue.zip}</p>
+              <p className="text-muted dark:text-[#7A7264] text-sm">{venue.street}</p>
+              <p className="text-muted dark:text-[#7A7264] text-sm">{venue.city}, {venue.state} {venue.zip}</p>
             </div>
 
-            <div className="bg-white border border-charcoal/10 p-6">
+            <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6">
               <div className="text-gold text-sm font-semibold mb-3">Email</div>
               <a
                 href={`mailto:${venue.email}`}
-                className="text-muted text-sm hover:text-charcoal transition-colors"
+                className="text-muted dark:text-[#7A7264] text-sm hover:text-charcoal dark:hover:text-[#F0ECE3] transition-colors"
               >
                 {venue.email}
               </a>
             </div>
 
-            <div className="bg-white border border-charcoal/10 p-6">
+            <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6">
               <div className="text-gold text-sm font-semibold mb-3">Phone</div>
               <a
                 href={phoneHref(venue)}
-                className="text-muted text-sm hover:text-charcoal transition-colors"
+                className="text-muted dark:text-[#7A7264] text-sm hover:text-charcoal dark:hover:text-[#F0ECE3] transition-colors"
               >
                 {venue.phone}
               </a>
             </div>
 
-            <div className="bg-white border border-charcoal/10 p-6">
+            <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6">
               <div className="text-gold text-sm font-semibold mb-3">Hours</div>
-              <div className="text-sm text-muted space-y-1">
+              <div className="text-sm text-muted dark:text-[#7A7264] space-y-1">
                 <div className="flex justify-between">
                   <span>Mon &ndash; Thu</span>
-                  <span className="text-muted">{venue.hoursMon}</span>
+                  <span className="text-muted dark:text-[#7A7264]">{venue.hoursMon}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Fri &ndash; Sat</span>
-                  <span className="text-muted">{venue.hoursFri}</span>
+                  <span className="text-muted dark:text-[#7A7264]">{venue.hoursFri}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Sunday</span>
-                  <span className="text-muted">{venue.hoursSun}</span>
+                  <span className="text-muted dark:text-[#7A7264]">{venue.hoursSun}</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white border border-charcoal/10 p-6">
+            <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6">
               <div className="text-gold text-sm font-semibold mb-3">Private Events</div>
-              <p className="text-muted text-sm">
+              <p className="text-muted dark:text-[#7A7264] text-sm">
                 Hosting a birthday, corporate event, or party? We offer private show packages.
               </p>
               <Link
@@ -166,7 +166,7 @@ export default async function ContactPage() {
 
             {/* Social links */}
             {Object.values(socialLinks).some(Boolean) && (
-              <div className="bg-white border border-charcoal/10 p-6">
+              <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6">
                 <div className="text-gold text-sm font-semibold mb-3">Follow Us</div>
                 <div className="flex items-center gap-4">
                   {socialLinks.social_instagram && (
@@ -197,7 +197,7 @@ export default async function ContactPage() {
 
         {/* Map */}
         <div className="mt-10">
-          <div className="bg-white border border-charcoal/10 overflow-hidden">
+          <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 overflow-hidden">
             <iframe
               title="Mad Hatter Comedy Club Location"
               src={mapEmbedUrl(venue)}
@@ -207,7 +207,7 @@ export default async function ContactPage() {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              className="grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+              className="grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-500 dark:brightness-75 dark:invert dark:hue-rotate-180"
             />
           </div>
         </div>

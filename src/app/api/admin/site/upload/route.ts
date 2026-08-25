@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   const type = formData.get("type") as string | null;
 
   if (!file || !type) return NextResponse.json({ error: "Missing file or type" }, { status: 400 });
-  if (!["favicon", "background", "og_image", "app_icon"].includes(type)) return NextResponse.json({ error: "Invalid type" }, { status: 400 });
+  if (!["favicon", "background", "mobile_background", "og_image", "app_icon"].includes(type)) return NextResponse.json({ error: "Invalid type" }, { status: 400 });
   if (file.size > MAX_SIZE) return NextResponse.json({ error: "File too large (max 10MB)" }, { status: 400 });
   if (!ALLOWED_TYPES.includes(file.type)) return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
 
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 
   const { data: { publicUrl } } = db.storage.from("site-assets").getPublicUrl(filename);
 
-  const settingKey = type === "favicon" ? "favicon_url" : type === "og_image" ? "og_image_url" : type === "app_icon" ? "app_icon_url" : "background_url";
+  const settingKey = type === "favicon" ? "favicon_url" : type === "og_image" ? "og_image_url" : type === "app_icon" ? "app_icon_url" : type === "mobile_background" ? "mobile_background_url" : "background_url";
   await db.from("site_settings").upsert({
     key: settingKey,
     value: publicUrl,

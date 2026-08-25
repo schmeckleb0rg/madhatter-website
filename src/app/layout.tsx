@@ -64,6 +64,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable} ${plexMono.variable}`}>
       <body className="font-body">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(localStorage.getItem('mh-theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}})();`,
+          }}
+        />
         <GoogleAnalytics />
         <LocalBusinessSchema venue={venue} />
         {children}

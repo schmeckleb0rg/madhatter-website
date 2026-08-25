@@ -7,9 +7,9 @@ export default function FeaturedEventHero({ event }: { event: Event }) {
   const date = formatDate(event.date);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 border border-charcoal/10 overflow-hidden group">
+    <div className="grid grid-cols-1 lg:grid-cols-2 border-2 border-charcoal/15 dark:border-gold/10 overflow-hidden group">
       {/* Image */}
-      <div className="relative h-48 sm:h-64 lg:h-96 bg-off-white-2 overflow-hidden">
+      <div className="relative h-48 sm:h-64 lg:h-96 bg-off-white-2 overflow-hidden spotlight-sweep">
         {event.image_url ? (
           <Image
             src={event.image_url}
@@ -39,7 +39,7 @@ export default function FeaturedEventHero({ event }: { event: Event }) {
       </div>
 
       {/* Content */}
-      <div className="bg-charcoal grain p-5 sm:p-8 lg:p-12 flex flex-col justify-between">
+      <div className="bg-charcoal grain dark:bg-[#080706] p-5 sm:p-8 lg:p-12 flex flex-col justify-between">
         <div className="relative z-[2]">
           <p className="font-mono text-[10px] sm:text-xs tracking-widest uppercase text-gold mb-3 sm:mb-4">
             {date.full}
@@ -60,14 +60,14 @@ export default function FeaturedEventHero({ event }: { event: Event }) {
               {event.ticket_price_cents && event.ticket_capacity ? (
                 <Link
                   href={`/tickets/${event.id}`}
-                  className="px-6 py-3 bg-gold text-white font-semibold text-sm text-center hover:bg-gold-soft hover:text-charcoal transition-colors active:scale-[0.98]"
+                  className="btn-shimmer px-6 py-3 bg-gold text-white font-semibold text-sm text-center hover:bg-gold-soft hover:text-charcoal transition-colors active:scale-[0.98]"
                 >
                   Get Tickets — ${(event.ticket_price_cents / 100).toFixed(2)}
                 </Link>
               ) : (
                 <Link
                   href={`/tickets?event=${event.id}`}
-                  className="px-6 py-3 border border-off-white/30 text-off-white font-semibold text-sm text-center hover:bg-off-white hover:text-charcoal transition-colors active:scale-[0.98]"
+                  className="btn-shimmer px-6 py-3 border border-off-white/30 text-off-white font-semibold text-sm text-center hover:bg-off-white hover:text-charcoal transition-colors active:scale-[0.98]"
                 >
                   Request Tickets
                 </Link>

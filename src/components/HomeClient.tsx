@@ -1,19 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import EmailPopup from "@/components/EmailPopup";
 
-export default function HomeClient({ background }: { background: string }) {
+export default function HomeClient({ background, mobileBackground }: { background: string; mobileBackground: string | null }) {
   const [popupOpen, setPopupOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const bgImage = isMobile && mobileBackground ? mobileBackground : background;
 
   return (
     <>
-      {/* Full-screen background — uses admin-uploaded image for both mobile and desktop */}
+      {/* Full-screen background — uses mobile image on portrait/small screens if uploaded */}
       <div
         className="fixed inset-0 cursor-pointer"
         style={{
-          backgroundImage: `url('${background}')`,
+          backgroundImage: `url('${bgImage}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

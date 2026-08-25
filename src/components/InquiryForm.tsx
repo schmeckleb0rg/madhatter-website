@@ -55,11 +55,11 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
 
   if (status === "success") {
     return (
-      <div className="bg-off-white-2 border border-gold/30 p-10 text-center">
-        <h3 className="font-display text-xl font-semibold text-charcoal mb-2">
+      <div className="bg-off-white-2 border border-gold/30 p-10 text-center dark:bg-[#1C1A16] dark:border-gold/10">
+        <h3 className="font-display text-xl font-semibold text-charcoal mb-2 dark:text-[#F0ECE3]">
           Request Received!
         </h3>
-        <p className="text-muted text-sm">
+        <p className="text-muted text-sm dark:text-[#7A7264]">
           We&apos;ll be in touch soon to confirm your tickets.
         </p>
         <button
@@ -73,8 +73,8 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
   }
 
   const inputClass =
-    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
-  const labelClass = "block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2";
+    "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors dark:bg-[#161412] dark:border-gold/10 dark:text-[#F0ECE3] dark:placeholder:text-[#7A7264]/50";
+  const labelClass = "block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2 dark:text-[#7A7264]";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -183,7 +183,7 @@ export default function InquiryForm({ events }: { events: EventOption[] }) {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full py-4 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
+        className="w-full py-4 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors dark:bg-gold dark:text-[#0D0C0A] dark:hover:bg-[#D4A84B] btn-shimmer"
       >
         {status === "loading" ? "Sending..." : "Request Tickets"}
       </button>

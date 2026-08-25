@@ -63,9 +63,9 @@ export default function EventCard({ event }: { event: Event }) {
   const timing = getTimingBadge(event.date);
 
   return (
-    <div className="group bg-white border border-charcoal/10 overflow-hidden hover:border-charcoal/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-charcoal/5">
+    <div className="group bg-white grain border-2 border-charcoal/15 dark:bg-[#1C1A16] dark:border-gold/10 shadow-[2px_3px_0_rgba(27,26,23,0.06),0_1px_3px_rgba(27,26,23,0.04)] dark:shadow-[2px_3px_0_rgba(184,147,74,0.04),0_1px_3px_rgba(0,0,0,0.3)] overflow-hidden hover:border-gold/40 hover:-translate-y-1 hover:shadow-[4px_6px_0_rgba(27,26,23,0.08),0_4px_12px_rgba(27,26,23,0.06)] dark:hover:border-gold/30 dark:hover:shadow-[0_0_15px_rgba(184,147,74,0.08)] transition-all duration-300">
       {/* Image */}
-      <div className="relative h-40 sm:h-48 bg-off-white-2 overflow-hidden">
+      <div className="relative h-40 sm:h-48 bg-off-white-2 dark:bg-[#161412] overflow-hidden">
         {event.image_url ? (
           <Image
             src={event.image_url}
@@ -75,7 +75,7 @@ export default function EventCard({ event }: { event: Event }) {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="h-full flex flex-col items-center justify-center bg-off-white-2 gap-2">
+          <div className="h-full flex flex-col items-center justify-center bg-off-white-2 dark:bg-[#161412] gap-2">
             <svg className="w-10 h-10 text-gold/40" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 1.5a3 3 0 013 3v6a3 3 0 01-6 0v-6a3 3 0 013-3z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5A7.5 7.5 0 0112 18m0 0v3m0 0H9m3 0h3" />
@@ -99,7 +99,7 @@ export default function EventCard({ event }: { event: Event }) {
           )}
         </div>
         {event.is_sold_out && (
-          <div className="absolute inset-0 bg-charcoal/60 flex items-center justify-center">
+          <div className="absolute inset-0 bg-charcoal/60 dark:bg-black/70 flex items-center justify-center">
             <span className="font-mono text-off-white font-medium text-sm tracking-widest uppercase">Sold Out</span>
           </div>
         )}
@@ -110,16 +110,16 @@ export default function EventCard({ event }: { event: Event }) {
         {/* Date block */}
         <div className="flex-shrink-0 text-center w-10 sm:w-12">
           <div className="font-mono text-[10px] sm:text-xs font-medium text-gold">{date.month}</div>
-          <div className="text-xl sm:text-2xl font-bold text-charcoal leading-none">{date.day}</div>
+          <div className="text-xl sm:text-2xl font-bold text-charcoal dark:text-[#F0ECE3] leading-none">{date.day}</div>
         </div>
 
         {/* Details */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-display font-semibold text-charcoal truncate">{event.title}</h3>
+          <h3 className="font-display font-semibold text-charcoal dark:text-[#F0ECE3] truncate">{event.title}</h3>
           {event.performer && (
-            <p className="text-sm text-muted mt-0.5">{event.performer}</p>
+            <p className="text-sm text-muted dark:text-[#7A7264] mt-0.5">{event.performer}</p>
           )}
-          <div className="flex items-center gap-3 mt-2 text-xs text-muted flex-wrap">
+          <div className="flex items-center gap-3 mt-2 text-xs text-muted dark:text-[#7A7264] flex-wrap">
             {event.show_time && <span className="font-mono">{event.show_time}</span>}
             {event.ticket_price_cents ? (
               <span className="font-mono">${(event.ticket_price_cents / 100).toFixed(2)}</span>
@@ -137,14 +137,14 @@ export default function EventCard({ event }: { event: Event }) {
           {event.ticket_price_cents && event.ticket_capacity ? (
             <Link
               href={`/tickets/${event.id}`}
-              className="block w-full text-center py-3 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 transition-all duration-200 active:scale-[0.98]"
+              className="block w-full text-center py-3 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 transition-all duration-200 active:scale-[0.98] btn-shimmer dark:bg-gold dark:text-[#0D0C0A] dark:hover:bg-[#D4A84B]"
             >
               Buy Tickets — ${(event.ticket_price_cents / 100).toFixed(2)}
             </Link>
           ) : (
             <Link
               href={`/tickets?event=${event.id}`}
-              className="block w-full text-center py-3 border border-charcoal/20 text-charcoal text-sm font-semibold hover:bg-charcoal hover:text-off-white transition-all duration-200"
+              className="block w-full text-center py-3 border border-charcoal/20 text-charcoal text-sm font-semibold hover:bg-charcoal hover:text-off-white transition-all duration-200 btn-shimmer dark:border-gold/20 dark:text-[#F0ECE3] dark:hover:bg-gold dark:hover:text-[#0D0C0A]"
             >
               Request Tickets
             </Link>

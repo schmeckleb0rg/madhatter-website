@@ -9,6 +9,12 @@ html, body {
   color: #1B1A17;
 }
 
+/* Dark mode base */
+html.dark, html.dark body {
+  background-color: #0D0C0A;
+  color: #F0ECE3;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -22,6 +28,17 @@ html, body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #B8934A;
+}
+
+/* Dark scrollbar */
+html.dark ::-webkit-scrollbar-track {
+  background: #161412;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #3D3829;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #D4A84B;
 }
 
 /* Marquee animation */
@@ -50,6 +67,12 @@ html, body {
   }
 }
 
+/* Dark mode grain adjustment */
+html.dark .grain::after {
+  opacity: 0.25;
+  mix-blend-mode: soft-light;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
@@ -60,8 +83,12 @@ html {
   background-color: rgba(184, 147, 74, 0.25);
   color: #1B1A17;
 }
+html.dark ::selection {
+  background-color: rgba(212, 168, 75, 0.35);
+  color: #F0ECE3;
+}
 
-/* Popup animations */
+/* ─── Popup / Reveal animations ─── */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -75,6 +102,106 @@ html {
 }
 .animate-fadeInUp {
   animation: fadeInUp 0.3s ease-out both;
+}
+
+/* ─── Theatrical animations ─── */
+
+/* Typewriter text reveal */
+@keyframes typewriter {
+  from { max-width: 0; }
+  to { max-width: 100%; }
+}
+@keyframes blinkCaret {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: #B8934A; }
+}
+.animate-typewriter {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #B8934A;
+  max-width: 0;
+  animation: typewriter 1.2s steps(24, end) forwards, blinkCaret 0.6s step-end 4;
+}
+.animate-typewriter-done {
+  max-width: 100%;
+  border-right-color: transparent;
+}
+
+/* Curtain reveal — page entry */
+@keyframes curtainReveal {
+  from { opacity: 0; filter: brightness(0.3); }
+  to { opacity: 1; filter: brightness(1); }
+}
+.animate-curtain {
+  animation: curtainReveal 0.8s ease-out both;
+}
+
+/* Card entrance — staggered grid */
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-card-entrance {
+  animation: cardEntrance 0.6s ease-out both;
+}
+
+/* Spotlight sweep on hero sections */
+@keyframes spotlightSweep {
+  0% { opacity: 0; transform: translateX(-100%); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(100%); }
+}
+.spotlight-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, rgba(184, 147, 74, 0.08) 40%, rgba(184, 147, 74, 0.12) 50%, rgba(184, 147, 74, 0.08) 60%, transparent 100%);
+  animation: spotlightSweep 2.5s ease-in-out 0.5s;
+  animation-fill-mode: both;
+  z-index: 2;
+}
+
+/* Button shimmer on hover */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  transition: left 0.5s ease;
+  z-index: 1;
+}
+.btn-shimmer:hover::before {
+  left: 100%;
+}
+html.dark .btn-shimmer::before {
+  background: linear-gradient(90deg, transparent, rgba(184, 147, 74, 0.15), transparent);
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-typewriter,
+  .spotlight-sweep::after,
+  .animate-curtain,
+  .animate-card-entrance {
+    animation: none !important;
+  }
+  .animate-typewriter {
+    max-width: 100%;
+    border-right-color: transparent;
+  }
 }
 
 /* Prevent horizontal overflow on mobile */

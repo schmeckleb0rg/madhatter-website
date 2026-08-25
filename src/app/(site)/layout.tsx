@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import type { SocialLinks } from "@/components/Footer";
+import ThemeProvider from "@/components/ThemeProvider";
 import { getVenueInfo } from "@/lib/venue";
 import { supabase } from "@/lib/supabase";
 
@@ -34,10 +35,10 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const [venue, socialLinks] = await Promise.all([getVenueInfo(), getSocialLinks()]);
 
   return (
-    <>
+    <ThemeProvider>
       <Navbar />
       <main>{children}</main>
       <Footer venue={venue} socialLinks={socialLinks} />
-    </>
+    </ThemeProvider>
   );
 }

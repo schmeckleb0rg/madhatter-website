@@ -78,24 +78,24 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
   return (
-    <div className="bg-white border border-charcoal/10 overflow-hidden">
+    <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-charcoal/10">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-charcoal/10 dark:border-gold/10">
         <button
           onClick={prevMonth}
-          className="text-muted hover:text-charcoal transition-colors p-2"
+          className="text-muted hover:text-charcoal dark:text-[#7A7264] dark:hover:text-[#F0ECE3] transition-colors p-2"
           aria-label="Previous month"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <h3 className="font-display text-base sm:text-lg font-semibold text-charcoal">
+        <h3 className="font-display text-base sm:text-lg font-semibold text-charcoal dark:text-[#F0ECE3]">
           {MONTHS[currentMonth.month]} {currentMonth.year}
         </h3>
         <button
           onClick={nextMonth}
-          className="text-muted hover:text-charcoal transition-colors p-2"
+          className="text-muted hover:text-charcoal dark:text-[#7A7264] dark:hover:text-[#F0ECE3] transition-colors p-2"
           aria-label="Next month"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -105,9 +105,9 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
       </div>
 
       {/* Day labels — short on mobile, full on desktop */}
-      <div className="grid grid-cols-7 border-b border-charcoal/10">
+      <div className="grid grid-cols-7 border-b border-charcoal/10 dark:border-gold/10">
         {DAYS.map((day, i) => (
-          <div key={i} className="py-2 text-center font-mono text-[10px] sm:text-xs text-muted uppercase tracking-wide">
+          <div key={i} className="py-2 text-center font-mono text-[10px] sm:text-xs text-muted dark:text-[#7A7264] uppercase tracking-wide">
             <span className="sm:hidden">{day}</span>
             <span className="hidden sm:inline">{DAYS_FULL[i]}</span>
           </div>
@@ -131,19 +131,19 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
               onClick={() => setSelectedDate(isSelected ? null : cell.date)}
               className={`aspect-square border-b border-r border-charcoal/5 flex flex-col items-center justify-center gap-1 transition-colors relative ${
                 isSelected
-                  ? "bg-charcoal text-off-white"
+                  ? "bg-charcoal text-off-white dark:bg-gold dark:text-[#0D0C0A]"
                   : hasEvents
-                  ? "hover:bg-off-white-2 cursor-pointer"
+                  ? "hover:bg-off-white-2 dark:hover:bg-[#242119] cursor-pointer"
                   : "cursor-default"
               }`}
             >
               <span
                 className={`text-xs sm:text-sm ${
                   isSelected
-                    ? "font-semibold text-off-white"
+                    ? "font-semibold text-off-white dark:text-[#0D0C0A]"
                     : isToday
                     ? "font-bold text-gold"
-                    : "text-charcoal"
+                    : "text-charcoal dark:text-[#F0ECE3]"
                 }`}
               >
                 {cell.day}
@@ -165,7 +165,7 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
 
       {/* Selected date events */}
       {selectedDate && (
-        <div className="border-t border-charcoal/10 p-4">
+        <div className="border-t border-charcoal/10 dark:border-gold/10 dark:bg-[#161412] p-4">
           <h4 className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
             {new Date(selectedDate + "T12:00:00").toLocaleDateString("en-US", {
               weekday: "long",
@@ -181,13 +181,13 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
                 <button
                   key={event.id}
                   onClick={() => onEventClick(event)}
-                  className="w-full text-left bg-off-white-2 border border-charcoal/10 p-3 hover:border-gold/30 transition-colors"
+                  className="w-full text-left bg-off-white-2 dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-3 hover:border-gold/30 transition-colors"
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-charcoal">{event.title}</p>
+                      <p className="text-sm font-semibold text-charcoal dark:text-[#F0ECE3]">{event.title}</p>
                       {event.show_time && (
-                        <p className="text-xs text-muted font-mono mt-0.5">{event.show_time}</p>
+                        <p className="text-xs text-muted dark:text-[#7A7264] font-mono mt-0.5">{event.show_time}</p>
                       )}
                     </div>
                     {event.is_sold_out ? (

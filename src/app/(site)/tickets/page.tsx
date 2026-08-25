@@ -24,38 +24,38 @@ export default async function TicketsPage() {
   const [events, venue] = await Promise.all([getUpcomingEvents(), getVenueInfo()]);
 
   return (
-    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white dark:bg-[#0D0C0A]">
       <div className="max-w-2xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-12">
           <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
             Join Us
           </p>
-          <h1 className="font-display text-3xl sm:text-5xl font-semibold text-charcoal">
+          <h1 className="font-display text-3xl sm:text-5xl font-semibold text-charcoal dark:text-[#F0ECE3]">
             Request Tickets
           </h1>
-          <p className="mt-4 text-muted">
+          <p className="mt-4 text-muted dark:text-[#7A7264]">
             Fill out the form below and we&apos;ll be in touch to confirm your reservation.
           </p>
           <div className="w-16 h-0.5 bg-gold mt-4 mx-auto" />
         </div>
 
-        <div className="bg-white border border-charcoal/10 p-6 sm:p-8">
-          <Suspense fallback={<div className="text-muted text-sm">Loading form...</div>}>
+        <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6 sm:p-8">
+          <Suspense fallback={<div className="text-muted dark:text-[#7A7264] text-sm">Loading form...</div>}>
             <InquiryForm events={events} />
           </Suspense>
         </div>
 
         {/* Info */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-muted">
-          <div className="bg-off-white-2 border border-charcoal/10 p-4">
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-muted dark:text-[#7A7264]">
+          <div className="bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-4">
             <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Location</div>
             <p>{venue.street}</p>
             <p>{venue.city}, {venue.state} {venue.zip}</p>
           </div>
-          <div className="bg-off-white-2 border border-charcoal/10 p-4">
+          <div className="bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-4">
             <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Questions?</div>
-            <a href={`mailto:${venue.email}`} className="hover:text-charcoal transition-colors">
+            <a href={`mailto:${venue.email}`} className="hover:text-charcoal dark:hover:text-[#F0ECE3] transition-colors">
               {venue.email}
             </a>
           </div>

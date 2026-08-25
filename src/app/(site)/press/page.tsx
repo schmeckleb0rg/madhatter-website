@@ -28,38 +28,38 @@ export default async function PressPage() {
   const galleryImages = await getGalleryImages();
 
   return (
-    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen dark:bg-[#0D0C0A]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
           <p className="text-gold text-xs font-bold tracking-widest uppercase mb-3">
             In the Spotlight
           </p>
-          <h1 className="text-3xl sm:text-5xl font-black text-charcoal font-display">
+          <h1 className="text-3xl sm:text-5xl font-black text-charcoal dark:text-[#F0ECE3] font-display">
             Media & Press
           </h1>
-          <p className="mt-4 text-muted max-w-xl mx-auto">
+          <p className="mt-4 text-muted dark:text-[#7A7264] max-w-xl mx-auto">
             Press inquiries, media resources, and highlights from Mad Hatter Comedy Club.
           </p>
         </div>
 
         {/* Press Kit */}
-        <div className="bg-white border border-charcoal/10 p-6 sm:p-8 mb-10">
+        <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6 sm:p-8 mb-10">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h2 className="text-xl font-bold text-charcoal font-display">
+              <h2 className="text-xl font-bold text-charcoal dark:text-[#F0ECE3] font-display">
                 Press Kit
               </h2>
-              <p className="text-sm text-muted mt-1">
+              <p className="text-sm text-muted dark:text-[#7A7264] mt-1">
                 Everything you need for coverage and features.
               </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className="bg-off-white border border-charcoal/10 p-4">
+            <div className="bg-off-white dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-4">
               <div className="text-gold font-semibold mb-2">Venue Facts</div>
-              <ul className="space-y-1 text-muted">
+              <ul className="space-y-1 text-muted dark:text-[#C4BDA8]">
                 <li>200-seat intimate comedy venue</li>
                 <li>Located in downtown Chicago</li>
                 <li>Open since 2015</li>
@@ -67,9 +67,9 @@ export default async function PressPage() {
                 <li>Full bar with craft cocktails</li>
               </ul>
             </div>
-            <div className="bg-off-white border border-charcoal/10 p-4">
+            <div className="bg-off-white dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-4">
               <div className="text-gold font-semibold mb-2">Media Contact</div>
-              <div className="space-y-2 text-muted">
+              <div className="space-y-2 text-muted dark:text-[#C4BDA8]">
                 <p>For press inquiries, interviews, and media passes:</p>
                 <a
                   href="mailto:press@madhattercomedy.com"
@@ -77,7 +77,7 @@ export default async function PressPage() {
                 >
                   press@madhattercomedy.com
                 </a>
-                <p className="text-xs text-muted mt-2">
+                <p className="text-xs text-muted dark:text-[#7A7264] mt-2">
                   Please allow 48 hours for a response. Media passes subject to availability.
                 </p>
               </div>
@@ -85,13 +85,13 @@ export default async function PressPage() {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <div className="text-xs text-muted bg-off-white border border-charcoal/10 px-3 py-1.5">
+            <div className="text-xs text-muted dark:text-[#7A7264] bg-off-white dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 px-3 py-1.5">
               Logo files available on request
             </div>
-            <div className="text-xs text-muted bg-off-white border border-charcoal/10 px-3 py-1.5">
+            <div className="text-xs text-muted dark:text-[#7A7264] bg-off-white dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 px-3 py-1.5">
               High-res photos available
             </div>
-            <div className="text-xs text-muted bg-off-white border border-charcoal/10 px-3 py-1.5">
+            <div className="text-xs text-muted dark:text-[#7A7264] bg-off-white dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 px-3 py-1.5">
               Founder interviews welcome
             </div>
           </div>
@@ -99,16 +99,16 @@ export default async function PressPage() {
 
         {/* Press quotes */}
         <div className="mb-10">
-          <h2 className="text-lg font-bold text-charcoal mb-6 font-display">
+          <h2 className="text-lg font-bold text-charcoal dark:text-[#F0ECE3] mb-6 font-display">
             As Seen In
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {pressFeatures.map((feature) => (
               <div
                 key={feature.outlet}
-                className="bg-white border border-charcoal/10 p-6 text-center"
+                className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6 text-center"
               >
-                <p className="text-muted text-sm italic mb-3">&ldquo;{feature.quote}&rdquo;</p>
+                <p className="text-muted dark:text-[#C4BDA8] text-sm italic mb-3">&ldquo;{feature.quote}&rdquo;</p>
                 <p className="text-gold text-xs font-semibold uppercase tracking-wide">
                   &mdash; {feature.outlet}
                 </p>
@@ -119,7 +119,7 @@ export default async function PressPage() {
 
         {/* Gallery */}
         <div className="mb-10">
-          <h2 className="text-lg font-bold text-charcoal mb-6 font-display">
+          <h2 className="text-lg font-bold text-charcoal dark:text-[#F0ECE3] mb-6 font-display">
             Gallery
           </h2>
           {galleryImages.length > 0 ? (
@@ -127,7 +127,7 @@ export default async function PressPage() {
               {galleryImages.map((img) => (
                 <div
                   key={img.id}
-                  className="aspect-[4/3] bg-off-white-2 border border-charcoal/10 overflow-hidden relative group"
+                  className="aspect-[4/3] bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 overflow-hidden relative group"
                 >
                   <Image
                     src={img.image_url}
@@ -145,18 +145,18 @@ export default async function PressPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-white border border-charcoal/10">
-              <p className="text-muted text-sm">Gallery photos coming soon.</p>
+            <div className="text-center py-12 bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10">
+              <p className="text-muted dark:text-[#7A7264] text-sm">Gallery photos coming soon.</p>
             </div>
           )}
         </div>
 
         {/* CTA */}
         <div className="text-center">
-          <p className="text-muted text-sm mb-4">Want to feature Mad Hatter in your publication?</p>
+          <p className="text-muted dark:text-[#7A7264] text-sm mb-4">Want to feature Mad Hatter in your publication?</p>
           <Link
             href="/contact"
-            className="inline-block px-8 py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 transition-colors"
+            className="inline-block px-8 py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 transition-colors dark:bg-gold dark:text-[#0D0C0A] btn-shimmer"
           >
             Get In Touch
           </Link>

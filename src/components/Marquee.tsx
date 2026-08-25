@@ -9,7 +9,7 @@ export default function Marquee({ items, speed = 40 }: MarqueeProps) {
   const doubled = [...items, ...items];
 
   return (
-    <div className="overflow-hidden border-y border-charcoal/10 py-3 bg-off-white-2 select-none">
+    <div className="overflow-hidden border-y border-charcoal/10 dark:border-gold/10 py-3 bg-off-white-2 dark:bg-[#161412] select-none">
       <div
         className="flex gap-12 whitespace-nowrap"
         style={{
@@ -18,7 +18,7 @@ export default function Marquee({ items, speed = 40 }: MarqueeProps) {
         }}
       >
         {doubled.map((item, i) => (
-          <span key={i} className="font-mono text-xs tracking-widest uppercase text-muted">
+          <span key={i} className="font-mono text-xs tracking-widest uppercase text-muted dark:text-[#7A7264]">
             {item}
             <span className="mx-6 text-gold">&#9670;</span>
           </span>

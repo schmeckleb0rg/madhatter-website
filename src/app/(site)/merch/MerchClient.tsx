@@ -41,7 +41,7 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
   }, [products, filters]);
 
   return (
-    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white dark:bg-[#0D0C0A]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
@@ -49,22 +49,22 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
             {content.subtitle || "Rep the Club"}
           </p>
           <h1 className="font-display text-4xl sm:text-5xl font-light leading-none tracking-tight">
-            <span className="font-display italic text-muted block">
+            <span className="font-display italic text-muted dark:text-[#7A7264] block">
               {content.title_line1 || "Official"}
             </span>
-            <span className="font-display font-semibold text-charcoal block">
+            <span className="font-display font-semibold text-charcoal dark:text-[#F0ECE3] block">
               {content.title_line2 || "Merch"}
             </span>
           </h1>
-          <p className="mt-4 text-muted max-w-xl mx-auto">
+          <p className="mt-4 text-muted dark:text-[#7A7264] max-w-xl mx-auto">
             {content.description || "Official Mad Hatter gear. Available at the venue and online soon."}
           </p>
           <div className="flex items-center gap-4 mt-4 justify-center">
-            <div className="w-12 h-px bg-charcoal/10" />
+            <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
             <span className="font-mono text-xs tracking-widest uppercase text-gold">
               {content.badge || "Gear Up"}
             </span>
-            <div className="w-12 h-px bg-charcoal/10" />
+            <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
           </div>
         </div>
 
@@ -86,9 +86,9 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
             {filtered.map((product) => (
               <div
                 key={product.id}
-                className="bg-white border border-charcoal/10 overflow-hidden group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-charcoal/5 transition-all duration-300"
+                className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 overflow-hidden group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-charcoal/5 transition-all duration-300"
               >
-                <div className="aspect-square bg-off-white-2 flex items-center justify-center relative overflow-hidden">
+                <div className="aspect-square bg-off-white-2 dark:bg-[#161412] flex items-center justify-center relative overflow-hidden">
                   {product.image_url ? (
                     <Image
                       src={product.image_url}
@@ -99,8 +99,8 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
                     />
                   ) : (
                     <div className="text-center">
-                      <span className="font-display text-2xl text-muted/30">MH</span>
-                      <p className="text-xs text-muted mt-2">Photo coming soon</p>
+                      <span className="font-display text-2xl text-muted/30 dark:text-[#7A7264]/30">MH</span>
+                      <p className="text-xs text-muted dark:text-[#7A7264] mt-2">Photo coming soon</p>
                     </div>
                   )}
                   {/* Badges */}
@@ -121,7 +121,7 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
                       </span>
                     )}
                     {product.is_archive && (
-                      <span className="font-mono text-xs px-2 py-0.5 bg-muted/20 text-muted font-medium">
+                      <span className="font-mono text-xs px-2 py-0.5 bg-muted/20 text-muted dark:text-[#7A7264] font-medium">
                         Archive
                       </span>
                     )}
@@ -129,31 +129,31 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
                 </div>
                 <div className="p-5">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-semibold text-charcoal">{product.name}</h3>
+                    <h3 className="text-sm font-semibold text-charcoal dark:text-[#F0ECE3]">{product.name}</h3>
                     <span className="text-gold font-mono font-medium text-sm">
                       ${(product.price_cents / 100).toFixed(2)}
                     </span>
                   </div>
                   {product.description && (
-                    <p className="text-xs text-muted leading-relaxed mb-2">{product.description}</p>
+                    <p className="text-xs text-muted dark:text-[#C4BDA8] leading-relaxed mb-2">{product.description}</p>
                   )}
                   {product.sizes && product.sizes.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-2">
                       {product.sizes.map((s: string) => (
-                        <span key={s} className="text-xs px-1.5 py-0.5 border border-charcoal/10 text-muted">
+                        <span key={s} className="text-xs px-1.5 py-0.5 border border-charcoal/10 dark:border-gold/10 text-muted dark:text-[#7A7264]">
                           {s}
                         </span>
                       ))}
                     </div>
                   )}
-                  <span className="text-xs text-muted capitalize">{product.category}</span>
+                  <span className="text-xs text-muted dark:text-[#7A7264] capitalize">{product.category}</span>
                 </div>
               </div>
             ))}
           </div>
         ) : products.length > 0 ? (
           <div className="text-center py-16 mb-12">
-            <p className="text-muted text-lg">No items match your filters.</p>
+            <p className="text-muted dark:text-[#7A7264] text-lg">No items match your filters.</p>
             <button
               onClick={() => setFilters({ sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"], category: "all", showLimited: true, showArchive: true })}
               className="text-gold text-sm mt-2 hover:underline"
@@ -164,8 +164,8 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
         ) : (
           <div className="text-center py-16 mb-12">
             <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">Coming Soon</p>
-            <p className="text-muted text-lg">Merch catalog coming soon.</p>
-            <p className="text-muted text-sm mt-2">Check back or visit us at a show.</p>
+            <p className="text-muted dark:text-[#7A7264] text-lg">Merch catalog coming soon.</p>
+            <p className="text-muted dark:text-[#7A7264] text-sm mt-2">Check back or visit us at a show.</p>
           </div>
         )}
 
@@ -180,7 +180,7 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
             </p>
             <Link
               href="/contact"
-              className="inline-block px-8 py-3 bg-gold text-white font-semibold hover:bg-gold-soft hover:text-charcoal transition-colors"
+              className="inline-block px-8 py-3 bg-gold text-white font-semibold hover:bg-gold-soft hover:text-charcoal transition-colors btn-shimmer"
             >
               Ask About Merch
             </Link>
@@ -189,15 +189,15 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
 
         {/* Info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-          <div className="bg-off-white-2 border border-charcoal/10 p-5">
+          <div className="bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-5">
             <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">At the Venue</div>
-            <p className="text-muted">
+            <p className="text-muted dark:text-[#C4BDA8]">
               All merchandise is available at our merch table during show nights. Cash and card accepted.
             </p>
           </div>
-          <div className="bg-off-white-2 border border-charcoal/10 p-5">
+          <div className="bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-5">
             <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Custom Orders</div>
-            <p className="text-muted">
+            <p className="text-muted dark:text-[#C4BDA8]">
               Need bulk orders for an event or want something custom? Email us at{" "}
               <a href={`mailto:${merchEmail}`} className="text-gold hover:underline">
                 {merchEmail}

@@ -54,7 +54,7 @@ export default async function ComediansPage() {
   ]);
 
   return (
-    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white dark:bg-[#0D0C0A]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <Reveal>
@@ -63,19 +63,19 @@ export default async function ComediansPage() {
               {content.subtitle || "The Lineup"}
             </p>
             <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-light leading-none tracking-tight">
-              <span className="font-display italic text-muted block">
+              <span className="font-display italic text-muted dark:text-[#7A7264] block">
                 {content.title_line1 || "Our"}
               </span>
-              <span className="font-display font-semibold text-charcoal block">
+              <span className="font-display font-semibold text-charcoal dark:text-[#F0ECE3] block">
                 {content.title_line2 || "Comedians"}
               </span>
             </h1>
             <div className="flex items-center gap-4 mt-6 justify-center">
-              <div className="w-12 h-px bg-charcoal/10" />
+              <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
               <span className="font-mono text-xs tracking-widest uppercase text-gold">
                 {content.badge || "The Talent"}
               </span>
-              <div className="w-12 h-px bg-charcoal/10" />
+              <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
             </div>
           </div>
         </Reveal>
@@ -87,8 +87,8 @@ export default async function ComediansPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 1.5a3 3 0 013 3v6a3 3 0 01-6 0v-6a3 3 0 013-3z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5A7.5 7.5 0 0112 18m0 0v3m0 0H9m3 0h3" />
               </svg>
-              <p className="text-muted text-lg">No comedians listed yet.</p>
-              <p className="text-muted text-sm mt-2">Check back soon — the lineup is always growing.</p>
+              <p className="text-muted dark:text-[#7A7264] text-lg">No comedians listed yet.</p>
+              <p className="text-muted dark:text-[#7A7264] text-sm mt-2">Check back soon — the lineup is always growing.</p>
             </div>
           </Reveal>
         ) : (

@@ -47,6 +47,10 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
   const [bgStatus, setBgStatus] = useState<"idle" | "uploading" | "done" | "error">("idle");
   const bgRef = useRef<HTMLInputElement>(null);
 
+  const [mobileBgUrl, setMobileBgUrl] = useState(initial.mobile_background_url ?? "");
+  const [mobileBgStatus, setMobileBgStatus] = useState<"idle" | "uploading" | "done" | "error">("idle");
+  const mobileBgRef = useRef<HTMLInputElement>(null);
+
   const [ogImageUrl, setOgImageUrl] = useState(initial.og_image_url ?? "");
   const [ogImageStatus, setOgImageStatus] = useState<"idle" | "uploading" | "done" | "error">("idle");
   const ogImageRef = useRef<HTMLInputElement>(null);
@@ -91,8 +95,8 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
     if (res.ok) setTimeout(() => setSocialStatus("idle"), 2000);
   }
 
-  async function uploadFile(file: File, type: "favicon" | "background" | "og_image" | "app_icon") {
-    const setStatus = type === "favicon" ? setFaviconStatus : type === "og_image" ? setOgImageStatus : type === "app_icon" ? setAppIconStatus : setBgStatus;
+  async function uploadFile(file: File, type: "favicon" | "background" | "mobile_background" | "og_image" | "app_icon") {
+    const setStatus = type === "favicon" ? setFaviconStatus : type === "og_image" ? setOgImageStatus : type === "app_icon" ? setAppIconStatus : type === "mobile_background" ? setMobileBgStatus : setBgStatus;
     setStatus("uploading");
     try {
       const fd = new FormData();
@@ -104,6 +108,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
         if (type === "favicon") setFaviconUrl(url);
         else if (type === "og_image") setOgImageUrl(url);
         else if (type === "app_icon") setAppIconUrl(url);
+        else if (type === "mobile_background") setMobileBgUrl(url);
         else setBgUrl(url);
         setStatus("done");
         setTimeout(() => setStatus("idle"), 2000);
@@ -412,30 +417,63 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
         </div>
       </div>
 
-      {/* Coming Soon Background */}
+      {/* Coming Soon Backgrounds */}
       <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
-        <h2 className="text-base font-bold text-charcoal mb-1">Coming Soon Background</h2>
-        <p className="text-xs text-muted mb-5">1920x1080px recommended. SVG, PNG, JPG, or WEBP.</p>
-        <div className="space-y-4">
-          {bgUrl && (
-            <div className="border border-charcoal/10 overflow-hidden bg-off-white-2" style={{ height: 160 }}>
-              <img src={bgUrl} alt="background preview" className="w-full h-full object-cover" />
+        <h2 className="text-base font-bold text-charcoal mb-1">Coming Soon Backgrounds</h2>
+        <p className="text-xs text-muted mb-5">Upload separate images for desktop (landscape) and mobile (portrait) screens.</p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Desktop background */}
+          <div className="space-y-4">
+            <div>
+              <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-2">Desktop (Landscape)</label>
+              <p className="text-xs text-muted mb-3">1920x1080px recommended. SVG, PNG, JPG, or WEBP.</p>
             </div>
-          )}
-          {!bgUrl && (
-            <div className="border border-dashed border-charcoal/10 bg-off-white flex items-center justify-center" style={{ height: 120 }}>
-              <p className="text-xs text-muted">Using default coming-soon.svg</p>
+            {bgUrl ? (
+              <div className="border border-charcoal/10 overflow-hidden bg-off-white-2" style={{ height: 160 }}>
+                <img src={bgUrl} alt="desktop background preview" className="w-full h-full object-cover" />
+              </div>
+            ) : (
+              <div className="border border-dashed border-charcoal/10 bg-off-white flex items-center justify-center" style={{ height: 120 }}>
+                <p className="text-xs text-muted">Using default coming-soon.svg</p>
+              </div>
+            )}
+            <input ref={bgRef} type="file" accept="image/*,.svg" className="hidden"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadFile(f, "background"); }} />
+            <button
+              onClick={() => bgRef.current?.click()}
+              disabled={bgStatus === "uploading"}
+              className="text-xs px-4 py-2 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal disabled:opacity-50 transition-colors"
+            >
+              {bgStatus === "uploading" ? "Uploading..." : bgStatus === "done" ? "Uploaded" : "Upload Desktop Background"}
+            </button>
+          </div>
+
+          {/* Mobile background */}
+          <div className="space-y-4">
+            <div>
+              <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-2">Mobile (Portrait)</label>
+              <p className="text-xs text-muted mb-3">1080x1920px recommended. PNG, JPG, or WEBP.</p>
             </div>
-          )}
-          <input ref={bgRef} type="file" accept="image/*,.svg" className="hidden"
-            onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadFile(f, "background"); }} />
-          <button
-            onClick={() => bgRef.current?.click()}
-            disabled={bgStatus === "uploading"}
-            className="text-xs px-4 py-2 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal disabled:opacity-50 transition-colors"
-          >
-            {bgStatus === "uploading" ? "Uploading..." : bgStatus === "done" ? "Uploaded" : "Upload New Background"}
-          </button>
+            {mobileBgUrl ? (
+              <div className="border border-charcoal/10 overflow-hidden bg-off-white-2 mx-auto" style={{ height: 200, maxWidth: 120 }}>
+                <img src={mobileBgUrl} alt="mobile background preview" className="w-full h-full object-cover" />
+              </div>
+            ) : (
+              <div className="border border-dashed border-charcoal/10 bg-off-white flex items-center justify-center mx-auto" style={{ height: 160, maxWidth: 120 }}>
+                <p className="text-xs text-muted text-center px-2">Falls back to desktop image</p>
+              </div>
+            )}
+            <input ref={mobileBgRef} type="file" accept="image/*" className="hidden"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadFile(f, "mobile_background"); }} />
+            <button
+              onClick={() => mobileBgRef.current?.click()}
+              disabled={mobileBgStatus === "uploading"}
+              className="text-xs px-4 py-2 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal disabled:opacity-50 transition-colors"
+            >
+              {mobileBgStatus === "uploading" ? "Uploading..." : mobileBgStatus === "done" ? "Uploaded" : "Upload Mobile Background"}
+            </button>
+          </div>
         </div>
       </div>
 
