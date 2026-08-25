@@ -18,7 +18,9 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
   const [form, setForm] = useState({
     title: initialData?.title ?? "",
     description: initialData?.description ?? "",
+    detailed_description: (initialData as Partial<Event>)?.detailed_description ?? "",
     performer: initialData?.performer ?? "",
+    comedian_id: (initialData as Partial<Event>)?.comedian_id ?? "",
     date: initialData?.date ? new Date(initialData.date).toISOString().slice(0, 16) : "",
     image_url: initialData?.image_url ?? "",
     // Event-only fields
@@ -31,10 +33,29 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
     is_featured: (initialData as Partial<Event>)?.is_featured ?? false,
   });
 
+  const existingLineup = (initialData as Partial<Event>)?.lineup ?? [];
+  const [lineup, setLineup] = useState<{ name: string; role: string }[]>(
+    existingLineup.length > 0
+      ? existingLineup.map((l) => ({ name: l.name, role: l.role ?? "" }))
+      : []
+  );
+
   const ticketsSold = isEvent ? ((initialData as Partial<Event>)?.tickets_sold ?? 0) : 0;
 
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
+
+  function addLineupEntry() {
+    setLineup([...lineup, { name: "", role: "" }]);
+  }
+
+  function removeLineupEntry(index: number) {
+    setLineup(lineup.filter((_, i) => i !== index));
+  }
+
+  function updateLineupEntry(index: number, field: "name" | "role", value: string) {
+    setLineup(lineup.map((item, i) => i === index ? { ...item, [field]: value } : item));
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -47,6 +68,12 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
       ticket_capacity: form.ticket_capacity ? Number(form.ticket_capacity) : null,
       // Auto-generate display price from cents
       ticket_price: form.ticket_price_cents ? `$${(Number(form.ticket_price_cents) / 100).toFixed(2)}` : form.ticket_price || null,
+      detailed_description: form.detailed_description || null,
+      comedian_id: form.comedian_id || null,
+      lineup: lineup.filter((l) => l.name.trim()).map((l) => ({
+        name: l.name.trim(),
+        role: l.role.trim() || undefined,
+      })),
     };
 
     const payload = isEvent
@@ -106,6 +133,21 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
         />
       </div>
 
+      {/* Comedian ID */}
+      {isEvent && (
+        <div>
+          <label className={labelClass}>Comedian ID (optional)</label>
+          <input
+            type="text"
+            value={form.comedian_id}
+            onChange={(e) => setForm({ ...form, comedian_id: e.target.value })}
+            className={inputClass}
+            placeholder="Paste comedian UUID to link this event"
+          />
+          <p className="text-xs text-muted mt-1">Links this event to a comedian profile.</p>
+        </div>
+      )}
+
       {/* Date */}
       <div>
         <label className={labelClass}>Date & Time *</label>
@@ -158,7 +200,7 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
       {isEvent && (
         <div className="border border-charcoal/10 p-5 space-y-5">
           <div className="font-mono text-xs uppercase tracking-widest text-gold">Online Ticketing</div>
-          <p className="text-xs text-muted -mt-3">Set both price and capacity to enable online ticket sales via Stripe.</p>
+          <p className="text-xs text-muted -mt-3">Set both price and capacity to enable online ticket sales via Square.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
               <label className={labelClass}>Ticket Price (cents)</label>
@@ -210,6 +252,68 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
           className={`${inputClass} resize-none`}
         />
       </div>
+
+      {/* Detailed Description (event-only) */}
+      {isEvent && (
+        <div>
+          <label className={labelClass}>Detailed Description (shown in popup)</label>
+          <textarea
+            rows={6}
+            value={form.detailed_description}
+            onChange={(e) => setForm({ ...form, detailed_description: e.target.value })}
+            className={`${inputClass} resize-none`}
+            placeholder="Extended description shown when visitors click into the event details..."
+          />
+        </div>
+      )}
+
+      {/* Lineup (event-only) */}
+      {isEvent && (
+        <div className="border border-charcoal/10 p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="font-mono text-xs uppercase tracking-widest text-gold">Lineup</div>
+            <button
+              type="button"
+              onClick={addLineupEntry}
+              className="text-xs px-3 py-1 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal transition-colors"
+            >
+              + Add Performer
+            </button>
+          </div>
+          {lineup.length === 0 && (
+            <p className="text-xs text-muted">No lineup entries yet. Click &quot;Add Performer&quot; to add acts to this show.</p>
+          )}
+          {lineup.map((entry, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  value={entry.name}
+                  onChange={(e) => updateLineupEntry(i, "name", e.target.value)}
+                  className={inputClass}
+                  placeholder="Performer name"
+                />
+              </div>
+              <div className="w-40">
+                <input
+                  type="text"
+                  value={entry.role}
+                  onChange={(e) => updateLineupEntry(i, "role", e.target.value)}
+                  className={inputClass}
+                  placeholder="Role (e.g., Host)"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => removeLineupEntry(i)}
+                className="mt-3 text-xs text-red-500 hover:text-red-700 transition-colors"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Image URL */}
       <div>

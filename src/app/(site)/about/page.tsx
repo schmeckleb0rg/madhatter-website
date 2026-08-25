@@ -2,7 +2,6 @@ import { supabase } from "@/lib/supabase";
 import type { AboutContent } from "@/lib/supabase";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
-import CountUp from "@/components/CountUp";
 
 export const revalidate = 300;
 
@@ -17,13 +16,29 @@ async function getAboutContent(): Promise<Record<string, AboutContent>> {
   return Object.fromEntries(data.map((item) => [item.section_key, item]));
 }
 
+async function getPageContent(pageKey: string): Promise<Record<string, string>> {
+  const { data } = await supabase
+    .from("page_content")
+    .select("section_key, content")
+    .eq("page_key", pageKey);
+  if (!data) return {};
+  return Object.fromEntries(data.map((item) => [item.section_key, item.content]));
+}
+
 export default async function AboutPage() {
-  const content = await getAboutContent();
+  const [content, pageContent] = await Promise.all([
+    getAboutContent(),
+    getPageContent("about"),
+  ]);
 
   const hero = content["hero"];
   const story = content["story"];
   const venue = content["venue"];
   const address = content["address"];
+
+  const estText = pageContent["est_year"] || "Est. 2026";
+  const subtitle = pageContent["subtitle"] || "Our Story";
+  const badge = pageContent["badge"] || estText;
 
   return (
     <div className="pt-24 pb-20 min-h-screen bg-off-white">
@@ -32,7 +47,7 @@ export default async function AboutPage() {
         <Reveal>
           <div className="text-center mb-16">
             <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
-              Our Story
+              {subtitle}
             </p>
             <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-light leading-none tracking-tight">
               <span className="font-display italic text-muted block">About</span>
@@ -47,7 +62,7 @@ export default async function AboutPage() {
             )}
             <div className="flex items-center gap-4 mt-6 justify-center">
               <div className="w-12 h-px bg-charcoal/10" />
-              <span className="font-mono text-xs tracking-widest uppercase text-gold">Est. 2015</span>
+              <span className="font-mono text-xs tracking-widest uppercase text-gold">{badge}</span>
               <div className="w-12 h-px bg-charcoal/10" />
             </div>
           </div>
@@ -90,32 +105,6 @@ export default async function AboutPage() {
             </Reveal>
           )}
 
-          {/* Stats — bento grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <Reveal delay={0}>
-              <div className="col-span-1 bg-charcoal grain p-8 flex flex-col justify-end min-h-[160px]">
-                <div className="font-display text-3xl font-semibold text-gold relative z-[2]">Since 2015</div>
-                <div className="font-mono text-xs text-muted-dark mt-1 uppercase tracking-wide relative z-[2]">In Chicago</div>
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="bg-off-white-2 border border-charcoal/10 p-6 flex flex-col justify-center text-center min-h-[160px]">
-                <div className="font-display text-4xl font-semibold text-charcoal">
-                  <CountUp end={200} />
-                </div>
-                <div className="font-mono text-xs text-muted mt-1 uppercase tracking-wide">Seats</div>
-              </div>
-            </Reveal>
-            <Reveal delay={240}>
-              <div className="bg-off-white-2 border border-charcoal/10 p-6 flex flex-col justify-center text-center min-h-[160px]">
-                <div className="font-display text-4xl font-semibold text-charcoal">
-                  <CountUp end={200} suffix="+" />
-                </div>
-                <div className="font-mono text-xs text-muted mt-1 uppercase tracking-wide">Shows Hosted</div>
-              </div>
-            </Reveal>
-          </div>
-
           {/* Address */}
           {address && (
             <Reveal>
@@ -125,7 +114,7 @@ export default async function AboutPage() {
                 </h2>
                 <p className="text-muted leading-relaxed">{address.content}</p>
                 <Link
-                  href="/tickets"
+                  href="/contact"
                   className="inline-block mt-6 px-8 py-3 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 transition-all duration-200 active:scale-[0.98]"
                 >
                   Book a Table

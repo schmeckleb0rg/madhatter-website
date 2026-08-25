@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import type { MerchItem } from "@/lib/supabase";
 import Image from "next/image";
 
+const ALL_SIZES = ["XS", "S", "M", "L", "XL", "2XL", "3XL"];
+
 export default function MerchForm({ initialData, id }: { initialData?: Partial<MerchItem>; id?: string }) {
   const router = useRouter();
 
@@ -14,6 +16,12 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
     price_cents: initialData?.price_cents?.toString() ?? "",
     image_url: initialData?.image_url ?? "",
     tag: initialData?.tag ?? "",
+    category: initialData?.category ?? "apparel",
+    sizes: initialData?.sizes ?? [],
+    colors: Array.isArray(initialData?.colors) ? initialData.colors.join(", ") : "",
+    is_limited: initialData?.is_limited ?? false,
+    is_archive: initialData?.is_archive ?? false,
+    inventory_count: initialData?.inventory_count?.toString() ?? "",
     is_active: initialData?.is_active ?? true,
   });
 
@@ -36,15 +44,35 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
     setUploading(false);
   }
 
+  function toggleSize(size: string) {
+    setForm((f) => ({
+      ...f,
+      sizes: f.sizes.includes(size)
+        ? f.sizes.filter((s) => s !== size)
+        : [...f.sizes, size],
+    }));
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("loading");
     setError("");
 
     const payload = {
-      ...form,
+      name: form.name,
+      description: form.description || undefined,
       price_cents: form.price_cents ? Number(form.price_cents) : 0,
+      image_url: form.image_url || "",
       tag: form.tag || null,
+      category: form.category,
+      sizes: form.sizes,
+      colors: form.colors
+        ? form.colors.split(",").map((c) => c.trim()).filter(Boolean)
+        : [],
+      is_limited: form.is_limited,
+      is_archive: form.is_archive,
+      inventory_count: form.inventory_count ? Number(form.inventory_count) : null,
+      is_active: form.is_active,
     };
 
     const res = await fetch(id ? `/api/admin/merch/${id}` : "/api/admin/merch", {
@@ -112,6 +140,19 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
         </div>
       </div>
 
+      {/* Category */}
+      <div>
+        <label className={labelClass}>Category</label>
+        <select
+          value={form.category}
+          onChange={(e) => setForm({ ...form, category: e.target.value })}
+          className={inputClass}
+        >
+          <option value="apparel">Apparel</option>
+          <option value="accessories">Accessories</option>
+        </select>
+      </div>
+
       <div>
         <label className={labelClass}>Description</label>
         <textarea
@@ -121,6 +162,53 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
           onChange={(e) => setForm({ ...form, description: e.target.value })}
           className={`${inputClass} resize-none`}
           placeholder="Brief product description..."
+        />
+      </div>
+
+      {/* Sizes multi-select */}
+      <div>
+        <label className={labelClass}>Sizes</label>
+        <div className="flex flex-wrap gap-2">
+          {ALL_SIZES.map((size) => (
+            <button
+              key={size}
+              type="button"
+              onClick={() => toggleSize(size)}
+              className={`px-3 py-1.5 text-xs border transition-colors ${
+                form.sizes.includes(size)
+                  ? "bg-charcoal text-off-white border-charcoal"
+                  : "bg-off-white text-muted border-charcoal/10 hover:border-gold/40"
+              }`}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Colors */}
+      <div>
+        <label className={labelClass}>Colors (comma-separated)</label>
+        <input
+          type="text"
+          value={form.colors}
+          onChange={(e) => setForm({ ...form, colors: e.target.value })}
+          className={inputClass}
+          placeholder="Black, White, Navy"
+        />
+      </div>
+
+      {/* Inventory */}
+      <div>
+        <label className={labelClass}>Inventory Count</label>
+        <input
+          type="number"
+          min="0"
+          step="1"
+          value={form.inventory_count}
+          onChange={(e) => setForm({ ...form, inventory_count: e.target.value })}
+          className={inputClass}
+          placeholder="Leave blank for unlimited"
         />
       </div>
 
@@ -151,16 +239,38 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
         />
       </div>
 
-      {/* Active toggle */}
-      <label className="flex items-center gap-3 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={form.is_active}
-          onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
-          className="border-charcoal/10 bg-off-white text-gold focus:ring-gold/30"
-        />
-        <span className="text-sm text-muted">Active (visible on public merch page)</span>
-      </label>
+      {/* Toggles */}
+      <div className="space-y-3">
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.is_active}
+            onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
+            className="border-charcoal/10 bg-off-white text-gold focus:ring-gold/30"
+          />
+          <span className="text-sm text-muted">Active (visible on public merch page)</span>
+        </label>
+
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.is_limited}
+            onChange={(e) => setForm({ ...form, is_limited: e.target.checked })}
+            className="border-charcoal/10 bg-off-white text-gold focus:ring-gold/30"
+          />
+          <span className="text-sm text-muted">Limited Time</span>
+        </label>
+
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.is_archive}
+            onChange={(e) => setForm({ ...form, is_archive: e.target.checked })}
+            className="border-charcoal/10 bg-off-white text-gold focus:ring-gold/30"
+          />
+          <span className="text-sm text-muted">Archive (hidden from main listing but still accessible)</span>
+        </label>
+      </div>
 
       {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
 

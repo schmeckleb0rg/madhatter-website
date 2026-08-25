@@ -40,12 +40,20 @@ export async function generateMetadata(): Promise<Metadata> {
     title: s.seo_title || "Mad Hatter Comedy Club | Chicago",
     description: s.seo_description || "Chicago's premier comedy club. Live stand-up, improv, and more in the heart of the city.",
     keywords: s.seo_keywords || "comedy club, Chicago, stand-up, improv, live comedy, Mad Hatter",
-    icons: s.favicon_url ? { icon: s.favicon_url } : undefined,
+    icons: {
+      icon: s.favicon_url || undefined,
+      apple: s.app_icon_url || s.favicon_url || undefined,
+    },
+    manifest: "/manifest.json",
     openGraph: {
       title: s.og_title || s.seo_title || "Mad Hatter Comedy Club | Chicago",
       description: s.og_description || s.seo_description || "Chicago's premier comedy club.",
       type: "website",
       images: s.og_image_url ? [{ url: s.og_image_url, width: 1200, height: 630 }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: s.og_image_url ? [s.og_image_url] : undefined,
     },
   };
 }

@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 function LoginForm() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,12 +24,13 @@ function LoginForm() {
 
     try {
       const result = await signIn("credentials", {
+        email,
         password,
         redirect: false,
       });
 
       if (result?.error) {
-        setError("Incorrect password. Try again.");
+        setError("Invalid email or password. Try again.");
         setLoading(false);
       } else if (result?.ok) {
         router.push(callbackUrl);
@@ -47,14 +49,30 @@ function LoginForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label className="block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2">
-          Admin Password
+          Email
+        </label>
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoFocus
+          autoComplete="email"
+          className="w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors"
+          placeholder="you@madhattercomedy.com"
+        />
+      </div>
+
+      <div>
+        <label className="block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2">
+          Password
         </label>
         <input
           type="password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          autoFocus
+          autoComplete="current-password"
           className="w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors"
           placeholder="Enter password"
         />

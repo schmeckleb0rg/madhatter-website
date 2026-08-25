@@ -1,7 +1,13 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Comedian } from "@/lib/supabase";
 
-export default function ComedianCard({ comedian }: { comedian: Comedian }) {
+type Props = {
+  comedian: Comedian;
+  hasUpcomingShow?: boolean;
+};
+
+export default function ComedianCard({ comedian, hasUpcomingShow }: Props) {
   return (
     <div className="group bg-white border border-charcoal/10 overflow-hidden hover:border-charcoal/20 transition-all duration-300">
       {/* Headshot */}
@@ -56,6 +62,16 @@ export default function ComedianCard({ comedian }: { comedian: Comedian }) {
               </a>
             )}
           </div>
+        )}
+
+        {/* Upcoming Shows button */}
+        {hasUpcomingShow && (
+          <Link
+            href="/events"
+            className="block mt-3 text-center py-2 border border-gold text-gold text-xs font-semibold hover:bg-gold hover:text-white transition-colors"
+          >
+            Upcoming Shows
+          </Link>
         )}
       </div>
     </div>

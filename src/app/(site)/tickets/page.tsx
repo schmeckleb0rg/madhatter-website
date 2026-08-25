@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { supabase } from "@/lib/supabase";
 import InquiryForm from "@/components/InquiryForm";
+import { getVenueInfo } from "@/lib/venue";
 
 export const revalidate = 60;
 
@@ -20,7 +21,7 @@ async function getUpcomingEvents() {
 }
 
 export default async function TicketsPage() {
-  const events = await getUpcomingEvents();
+  const [events, venue] = await Promise.all([getUpcomingEvents(), getVenueInfo()]);
 
   return (
     <div className="pt-24 pb-20 min-h-screen bg-off-white">
@@ -49,13 +50,13 @@ export default async function TicketsPage() {
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-muted">
           <div className="bg-off-white-2 border border-charcoal/10 p-4">
             <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Location</div>
-            <p>123 W Madison St</p>
-            <p>Chicago, IL 60602</p>
+            <p>{venue.street}</p>
+            <p>{venue.city}, {venue.state} {venue.zip}</p>
           </div>
           <div className="bg-off-white-2 border border-charcoal/10 p-4">
             <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Questions?</div>
-            <a href="mailto:hello@madhattercomedy.com" className="hover:text-charcoal transition-colors">
-              hello@madhattercomedy.com
+            <a href={`mailto:${venue.email}`} className="hover:text-charcoal transition-colors">
+              {venue.email}
             </a>
           </div>
         </div>

@@ -20,7 +20,9 @@ export type Event = {
   id: string;
   title: string;
   description: string | null;
+  detailed_description: string | null;
   performer: string | null;
+  comedian_id: string | null;
   date: string;
   doors_time: string | null;
   show_time: string | null;
@@ -29,6 +31,7 @@ export type Event = {
   ticket_price_cents: number | null;
   ticket_capacity: number | null;
   tickets_sold: number;
+  lineup: { name: string; role?: string }[] | null;
   is_sold_out: boolean;
   is_featured: boolean;
   created_at: string;
@@ -70,13 +73,15 @@ export type Comedian = {
 export type Order = {
   id: string;
   event_id: string | null;
+  merch_item_id: string | null;
+  order_type: "ticket" | "merch";
   email: string;
   name: string | null;
   quantity: number;
   amount_cents: number;
   currency: string;
-  stripe_checkout_session_id: string | null;
-  stripe_payment_intent_id: string | null;
+  square_payment_id: string | null;
+  square_order_id: string | null;
   status: "pending" | "completed" | "failed" | "refunded";
   created_at: string;
   updated_at: string;
@@ -116,7 +121,92 @@ export type MerchItem = {
   price_cents: number;
   image_url: string | null;
   tag: string | null;
+  category: string;
+  sizes: string[];
+  colors: string[];
+  is_limited: boolean;
+  is_archive: boolean;
+  inventory_count: number | null;
   is_active: boolean;
   sort_order: number;
   created_at: string;
+};
+
+export type Room = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  features: string[];
+  image_url: string | null;
+  capacity: number | null;
+  sort_order: number;
+  created_at: string;
+};
+
+export type PrivateEventInquiry = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  company: string | null;
+  event_type: string | null;
+  guest_count: number | null;
+  preferred_date: string | null;
+  budget_range: string | null;
+  message: string | null;
+  is_read: boolean;
+  created_at: string;
+};
+
+export type Subscriber = {
+  id: string;
+  email: string;
+  is_active: boolean;
+  subscribed_at: string;
+};
+
+export type EmailTemplate = {
+  id: string;
+  template_key: string;
+  subject: string;
+  body: string;
+  updated_at: string;
+};
+
+export type EmailQueueItem = {
+  id: string;
+  subject: string;
+  body: string;
+  status: "draft" | "sent" | "failed";
+  event_id: string | null;
+  created_at: string;
+  sent_at: string | null;
+};
+
+export type EventSlideshow = {
+  id: string;
+  image_url: string;
+  caption: string | null;
+  sort_order: number;
+  created_at: string;
+};
+
+export type PageContent = {
+  id: string;
+  page_key: string;
+  section_key: string;
+  content: string;
+  updated_at: string;
+};
+
+export type AdminUser = {
+  id: string;
+  email: string;
+  password_hash: string;
+  name: string;
+  role: "manager" | "staff";
+  permissions: Record<string, boolean>;
+  created_at: string;
+  updated_at: string;
 };

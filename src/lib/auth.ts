@@ -1,34 +1,62 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { compare } from "bcryptjs";
+import { getAdminClient } from "@/lib/supabase";
+
+declare module "next-auth" {
+  interface User {
+    role?: "manager" | "staff";
+  }
+  interface Session {
+    isAdmin?: boolean;
+    user: {
+      id?: string;
+      name?: string | null;
+      email?: string | null;
+      role?: "manager" | "staff";
+    };
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface ExtendedToken {
+  isAdmin?: boolean;
+  role?: "manager" | "staff";
+  userId?: string;
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
-      name: "Password",
+      name: "Admin Login",
       credentials: {
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        const email = (credentials?.email as string | undefined)?.toLowerCase().trim();
         const password = credentials?.password as string | undefined;
-        const sitePassword = process.env.SITE_PASSWORD;
 
-        if (!password || !sitePassword) return null;
+        if (!email || !password) return null;
 
-        // Constant-time string comparison to prevent timing attacks
-        const encoder = new TextEncoder();
-        const a = encoder.encode(password);
-        const b = encoder.encode(sitePassword);
+        const db = getAdminClient();
+        const { data: user, error } = await db
+          .from("admin_users")
+          .select("id, email, password_hash, name, role")
+          .eq("email", email)
+          .single();
 
-        if (a.length !== b.length) return null;
+        if (error || !user) return null;
 
-        let mismatch = 0;
-        for (let i = 0; i < a.length; i++) {
-          mismatch |= a[i] ^ b[i];
-        }
+        const valid = await compare(password, user.password_hash);
+        if (!valid) return null;
 
-        if (mismatch !== 0) return null;
-
-        return { id: "admin", name: "Admin", email: "admin@madhattercomedy.com" };
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role as "manager" | "staff",
+        };
       },
     }),
   ],
@@ -59,11 +87,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return `${baseUrl}/admin/dashboard`;
     },
     async jwt({ token, user }) {
-      if (user) token.isAdmin = true;
+      if (user) {
+        (token as Record<string, unknown>).isAdmin = true;
+        (token as Record<string, unknown>).role = user.role;
+        (token as Record<string, unknown>).userId = user.id;
+      }
       return token;
     },
     async session({ session, token }) {
-      if (token.isAdmin) (session as { isAdmin?: boolean }).isAdmin = true;
+      const t = token as Record<string, unknown>;
+      if (t.isAdmin) (session as { isAdmin?: boolean }).isAdmin = true;
+      if (t.role) session.user.role = t.role as "manager" | "staff";
+      if (t.userId) session.user.id = t.userId as string;
       return session;
     },
   },

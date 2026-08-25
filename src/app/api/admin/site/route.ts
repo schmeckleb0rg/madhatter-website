@@ -32,6 +32,13 @@ const schema = z.object({
   hours_mon_thu: z.string().max(50).optional(),
   hours_fri_sat: z.string().max(50).optional(),
   hours_sun: z.string().max(50).optional(),
+  // Social media links
+  social_instagram: z.string().max(500).optional(),
+  social_tiktok: z.string().max(500).optional(),
+  social_facebook: z.string().max(500).optional(),
+  social_youtube: z.string().max(500).optional(),
+  // Slideshow speed
+  slideshow_speed: z.string().max(10).optional(),
 });
 
 export async function GET() {
@@ -67,9 +74,11 @@ export async function PUT(request: Request) {
   if (error) return NextResponse.json({ error: "Save failed" }, { status: 500 });
 
   revalidatePath("/");
+  revalidatePath("/events");
   revalidatePath("/contact");
   revalidatePath("/visitor-info");
   revalidatePath("/about");
+  revalidatePath("/rooms");
   revalidatePath("/admin/site");
 
   return NextResponse.json({ success: true });

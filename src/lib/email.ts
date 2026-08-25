@@ -75,3 +75,61 @@ export async function notifyTicketInquiry(data: {
     console.error("Failed to send inquiry notification email:", err);
   });
 }
+
+export async function notifyPrivateEventInquiry(data: {
+  name: string;
+  email: string;
+  phone: string | null;
+  company: string | null;
+  eventType: string;
+  guestCount: number | null;
+  preferredDate: string | null;
+  budgetRange: string | null;
+  message: string | null;
+}) {
+  const r = getResend();
+  if (!r) return;
+
+  await r.emails.send({
+    from: FROM_EMAIL,
+    to: ADMIN_EMAIL,
+    subject: `Private Event Inquiry from ${data.name} — ${data.eventType}`,
+    text: [
+      `New private event inquiry:`,
+      ``,
+      `Name: ${data.name}`,
+      `Email: ${data.email}`,
+      `Phone: ${data.phone || "N/A"}`,
+      `Company: ${data.company || "N/A"}`,
+      `Event Type: ${data.eventType}`,
+      `Guest Count: ${data.guestCount ?? "Not specified"}`,
+      `Preferred Date: ${data.preferredDate || "Flexible"}`,
+      `Budget Range: ${data.budgetRange || "Not specified"}`,
+      ``,
+      data.message ? `Message:\n${data.message}` : "",
+      ``,
+      `---`,
+      `View in admin: ${process.env.NEXT_PUBLIC_SITE_URL || ""}/admin/inquiries`,
+    ].join("\n"),
+  }).catch((err) => {
+    console.error("Failed to send private event inquiry notification email:", err);
+  });
+}
+
+export async function sendWelcomeEmail(data: {
+  email: string;
+  subject: string;
+  body: string;
+}) {
+  const r = getResend();
+  if (!r) return;
+
+  await r.emails.send({
+    from: FROM_EMAIL,
+    to: data.email,
+    subject: data.subject,
+    html: data.body,
+  }).catch((err) => {
+    console.error("Failed to send welcome email:", err);
+  });
+}

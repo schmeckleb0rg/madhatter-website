@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { Comedian } from "@/lib/supabase";
+import type { Comedian, Event } from "@/lib/supabase";
 import ComedianCard from "@/components/ComedianCard";
 import Reveal from "@/components/Reveal";
 
@@ -18,8 +18,40 @@ async function getComedians(): Promise<Comedian[]> {
   return data ?? [];
 }
 
+async function getUpcomingEvents(): Promise<Event[]> {
+  const { data } = await supabase
+    .from("events")
+    .select("id, performer, comedian_id")
+    .gte("date", new Date().toISOString());
+  return (data as Event[]) ?? [];
+}
+
+function comedianHasUpcomingShow(comedian: Comedian, events: Event[]): boolean {
+  return events.some(
+    (e) =>
+      (e.comedian_id && e.comedian_id === comedian.id) ||
+      (e.performer && comedian.name && e.performer.toLowerCase() === comedian.name.toLowerCase())
+  );
+}
+
+async function getPageContent() {
+  const { data } = await supabase
+    .from("page_content")
+    .select("section_key, content")
+    .eq("page_key", "comedians");
+  const content: Record<string, string> = {};
+  (data ?? []).forEach((r: { section_key: string; content: string }) => {
+    content[r.section_key] = r.content;
+  });
+  return content;
+}
+
 export default async function ComediansPage() {
-  const comedians = await getComedians();
+  const [comedians, events, content] = await Promise.all([
+    getComedians(),
+    getUpcomingEvents(),
+    getPageContent(),
+  ]);
 
   return (
     <div className="pt-24 pb-20 min-h-screen bg-off-white">
@@ -28,15 +60,21 @@ export default async function ComediansPage() {
         <Reveal>
           <div className="text-center mb-14">
             <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
-              The Lineup
+              {content.subtitle || "The Lineup"}
             </p>
             <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-light leading-none tracking-tight">
-              <span className="font-display italic text-muted block">Our</span>
-              <span className="font-display font-semibold text-charcoal block">Comedians</span>
+              <span className="font-display italic text-muted block">
+                {content.title_line1 || "Our"}
+              </span>
+              <span className="font-display font-semibold text-charcoal block">
+                {content.title_line2 || "Comedians"}
+              </span>
             </h1>
             <div className="flex items-center gap-4 mt-6 justify-center">
               <div className="w-12 h-px bg-charcoal/10" />
-              <span className="font-mono text-xs tracking-widest uppercase text-gold">The Talent</span>
+              <span className="font-mono text-xs tracking-widest uppercase text-gold">
+                {content.badge || "The Talent"}
+              </span>
               <div className="w-12 h-px bg-charcoal/10" />
             </div>
           </div>
@@ -57,7 +95,10 @@ export default async function ComediansPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {comedians.map((comedian, i) => (
               <Reveal key={comedian.id} delay={i * 80}>
-                <ComedianCard comedian={comedian} />
+                <ComedianCard
+                  comedian={comedian}
+                  hasUpcomingShow={comedianHasUpcomingShow(comedian, events)}
+                />
               </Reveal>
             ))}
           </div>

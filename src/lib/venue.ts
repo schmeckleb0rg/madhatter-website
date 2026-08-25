@@ -17,10 +17,10 @@ export type VenueInfo = {
 };
 
 const DEFAULTS: VenueInfo = {
-  street: "123 W Madison St",
+  street: "1046 W Kinzie St",
   city: "Chicago",
   state: "IL",
-  zip: "60602",
+  zip: "60642",
   phone: "(312) 555-0100",
   email: "hello@madhattercomedy.com",
   eventsEmail: "events@madhattercomedy.com",
