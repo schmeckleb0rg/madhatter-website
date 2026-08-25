@@ -94,21 +94,26 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
   async function uploadFile(file: File, type: "favicon" | "background" | "og_image" | "app_icon") {
     const setStatus = type === "favicon" ? setFaviconStatus : type === "og_image" ? setOgImageStatus : type === "app_icon" ? setAppIconStatus : setBgStatus;
     setStatus("uploading");
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("type", type);
-    const res = await fetch("/api/admin/site/upload", { method: "POST", body: fd });
-    if (res.ok) {
-      const { url } = await res.json();
-      if (type === "favicon") setFaviconUrl(url);
-      else if (type === "og_image") setOgImageUrl(url);
-      else if (type === "app_icon") setAppIconUrl(url);
-      else setBgUrl(url);
-      setStatus("done");
-      setTimeout(() => setStatus("idle"), 2000);
-    } else {
-      const data = await res.json();
-      alert(data.error ?? "Upload failed.");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("type", type);
+      const res = await fetch("/api/admin/site/upload", { method: "POST", body: fd });
+      if (res.ok) {
+        const { url } = await res.json();
+        if (type === "favicon") setFaviconUrl(url);
+        else if (type === "og_image") setOgImageUrl(url);
+        else if (type === "app_icon") setAppIconUrl(url);
+        else setBgUrl(url);
+        setStatus("done");
+        setTimeout(() => setStatus("idle"), 2000);
+      } else {
+        const data = await res.json();
+        alert(data.error ?? "Upload failed.");
+        setStatus("error");
+      }
+    } catch {
+      alert("Connection error. Please try again.");
       setStatus("error");
     }
   }

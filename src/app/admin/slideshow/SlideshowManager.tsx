@@ -19,22 +19,30 @@ export default function SlideshowManager({
   const inputClass =
     "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
 
+  const [uploadError, setUploadError] = useState("");
+
   async function handleUpload() {
     const file = fileRef.current?.files?.[0];
     if (!file) return;
     setUploading(true);
-    const fd = new FormData();
-    fd.append("file", file);
-    const res = await fetch("/api/admin/slideshow", { method: "POST", body: fd });
-    if (res.ok) {
-      const slide = await res.json();
-      setSlides((prev) => [...prev, slide]);
-    } else {
-      const data = await res.json();
-      alert(data.error ?? "Upload failed.");
+    setUploadError("");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/slideshow", { method: "POST", body: fd });
+      if (res.ok) {
+        const slide = await res.json();
+        setSlides((prev) => [...prev, slide]);
+      } else {
+        const data = await res.json();
+        setUploadError(data.error ?? "Upload failed.");
+      }
+    } catch {
+      setUploadError("Connection error. Please try again.");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
     }
-    setUploading(false);
-    if (fileRef.current) fileRef.current.value = "";
   }
 
   async function handleDelete(id: string) {
@@ -129,15 +137,19 @@ export default function SlideshowManager({
 
       {/* Upload */}
       <div className="bg-white border border-charcoal/10 p-6">
-        <h2 className="text-base font-bold text-charcoal mb-4">Upload New Image</h2>
+        <h2 className="text-base font-bold text-charcoal mb-1">Upload New Slide</h2>
+        <p className="font-mono text-[10px] uppercase tracking-wide text-muted/70 mb-4">
+          Recommended: 1920 × 1080 px · PNG, JPEG, GIF, or MOV · Max 100 MB
+        </p>
         <input
           ref={fileRef}
           type="file"
-          accept="image/png,image/jpeg,image/webp,image/gif"
+          accept="image/png,image/jpeg,image/webp,image/gif,.mov,video/quicktime,video/mp4"
           onChange={handleUpload}
           className="text-sm text-muted file:mr-4 file:py-2 file:px-4 file:border file:border-charcoal/10 file:text-sm file:font-semibold file:bg-off-white-2 file:text-charcoal hover:file:bg-charcoal/5 file:cursor-pointer file:transition-colors"
         />
         {uploading && <p className="text-xs text-gold mt-2">Uploading...</p>}
+        {uploadError && <p className="text-xs mt-2" style={{ color: "#9C4A38" }}>{uploadError}</p>}
       </div>
 
       {/* Current slides */}
@@ -152,7 +164,11 @@ export default function SlideshowManager({
             {slides.map((slide, index) => (
               <div key={slide.id} className="flex gap-4 border border-charcoal/10 p-4">
                 <div className="w-32 h-20 flex-shrink-0 overflow-hidden border border-charcoal/10 bg-off-white">
-                  <img src={slide.image_url} alt={slide.caption || "Slide"} className="w-full h-full object-cover" />
+                  {/\.(mov|mp4)(\?|$)/i.test(slide.image_url) ? (
+                    <video src={slide.image_url} className="w-full h-full object-cover" muted playsInline />
+                  ) : (
+                    <img src={slide.image_url} alt={slide.caption || "Slide"} className="w-full h-full object-cover" />
+                  )}
                 </div>
                 <div className="flex-1 space-y-2">
                   <input

@@ -11,8 +11,9 @@ async function requireAuth() {
 
 const ALLOWED_TYPES = [
   "image/png", "image/jpeg", "image/webp", "image/gif",
+  "video/quicktime", "video/mov", "video/x-quicktime", "video/mp4",
 ];
-const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_SIZE = 100 * 1024 * 1024; // 100MB
 
 export async function GET() {
   if (!(await requireAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

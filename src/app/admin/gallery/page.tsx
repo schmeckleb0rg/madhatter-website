@@ -39,14 +39,24 @@ export default async function AdminGalleryPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((img) => (
             <div key={img.id} className="bg-white border border-charcoal/10 overflow-hidden group relative">
-              <div className="aspect-[4/3] relative">
-                <Image
-                  src={img.image_url}
-                  alt={img.caption ?? "Gallery image"}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                />
+              <div className="aspect-[4/3] relative bg-charcoal/5">
+                {/\.(mov|mp4)(\?|$)/i.test(img.image_url) ? (
+                  <video
+                    src={img.image_url}
+                    className="w-full h-full object-cover"
+                    muted
+                    playsInline
+                  />
+                ) : (
+                  <Image
+                    src={img.image_url}
+                    alt={img.caption ?? "Gallery image"}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    unoptimized
+                  />
+                )}
               </div>
               <div className="p-3 flex items-center justify-between">
                 <p className="text-xs text-muted truncate">{img.caption ?? "No caption"}</p>
