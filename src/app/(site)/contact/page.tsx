@@ -51,14 +51,14 @@ export default async function ContactPage() {
     "Questions about shows, private events, or just want to say hello? We'd love to hear from you.";
 
   return (
-    <div className="pt-24 pb-20 min-h-screen">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
           <p className="text-gold text-xs font-bold tracking-widest uppercase mb-3 font-mono">
             {headerSubtitle}
           </p>
-          <h1 className="text-4xl sm:text-5xl font-black text-charcoal font-display">
+          <h1 className="text-3xl sm:text-5xl font-black text-charcoal font-display">
             {headerTitle}
           </h1>
           <p className="mt-4 text-muted max-w-xl mx-auto">
@@ -97,7 +97,7 @@ export default async function ContactPage() {
           </a>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10">
           {/* Form */}
           <div className="lg:col-span-3">
             <div className="bg-white border border-charcoal/10 p-6 sm:p-8">
@@ -202,7 +202,7 @@ export default async function ContactPage() {
               title="Mad Hatter Comedy Club Location"
               src={mapEmbedUrl(venue)}
               width="100%"
-              height="300"
+              height="250"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"

@@ -9,7 +9,7 @@ export default async function AdminRoomsPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
         <div>
           <h1 className="text-2xl font-bold text-charcoal font-display">Rooms</h1>
           <p className="text-sm text-muted mt-1">Manage venue rooms and spaces.</p>
@@ -32,9 +32,9 @@ export default async function AdminRoomsPage() {
             <Link
               key={room.id}
               href={`/admin/rooms/${room.id}`}
-              className="block bg-white border border-charcoal/10 p-5 hover:border-gold/30 transition-colors"
+              className="block bg-white border border-charcoal/10 px-4 sm:px-5 py-3 sm:py-4 hover:border-gold/30 transition-colors"
             >
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h2 className="text-sm font-bold text-charcoal">{room.name}</h2>
                   <p className="text-xs text-muted mt-0.5">

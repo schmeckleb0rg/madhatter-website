@@ -41,15 +41,15 @@ export default async function AboutPage() {
   const badge = pageContent["badge"] || estText;
 
   return (
-    <div className="pt-24 pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <Reveal>
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 sm:mb-16">
             <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
               {subtitle}
             </p>
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-light leading-none tracking-tight">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-light leading-none tracking-tight">
               <span className="font-display italic text-muted block">About</span>
               <span className="font-display font-semibold text-charcoal block">
                 {hero?.title ?? "Mad Hatter"}

@@ -17,13 +17,15 @@ export default async function PrivateInquiriesPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-charcoal font-display">
-          Private Event Inquiries
-        </h1>
-        <p className="text-sm text-muted mt-1">
-          {inquiries.filter((i) => !i.is_read).length} unread of {inquiries.length} total
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-charcoal font-display">
+            Private Event Inquiries
+          </h1>
+          <p className="text-sm text-muted mt-1">
+            {inquiries.filter((i) => !i.is_read).length} unread of {inquiries.length} total
+          </p>
+        </div>
       </div>
 
       {inquiries.length === 0 ? (
@@ -33,11 +35,11 @@ export default async function PrivateInquiriesPage() {
           {inquiries.map((inquiry) => (
             <div
               key={inquiry.id}
-              className={`bg-white border p-5 ${
+              className={`bg-white border p-4 sm:p-5 ${
                 inquiry.is_read ? "border-charcoal/10" : "border-gold/30 bg-gold/5"
               }`}
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="font-semibold text-charcoal">{inquiry.name}</span>

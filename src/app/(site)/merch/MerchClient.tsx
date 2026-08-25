@@ -41,14 +41,14 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
   }, [products, filters]);
 
   return (
-    <div className="pt-24 pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
           <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
             {content.subtitle || "Rep the Club"}
           </p>
-          <h1 className="font-display text-5xl sm:text-6xl font-light leading-none tracking-tight">
+          <h1 className="font-display text-4xl sm:text-5xl font-light leading-none tracking-tight">
             <span className="font-display italic text-muted block">
               {content.title_line1 || "Official"}
             </span>
@@ -82,7 +82,7 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
 
         {/* Products grid */}
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 mb-12">
             {filtered.map((product) => (
               <div
                 key={product.id}

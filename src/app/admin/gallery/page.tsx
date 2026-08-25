@@ -17,7 +17,7 @@ export default async function AdminGalleryPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
         <div>
           <h1 className="text-2xl font-bold text-charcoal font-display">
             Gallery
@@ -36,7 +36,7 @@ export default async function AdminGalleryPage() {
       {images.length === 0 ? (
         <div className="text-center py-20 text-muted">No gallery images yet.</div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
           {images.map((img) => (
             <div key={img.id} className="bg-white border border-charcoal/10 overflow-hidden group relative">
               <div className="aspect-[4/3] relative bg-charcoal/5">

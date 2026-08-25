@@ -60,7 +60,7 @@ export default function Navbar() {
           : "bg-off-white/90 backdrop-blur border-b border-charcoal/10"
       }`}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 sm:h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <span className="font-display text-xl font-semibold text-charcoal tracking-wide group-hover:text-gold transition-colors duration-300">
@@ -134,9 +134,9 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile hamburger — 44px touch target */}
         <button
-          className="md:hidden text-muted hover:text-charcoal transition-colors"
+          className="md:hidden flex items-center justify-center w-11 h-11 -mr-2 text-muted hover:text-charcoal transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -150,23 +150,23 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — full-height overlay for better UX */}
       <div
-        className={`md:hidden bg-off-white border-t border-charcoal/10 px-4 overflow-hidden transition-all duration-300 ease-in-out ${
-          open ? "max-h-[500px] py-4 opacity-100" : "max-h-0 py-0 opacity-0"
+        className={`md:hidden bg-off-white border-t border-charcoal/10 overflow-hidden transition-all duration-300 ease-in-out ${
+          open ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col px-4 py-3 overflow-y-auto">
           {/* Events expandable */}
           <button
             onClick={() => setMobileEventsOpen(!mobileEventsOpen)}
-            className={`flex items-center justify-between text-sm font-medium py-2 transition-colors ${
+            className={`flex items-center justify-between text-base font-medium py-3 transition-colors ${
               isEventsActive ? "text-charcoal" : "text-muted hover:text-charcoal"
             }`}
           >
             Events
             <svg
-              className={`w-4 h-4 transition-transform duration-200 ${mobileEventsOpen ? "rotate-180" : ""}`}
+              className={`w-5 h-5 transition-transform duration-200 ${mobileEventsOpen ? "rotate-180" : ""}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -176,15 +176,15 @@ export default function Navbar() {
           </button>
           <div
             className={`overflow-hidden transition-all duration-200 ${
-              mobileEventsOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+              mobileEventsOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0"
             }`}
           >
-            <div className="pl-4 flex flex-col gap-1 pb-2">
+            <div className="pl-4 flex flex-col border-l-2 border-gold/20 ml-2 mb-1">
               {eventsSubItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`text-sm py-1.5 transition-colors ${
+                  className={`text-sm py-2.5 transition-colors ${
                     pathname === item.href ? "text-charcoal font-medium" : "text-muted hover:text-charcoal"
                   }`}
                   onClick={() => setOpen(false)}
@@ -199,7 +199,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium py-2 transition-colors ${
+              className={`text-base font-medium py-3 transition-colors border-t border-charcoal/5 ${
                 pathname === link.href ? "text-charcoal" : "text-muted hover:text-charcoal"
               }`}
               onClick={() => setOpen(false)}
@@ -209,7 +209,7 @@ export default function Navbar() {
           ))}
           <Link
             href="/contact"
-            className="px-4 py-2 mt-2 bg-charcoal text-off-white text-sm font-semibold text-center"
+            className="mt-3 mb-1 py-3.5 bg-charcoal text-off-white text-sm font-semibold text-center active:scale-[0.98] transition-transform"
             onClick={() => setOpen(false)}
           >
             Contact Us

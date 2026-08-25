@@ -7,7 +7,7 @@ export default function AdminContent({ children }: { children: React.ReactNode }
   const isLoginPage = pathname === "/admin/login";
 
   return (
-    <main className={`flex-1 min-w-0 ${isLoginPage ? "" : "ml-56"}`}>
+    <main className={`flex-1 min-w-0 ${isLoginPage ? "" : "pt-14 lg:pt-0 lg:ml-56"}`}>
       {children}
     </main>
   );

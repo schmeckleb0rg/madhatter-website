@@ -7,35 +7,26 @@ import EmailPopup from "@/components/EmailPopup";
 export default function HomeClient({ background }: { background: string }) {
   const [popupOpen, setPopupOpen] = useState(false);
 
-  const bgStyle = {
-    position: "fixed" as const,
-    inset: 0,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    backgroundColor: "#000",
-  };
-
   return (
     <>
-      {/* Mobile */}
+      {/* Full-screen background — uses admin-uploaded image for both mobile and desktop */}
       <div
-        className="sm:hidden"
-        style={{ ...bgStyle, backgroundImage: "url('/Mad%20Hatter_mobilebackgroung.png')" }}
-        onClick={() => setPopupOpen(true)}
-      />
-      {/* Desktop */}
-      <div
-        className="hidden sm:block cursor-pointer"
-        style={{ ...bgStyle, backgroundImage: `url('${background}')` }}
+        className="fixed inset-0 cursor-pointer"
+        style={{
+          backgroundImage: `url('${background}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#000",
+        }}
         onClick={() => setPopupOpen(true)}
       />
 
-      {/* Hidden access link */}
+      {/* Hidden access link — larger touch target on mobile */}
       <Link
         href="/about"
         aria-label="View site"
-        className="fixed bottom-4 left-4 z-50 block h-[18px] w-[18px] rounded opacity-0 transition-opacity duration-200 hover:opacity-15 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-[#B8934A]"
+        className="fixed bottom-4 left-4 z-50 block w-11 h-11 rounded opacity-0 transition-opacity duration-200 hover:opacity-15 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-[#B8934A]"
       />
 
       {/* Email popup */}

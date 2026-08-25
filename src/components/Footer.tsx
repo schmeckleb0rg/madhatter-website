@@ -16,11 +16,11 @@ export default function Footer({
   socialLinks?: SocialLinks;
 }) {
   return (
-    <footer className="bg-charcoal mt-24">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          {/* Brand */}
-          <div>
+    <footer className="bg-charcoal mt-16 sm:mt-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10">
+          {/* Brand — full width on mobile */}
+          <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
               <span className="font-display text-xl font-semibold text-off-white">
                 Mad Hatter

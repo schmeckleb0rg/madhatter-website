@@ -54,7 +54,7 @@ export default async function ComediansPage() {
   ]);
 
   return (
-    <div className="pt-24 pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <Reveal>
@@ -92,7 +92,7 @@ export default async function ComediansPage() {
             </div>
           </Reveal>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {comedians.map((comedian, i) => (
               <Reveal key={comedian.id} delay={i * 80}>
                 <ComedianCard

@@ -109,8 +109,8 @@ export default function SlideshowManager({
   return (
     <div className="space-y-6">
       {/* Speed setting */}
-      <div className="bg-white border border-charcoal/10 p-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
           <div>
             <h2 className="text-base font-bold text-charcoal">Slideshow Speed</h2>
             <p className="text-xs text-muted mt-0.5">Time in milliseconds between slides (e.g., 5000 = 5 seconds).</p>
@@ -118,7 +118,7 @@ export default function SlideshowManager({
           <button
             onClick={saveSpeed}
             disabled={speedStatus === "saving"}
-            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
+            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors w-full sm:w-auto"
           >
             {speedStatus === "saving" ? "Saving..." : speedStatus === "saved" ? "Saved" : "Save"}
           </button>
@@ -136,7 +136,7 @@ export default function SlideshowManager({
       </div>
 
       {/* Upload */}
-      <div className="bg-white border border-charcoal/10 p-6">
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
         <h2 className="text-base font-bold text-charcoal mb-1">Upload New Slide</h2>
         <p className="font-mono text-[10px] uppercase tracking-wide text-muted/70 mb-4">
           Recommended: 1920 × 1080 px · PNG, JPEG, GIF, or MOV · Max 100 MB
@@ -153,7 +153,7 @@ export default function SlideshowManager({
       </div>
 
       {/* Current slides */}
-      <div className="bg-white border border-charcoal/10 p-6">
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
         <h2 className="text-base font-bold text-charcoal mb-4">
           Current Slides ({slides.length})
         </h2>
@@ -162,8 +162,8 @@ export default function SlideshowManager({
         ) : (
           <div className="space-y-4">
             {slides.map((slide, index) => (
-              <div key={slide.id} className="flex gap-4 border border-charcoal/10 p-4">
-                <div className="w-32 h-20 flex-shrink-0 overflow-hidden border border-charcoal/10 bg-off-white">
+              <div key={slide.id} className="flex flex-col sm:flex-row gap-3 sm:gap-4 border border-charcoal/10 p-3 sm:p-4">
+                <div className="w-full sm:w-32 h-32 sm:h-20 flex-shrink-0 overflow-hidden border border-charcoal/10 bg-off-white">
                   {/\.(mov|mp4)(\?|$)/i.test(slide.image_url) ? (
                     <video src={slide.image_url} className="w-full h-full object-cover" muted playsInline />
                   ) : (

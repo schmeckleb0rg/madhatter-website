@@ -20,7 +20,7 @@ export default async function AdminOrdersPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
         <div>
           <h1 className="text-2xl font-bold text-charcoal font-display">
             Orders
@@ -50,9 +50,9 @@ export default async function AdminOrdersPage() {
             return (
               <div
                 key={order.id}
-                className="flex items-center justify-between bg-white border border-charcoal/10 px-5 py-4"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-white border border-charcoal/10 px-4 sm:px-5 py-3 sm:py-4"
               >
-                <div className="flex items-center gap-4 min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
                   <div className="min-w-0">
                     <div className="text-sm font-semibold text-charcoal truncate">{eventTitle}</div>
                     <div className="text-xs text-muted">
@@ -60,7 +60,7 @@ export default async function AdminOrdersPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 flex-wrap">
                   <span className="text-sm font-semibold text-charcoal">{amount}</span>
                   <span
                     className={`text-xs px-2 py-0.5 ${

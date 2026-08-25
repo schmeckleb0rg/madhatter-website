@@ -34,7 +34,7 @@ export default async function PrivateEventsPage() {
   const rooms = await getRooms();
 
   return (
-    <div className="pt-24 pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <Reveal>
@@ -42,7 +42,7 @@ export default async function PrivateEventsPage() {
             <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
               Host Your Event
             </p>
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-light leading-none tracking-tight">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-light leading-none tracking-tight">
               <span className="font-display italic text-muted block">Private</span>
               <span className="font-display font-semibold text-charcoal block">Events</span>
             </h1>

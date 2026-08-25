@@ -8,7 +8,8 @@ type EventCalendarProps = {
   onEventClick: (event: Event) => void;
 };
 
-const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
+const DAYS_FULL = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
@@ -79,22 +80,22 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
   return (
     <div className="bg-white border border-charcoal/10 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-charcoal/10">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-charcoal/10">
         <button
           onClick={prevMonth}
-          className="text-muted hover:text-charcoal transition-colors p-1"
+          className="text-muted hover:text-charcoal transition-colors p-2"
           aria-label="Previous month"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <h3 className="font-display text-lg font-semibold text-charcoal">
+        <h3 className="font-display text-base sm:text-lg font-semibold text-charcoal">
           {MONTHS[currentMonth.month]} {currentMonth.year}
         </h3>
         <button
           onClick={nextMonth}
-          className="text-muted hover:text-charcoal transition-colors p-1"
+          className="text-muted hover:text-charcoal transition-colors p-2"
           aria-label="Next month"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -103,11 +104,12 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
         </button>
       </div>
 
-      {/* Day labels */}
+      {/* Day labels — short on mobile, full on desktop */}
       <div className="grid grid-cols-7 border-b border-charcoal/10">
-        {DAYS.map((day) => (
-          <div key={day} className="py-2 text-center font-mono text-xs text-muted uppercase tracking-wide">
-            {day}
+        {DAYS.map((day, i) => (
+          <div key={i} className="py-2 text-center font-mono text-[10px] sm:text-xs text-muted uppercase tracking-wide">
+            <span className="sm:hidden">{day}</span>
+            <span className="hidden sm:inline">{DAYS_FULL[i]}</span>
           </div>
         ))}
       </div>
@@ -136,7 +138,7 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
               }`}
             >
               <span
-                className={`text-sm ${
+                className={`text-xs sm:text-sm ${
                   isSelected
                     ? "font-semibold text-off-white"
                     : isToday
@@ -151,9 +153,7 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
                   {eventsByDate[cell.date!].slice(0, 3).map((_, ei) => (
                     <span
                       key={ei}
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        isSelected ? "bg-gold" : "bg-gold"
-                      }`}
+                      className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-gold"
                     />
                   ))}
                 </div>

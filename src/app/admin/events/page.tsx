@@ -15,7 +15,7 @@ export default async function AdminEventsPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
         <h1 className="text-2xl font-bold text-charcoal font-display">
           Upcoming Events
         </h1>
@@ -35,9 +35,9 @@ export default async function AdminEventsPage() {
             <Link
               key={event.id}
               href={`/admin/events/${event.id}`}
-              className="flex items-center justify-between bg-white border border-charcoal/10 px-5 py-4 hover:border-gold/30 transition-colors group"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white border border-charcoal/10 px-5 py-4 hover:border-gold/30 transition-colors group gap-2 sm:gap-0"
             >
-              <div className="flex items-center gap-4 min-w-0">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                 <div className="text-center w-10 flex-shrink-0">
                   <div className="text-xs text-gold font-bold">
                     {new Date(event.date).toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
@@ -53,7 +53,7 @@ export default async function AdminEventsPage() {
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
                 {event.ticket_capacity ? (
                   <span className="text-xs px-2 py-0.5 bg-off-white-2 border border-charcoal/10 text-muted">
                     {event.tickets_sold ?? 0}/{event.ticket_capacity} sold

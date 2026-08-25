@@ -81,14 +81,14 @@ export default async function VisitorInfoPage() {
   const venue = await getVenueInfo();
 
   return (
-    <div className="pt-24 pb-20 min-h-screen">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
           <p className="text-gold text-xs font-bold tracking-widest uppercase mb-3">
             Before You Visit
           </p>
-          <h1 className="text-4xl sm:text-5xl font-black text-charcoal font-display">
+          <h1 className="text-3xl sm:text-5xl font-black text-charcoal font-display">
             Visitor Info & Policies
           </h1>
           <p className="mt-4 text-muted max-w-xl mx-auto">

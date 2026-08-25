@@ -29,7 +29,7 @@ export default async function AdminInquiriesPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
         <div>
           <h1 className="text-2xl font-bold text-charcoal font-display">
             Ticket Inquiries
@@ -47,11 +47,11 @@ export default async function AdminInquiriesPage() {
           {inquiries.map((inquiry) => (
             <div
               key={inquiry.id}
-              className={`bg-white border p-5 ${
+              className={`bg-white border p-4 sm:p-5 ${
                 !inquiry.is_read ? "border-gold/40" : "border-charcoal/10"
               }`}
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                 <div className="min-w-0">
                   <div className="flex items-center gap-3 mb-1">
                     {!inquiry.is_read && (

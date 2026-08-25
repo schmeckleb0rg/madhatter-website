@@ -29,14 +29,14 @@ export default async function PastEventsPage() {
   const events = await getPastEvents();
 
   return (
-    <div className="pt-24 pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-14">
           <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
             The Archives
           </p>
-          <h1 className="font-display text-4xl sm:text-5xl font-semibold text-charcoal">
+          <h1 className="font-display text-3xl sm:text-5xl font-semibold text-charcoal">
             Past Shows
           </h1>
           <p className="mt-4 text-muted max-w-lg mx-auto">

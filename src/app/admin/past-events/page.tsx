@@ -15,7 +15,7 @@ export default async function AdminPastEventsPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
         <h1 className="text-2xl font-bold text-charcoal font-display">
           Past Shows
         </h1>
@@ -35,7 +35,7 @@ export default async function AdminPastEventsPage() {
             <Link
               key={event.id}
               href={`/admin/past-events/${event.id}`}
-              className="flex items-center justify-between bg-white border border-charcoal/10 px-5 py-4 hover:border-gold/30 transition-colors group"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-charcoal/10 px-4 sm:px-5 py-3 sm:py-4 hover:border-gold/30 transition-colors group"
             >
               <div className="flex items-center gap-4 min-w-0">
                 <div className="text-center w-10 flex-shrink-0">

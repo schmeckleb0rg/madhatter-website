@@ -9,13 +9,14 @@ export default function FeaturedEventHero({ event }: { event: Event }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 border border-charcoal/10 overflow-hidden group">
       {/* Image */}
-      <div className="relative h-64 lg:h-96 bg-off-white-2 overflow-hidden">
+      <div className="relative h-48 sm:h-64 lg:h-96 bg-off-white-2 overflow-hidden">
         {event.image_url ? (
           <Image
             src={event.image_url}
             alt={event.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-700"
+            sizes="(max-width: 1024px) 100vw, 50vw"
             priority
           />
         ) : (
@@ -38,47 +39,49 @@ export default function FeaturedEventHero({ event }: { event: Event }) {
       </div>
 
       {/* Content */}
-      <div className="bg-charcoal grain p-8 lg:p-12 flex flex-col justify-between">
+      <div className="bg-charcoal grain p-5 sm:p-8 lg:p-12 flex flex-col justify-between">
         <div className="relative z-[2]">
-          <p className="font-mono text-xs tracking-widest uppercase text-gold mb-4">
+          <p className="font-mono text-[10px] sm:text-xs tracking-widest uppercase text-gold mb-3 sm:mb-4">
             {date.full}
           </p>
-          <h2 className="font-display text-3xl lg:text-4xl font-semibold text-off-white leading-tight mb-4 tracking-tight">
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-off-white leading-tight mb-3 sm:mb-4 tracking-tight">
             {event.title}
           </h2>
           {event.performer && (
-            <p className="text-muted-dark text-lg">{event.performer}</p>
+            <p className="text-muted-dark text-base sm:text-lg">{event.performer}</p>
           )}
           {event.description && (
-            <p className="text-muted-dark text-sm mt-3 line-clamp-2 leading-relaxed">{event.description}</p>
+            <p className="text-muted-dark text-sm mt-2 sm:mt-3 line-clamp-2 leading-relaxed">{event.description}</p>
           )}
         </div>
-        <div className="mt-8 flex items-center gap-4 relative z-[2]">
+        <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 relative z-[2]">
           {!event.is_sold_out && (
             <>
               {event.ticket_price_cents && event.ticket_capacity ? (
                 <Link
                   href={`/tickets/${event.id}`}
-                  className="px-6 py-3 bg-gold text-white font-semibold text-sm hover:bg-gold-soft hover:text-charcoal transition-colors"
+                  className="px-6 py-3 bg-gold text-white font-semibold text-sm text-center hover:bg-gold-soft hover:text-charcoal transition-colors active:scale-[0.98]"
                 >
                   Get Tickets — ${(event.ticket_price_cents / 100).toFixed(2)}
                 </Link>
               ) : (
                 <Link
                   href={`/tickets?event=${event.id}`}
-                  className="px-6 py-3 border border-off-white/30 text-off-white font-semibold text-sm hover:bg-off-white hover:text-charcoal transition-colors"
+                  className="px-6 py-3 border border-off-white/30 text-off-white font-semibold text-sm text-center hover:bg-off-white hover:text-charcoal transition-colors active:scale-[0.98]"
                 >
                   Request Tickets
                 </Link>
               )}
             </>
           )}
-          {event.show_time && (
-            <span className="font-mono text-xs text-muted-dark">{event.show_time}</span>
-          )}
-          {event.doors_time && (
-            <span className="font-mono text-xs text-muted-dark">Doors {event.doors_time}</span>
-          )}
+          <div className="flex items-center gap-3">
+            {event.show_time && (
+              <span className="font-mono text-xs text-muted-dark">{event.show_time}</span>
+            )}
+            {event.doors_time && (
+              <span className="font-mono text-xs text-muted-dark">Doors {event.doors_time}</span>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -122,8 +122,8 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
     <div className="space-y-8">
 
       {/* Venue Address & Contact */}
-      <div className="bg-white border border-charcoal/10 p-6">
-        <div className="flex items-center justify-between mb-6">
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
           <div>
             <h2 className="text-base font-bold text-charcoal">Venue Address & Contact</h2>
             <p className="text-xs text-muted mt-0.5">Updates the address, phone, email, and hours shown across the site.</p>
@@ -131,7 +131,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
           <button
             onClick={saveVenue}
             disabled={venueStatus === "saving"}
-            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
+            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors w-full sm:w-auto"
           >
             {venueStatus === "saving" ? "Saving..." : venueStatus === "saved" ? "Saved" : "Save"}
           </button>
@@ -143,7 +143,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
               onChange={(e) => setVenue({ ...venue, venue_street: e.target.value })} className={inputClass}
               placeholder="123 W Madison St" />
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">City</label>
               <input type="text" maxLength={100} value={venue.venue_city}
@@ -167,7 +167,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
           <div className="border-t border-charcoal/10 pt-4">
             <p className="text-xs text-muted mb-3">Contact Information</p>
             <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Phone</label>
                   <input type="text" maxLength={30} value={venue.venue_phone}
@@ -181,7 +181,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
                     placeholder="hello@madhattercomedy.com" />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Events Email</label>
                   <input type="text" maxLength={200} value={venue.venue_events_email}
@@ -200,7 +200,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
 
           <div className="border-t border-charcoal/10 pt-4">
             <p className="text-xs text-muted mb-3">Map Coordinates (for Google Maps embed & structured data)</p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Latitude</label>
                 <input type="text" maxLength={20} value={venue.venue_map_lat}
@@ -244,8 +244,8 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
       </div>
 
       {/* Social Media Links */}
-      <div className="bg-white border border-charcoal/10 p-6">
-        <div className="flex items-center justify-between mb-6">
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
           <div>
             <h2 className="text-base font-bold text-charcoal">Social Media Links</h2>
             <p className="text-xs text-muted mt-0.5">Leave blank to hide the button on the public site.</p>
@@ -253,7 +253,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
           <button
             onClick={saveSocial}
             disabled={socialStatus === "saving"}
-            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
+            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors w-full sm:w-auto"
           >
             {socialStatus === "saving" ? "Saving..." : socialStatus === "saved" ? "Saved" : "Save"}
           </button>
@@ -288,8 +288,8 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
       </div>
 
       {/* SEO & OG Tags */}
-      <div className="bg-white border border-charcoal/10 p-6">
-        <div className="flex items-center justify-between mb-6">
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
           <div>
             <h2 className="text-base font-bold text-charcoal">SEO & Open Graph</h2>
             <p className="text-xs text-muted mt-0.5">Controls browser tab title, search results, and link previews.</p>
@@ -297,7 +297,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
           <button
             onClick={saveSeo}
             disabled={seoStatus === "saving"}
-            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
+            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors w-full sm:w-auto"
           >
             {seoStatus === "saving" ? "Saving..." : seoStatus === "saved" ? "Saved" : "Save"}
           </button>
@@ -363,10 +363,10 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
       </div>
 
       {/* Favicon */}
-      <div className="bg-white border border-charcoal/10 p-6">
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
         <h2 className="text-base font-bold text-charcoal mb-1">Favicon / Browser Icon</h2>
         <p className="text-xs text-muted mb-5">32x32px or 64x64px, ICO or PNG recommended.</p>
-        <div className="flex items-center gap-5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
           <div className="w-12 h-12 border border-charcoal/10 bg-off-white flex items-center justify-center flex-shrink-0 overflow-hidden">
             {faviconUrl
               ? <img src={faviconUrl} alt="favicon" className="w-8 h-8 object-contain" />
@@ -388,10 +388,10 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
       </div>
 
       {/* App Logo (Home Screen Icon) */}
-      <div className="bg-white border border-charcoal/10 p-6">
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
         <h2 className="text-base font-bold text-charcoal mb-1">App Logo (Home Screen Icon)</h2>
         <p className="text-xs text-muted mb-5">The icon shown when users save your site to their phone home screen. 512x512px square PNG recommended.</p>
-        <div className="flex items-center gap-5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
           <div className="w-16 h-16 border border-charcoal/10 bg-off-white flex items-center justify-center flex-shrink-0 overflow-hidden rounded-xl">
             {appIconUrl
               ? <img src={appIconUrl} alt="app icon" className="w-14 h-14 object-contain" />
@@ -413,7 +413,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
       </div>
 
       {/* Coming Soon Background */}
-      <div className="bg-white border border-charcoal/10 p-6">
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
         <h2 className="text-base font-bold text-charcoal mb-1">Coming Soon Background</h2>
         <p className="text-xs text-muted mb-5">1920x1080px recommended. SVG, PNG, JPG, or WEBP.</p>
         <div className="space-y-4">

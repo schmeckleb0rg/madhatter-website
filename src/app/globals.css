@@ -60,3 +60,38 @@ html {
   background-color: rgba(184, 147, 74, 0.25);
   color: #1B1A17;
 }
+
+/* Popup animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out both;
+}
+.animate-fadeInUp {
+  animation: fadeInUp 0.3s ease-out both;
+}
+
+/* Prevent horizontal overflow on mobile */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Improve touch targets on mobile */
+@media (pointer: coarse) {
+  button, a, select, input[type="checkbox"], input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Exception for inline text links and small UI elements */
+  a.text-xs, a.text-sm, span > a, p > a,
+  button.text-xs, .flex button, nav a, nav button {
+    min-height: unset;
+    min-width: unset;
+  }
+}

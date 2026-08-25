@@ -139,7 +139,7 @@ export default function RoomForm({ initialData, id }: { initialData?: Partial<Ro
 
       {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
 
-      <div className="flex gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row gap-3 pt-2">
         <button
           type="submit"
           disabled={status === "loading"}
@@ -147,22 +147,24 @@ export default function RoomForm({ initialData, id }: { initialData?: Partial<Ro
         >
           {status === "loading" ? "Saving..." : id ? "Update Room" : "Add Room"}
         </button>
-        {id && (
+        <div className="flex gap-3">
+          {id && (
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="flex-1 sm:flex-none px-6 py-3 border border-red-200 text-red-600 hover:bg-red-50 transition-colors text-sm"
+            >
+              Delete
+            </button>
+          )}
           <button
             type="button"
-            onClick={handleDelete}
-            className="px-6 py-3 border border-red-200 text-red-600 hover:bg-red-50 transition-colors text-sm"
+            onClick={() => router.back()}
+            className="flex-1 sm:flex-none px-6 py-3 border border-charcoal/10 text-muted hover:text-charcoal transition-colors text-sm"
           >
-            Delete
+            Cancel
           </button>
-        )}
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="px-6 py-3 border border-charcoal/10 text-muted hover:text-charcoal transition-colors text-sm"
-        >
-          Cancel
-        </button>
+        </div>
       </div>
     </form>
   );

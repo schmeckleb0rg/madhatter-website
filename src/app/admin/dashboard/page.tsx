@@ -89,7 +89,7 @@ export default async function DashboardPage() {
       {pendingCount > 0 && (
         <Link
           href="/admin/messaging"
-          className="flex items-center gap-3 bg-gold/10 border border-gold/30 px-5 py-4 mb-6 hover:bg-gold/15 transition-colors"
+          className="flex items-center gap-3 bg-gold/10 border border-gold/30 px-4 sm:px-5 py-3 sm:py-4 mb-6 hover:bg-gold/15 transition-colors"
         >
           <svg className="w-5 h-5 text-gold flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -104,14 +104,14 @@ export default async function DashboardPage() {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-10">
         {tiles.map((tile) => (
           <Link
             key={tile.label}
             href={tile.href}
-            className="bg-white border border-charcoal/10 p-5 hover:border-gold/30 transition-colors"
+            className="bg-white border border-charcoal/10 p-4 sm:p-5 hover:border-gold/30 transition-colors"
           >
-            <div className={`text-3xl font-bold ${tile.color}`}>{tile.value}</div>
+            <div className={`text-2xl sm:text-3xl font-bold ${tile.color}`}>{tile.value}</div>
             <div className="font-mono text-xs text-muted mt-1">{tile.label}</div>
           </Link>
         ))}
@@ -125,7 +125,7 @@ export default async function DashboardPage() {
             <Link
               key={link.href}
               href={link.href}
-              className="flex items-center gap-3 bg-white border border-charcoal/10 px-5 py-4 hover:border-gold/30 transition-colors group"
+              className="flex items-center gap-3 bg-white border border-charcoal/10 px-4 sm:px-5 py-3 sm:py-4 hover:border-gold/30 transition-colors group"
             >
               {"icon" in link && <span className="text-gold text-lg">{link.icon}</span>}
               <span className="text-sm text-muted group-hover:text-charcoal transition-colors">{link.label}</span>

@@ -16,7 +16,7 @@ export default async function AdminMerchPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
         <div>
           <h1 className="font-display text-2xl font-semibold text-charcoal">
             Merch
@@ -25,7 +25,7 @@ export default async function AdminMerchPage() {
         </div>
         <Link
           href="/admin/merch/new"
-          className="px-4 py-2 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 transition-colors"
+          className="px-4 py-2 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 transition-colors mt-3 sm:mt-0"
         >
           + Add Item
         </Link>

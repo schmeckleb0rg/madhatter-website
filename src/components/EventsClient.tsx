@@ -49,7 +49,7 @@ export default function EventsClient({
         ];
 
   return (
-    <div className="pt-24 pb-20 min-h-screen bg-off-white">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <Reveal>
@@ -57,7 +57,7 @@ export default function EventsClient({
             <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">
               {subtitle}
             </p>
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-light leading-none tracking-tight">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-light leading-none tracking-tight">
               <span className="font-display italic text-muted block">{titleLine1}</span>
               <span className="font-display font-semibold text-charcoal block">{titleLine2}</span>
             </h1>
@@ -109,7 +109,7 @@ export default function EventsClient({
               <div className="flex items-center justify-end gap-2 mb-6">
                 <button
                   onClick={() => setViewMode("list")}
-                  className={`font-mono text-xs tracking-wide px-3 py-1.5 transition-colors ${
+                  className={`font-mono text-xs tracking-wide px-3 py-2 sm:py-1.5 transition-colors ${
                     viewMode === "list"
                       ? "bg-charcoal text-off-white"
                       : "border border-charcoal/20 text-muted hover:text-charcoal"
@@ -119,7 +119,7 @@ export default function EventsClient({
                 </button>
                 <button
                   onClick={() => setViewMode("calendar")}
-                  className={`font-mono text-xs tracking-wide px-3 py-1.5 transition-colors ${
+                  className={`font-mono text-xs tracking-wide px-3 py-2 sm:py-1.5 transition-colors ${
                     viewMode === "calendar"
                       ? "bg-charcoal text-off-white"
                       : "border border-charcoal/20 text-muted hover:text-charcoal"
@@ -133,7 +133,7 @@ export default function EventsClient({
             {viewMode === "list" ? (
               /* Regular events grid */
               regularEvents.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {regularEvents.map((event, i) => (
                     <Reveal key={event.id} delay={i * 80}>
                       <div onClick={() => setSelectedEvent(event)} className="cursor-pointer">

@@ -42,7 +42,7 @@ export default function EventDetailPopup({ event, onClose }: EventDetailPopupPro
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-8"
+      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:px-4 sm:py-8"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -50,12 +50,16 @@ export default function EventDetailPopup({ event, onClose }: EventDetailPopupPro
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70 animate-fadeIn" />
 
-      {/* Modal */}
-      <div className="relative bg-off-white border border-charcoal/10 max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-fadeInUp">
+      {/* Modal — slides up from bottom on mobile, centered on desktop */}
+      <div className="relative bg-off-white w-full sm:max-w-2xl sm:border sm:border-charcoal/10 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto animate-fadeInUp rounded-t-xl sm:rounded-none">
+        {/* Drag handle on mobile */}
+        <div className="sm:hidden flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 rounded-full bg-charcoal/20" />
+        </div>
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-off-white/80 backdrop-blur text-muted hover:text-charcoal transition-colors"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center bg-off-white/80 backdrop-blur text-muted hover:text-charcoal transition-colors rounded-full sm:rounded-none"
           aria-label="Close"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -90,15 +94,15 @@ export default function EventDetailPopup({ event, onClose }: EventDetailPopupPro
         </div>
 
         {/* Content */}
-        <div className="p-6 sm:p-8">
-          <div className="flex items-start gap-5 mb-6">
+        <div className="p-5 sm:p-8">
+          <div className="flex items-start gap-3 sm:gap-5 mb-6">
             {/* Date block */}
-            <div className="flex-shrink-0 text-center w-16 bg-off-white-2 border border-charcoal/10 py-3">
-              <div className="font-mono text-xs font-medium text-gold">{date.month}</div>
-              <div className="text-3xl font-bold text-charcoal leading-none">{date.day}</div>
+            <div className="flex-shrink-0 text-center w-14 sm:w-16 bg-off-white-2 border border-charcoal/10 py-2.5 sm:py-3">
+              <div className="font-mono text-[10px] sm:text-xs font-medium text-gold">{date.month}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-charcoal leading-none">{date.day}</div>
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="font-display text-2xl font-semibold text-charcoal tracking-tight">
+              <h2 className="font-display text-xl sm:text-2xl font-semibold text-charcoal tracking-tight">
                 {event.title}
               </h2>
               {event.performer && (
@@ -109,7 +113,7 @@ export default function EventDetailPopup({ event, onClose }: EventDetailPopupPro
           </div>
 
           {/* Time & Price */}
-          <div className="flex flex-wrap gap-4 mb-6 text-sm">
+          <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm">
             {event.doors_time && (
               <div className="bg-off-white-2 border border-charcoal/10 px-3 py-2">
                 <span className="font-mono text-xs text-gold uppercase tracking-wide">Doors</span>
@@ -160,7 +164,7 @@ export default function EventDetailPopup({ event, onClose }: EventDetailPopupPro
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 mt-8">
+          <div className="flex gap-3 mt-6 sm:mt-8">
             {!event.is_sold_out && (
               <>
                 {event.ticket_price_cents && event.ticket_capacity ? (

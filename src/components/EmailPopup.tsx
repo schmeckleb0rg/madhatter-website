@@ -62,7 +62,7 @@ export default function EmailPopup({ isOpen, onClose }: EmailPopupProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center px-4"
+      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:px-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -70,12 +70,16 @@ export default function EmailPopup({ isOpen, onClose }: EmailPopupProps) {
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70 animate-fadeIn" />
 
-      {/* Modal */}
-      <div className="relative bg-off-white border border-charcoal/10 p-8 sm:p-10 max-w-md w-full animate-fadeInUp">
+      {/* Modal — slides up from bottom on mobile */}
+      <div className="relative bg-off-white w-full sm:max-w-md p-6 sm:p-10 animate-fadeInUp rounded-t-xl sm:rounded-none sm:border sm:border-charcoal/10">
+        {/* Drag handle on mobile */}
+        <div className="sm:hidden flex justify-center -mt-2 mb-4">
+          <div className="w-10 h-1 rounded-full bg-charcoal/20" />
+        </div>
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-muted hover:text-charcoal transition-colors"
+          className="absolute top-4 right-4 w-10 h-10 sm:w-auto sm:h-auto flex items-center justify-center text-muted hover:text-charcoal transition-colors"
           aria-label="Close"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

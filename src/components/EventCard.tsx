@@ -65,13 +65,14 @@ export default function EventCard({ event }: { event: Event }) {
   return (
     <div className="group bg-white border border-charcoal/10 overflow-hidden hover:border-charcoal/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-charcoal/5">
       {/* Image */}
-      <div className="relative h-48 bg-off-white-2 overflow-hidden">
+      <div className="relative h-40 sm:h-48 bg-off-white-2 overflow-hidden">
         {event.image_url ? (
           <Image
             src={event.image_url}
             alt={event.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
           <div className="h-full flex flex-col items-center justify-center bg-off-white-2 gap-2">
@@ -105,11 +106,11 @@ export default function EventCard({ event }: { event: Event }) {
       </div>
 
       {/* Content */}
-      <div className="p-5 flex gap-4">
+      <div className="p-4 sm:p-5 flex gap-3 sm:gap-4">
         {/* Date block */}
-        <div className="flex-shrink-0 text-center w-12">
-          <div className="font-mono text-xs font-medium text-gold">{date.month}</div>
-          <div className="text-2xl font-bold text-charcoal leading-none">{date.day}</div>
+        <div className="flex-shrink-0 text-center w-10 sm:w-12">
+          <div className="font-mono text-[10px] sm:text-xs font-medium text-gold">{date.month}</div>
+          <div className="text-xl sm:text-2xl font-bold text-charcoal leading-none">{date.day}</div>
         </div>
 
         {/* Details */}
@@ -132,18 +133,18 @@ export default function EventCard({ event }: { event: Event }) {
 
       {/* CTA */}
       {!event.is_sold_out && (
-        <div className="px-5 pb-5">
+        <div className="px-4 pb-4 sm:px-5 sm:pb-5">
           {event.ticket_price_cents && event.ticket_capacity ? (
             <Link
               href={`/tickets/${event.id}`}
-              className="block w-full text-center py-2.5 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 transition-all duration-200 active:scale-[0.98]"
+              className="block w-full text-center py-3 bg-charcoal text-off-white text-sm font-semibold hover:bg-charcoal-2 transition-all duration-200 active:scale-[0.98]"
             >
               Buy Tickets — ${(event.ticket_price_cents / 100).toFixed(2)}
             </Link>
           ) : (
             <Link
               href={`/tickets?event=${event.id}`}
-              className="block w-full text-center py-2.5 border border-charcoal/20 text-charcoal text-sm font-semibold hover:bg-charcoal hover:text-off-white transition-all duration-200"
+              className="block w-full text-center py-3 border border-charcoal/20 text-charcoal text-sm font-semibold hover:bg-charcoal hover:text-off-white transition-all duration-200"
             >
               Request Tickets
             </Link>

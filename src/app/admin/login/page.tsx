@@ -93,7 +93,7 @@ function LoginForm() {
 export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-off-white flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm mx-4 sm:mx-auto">
         <div className="text-center mb-8">
           <p className="font-display text-4xl font-semibold text-charcoal tracking-wide uppercase mb-1">
             Mad Hatter
@@ -102,7 +102,7 @@ export default function AdminLoginPage() {
             Admin Access
           </h1>
         </div>
-        <div className="bg-white border border-charcoal/10 p-8">
+        <div className="bg-white border border-charcoal/10 p-6 sm:p-8">
           <Suspense fallback={null}>
             <LoginForm />
           </Suspense>
