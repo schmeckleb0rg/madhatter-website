@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Room } from "@/lib/supabase";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 export default function RoomForm({ initialData, id }: { initialData?: Partial<Room>; id?: string }) {
   const router = useRouter();
@@ -115,30 +116,26 @@ export default function RoomForm({ initialData, id }: { initialData?: Partial<Ro
         <p className="text-xs text-muted mt-1">Separate each feature with a comma.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label className={labelClass}>Capacity</label>
-          <input
-            type="number"
-            min="0"
-            step="1"
-            value={form.capacity}
-            onChange={(e) => setForm({ ...form, capacity: e.target.value })}
-            className={inputClass}
-            placeholder="200"
-          />
-        </div>
-        <div>
-          <label className={labelClass}>Image URL</label>
-          <input
-            type="url"
-            value={form.image_url}
-            onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-            className={inputClass}
-            placeholder="https://..."
-          />
-        </div>
+      <div>
+        <label className={labelClass}>Capacity</label>
+        <input
+          type="number"
+          min="0"
+          step="1"
+          value={form.capacity}
+          onChange={(e) => setForm({ ...form, capacity: e.target.value })}
+          className={inputClass}
+          placeholder="200"
+        />
       </div>
+
+      <MediaUpload
+        label="Room Photo"
+        value={form.image_url}
+        onChange={(url) => setForm({ ...form, image_url: url })}
+        folder="rooms"
+        hint="Recommended: 1200 × 800 px · PNG or JPEG · Max 100 MB"
+      />
 
       {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
 

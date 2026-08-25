@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Event, PastEvent } from "@/lib/supabase";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 type EventFormProps = {
   type: "event" | "past-event";
@@ -315,17 +316,14 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
         </div>
       )}
 
-      {/* Image URL */}
-      <div>
-        <label className={labelClass}>Image URL</label>
-        <input
-          type="url"
-          value={form.image_url}
-          onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-          className={inputClass}
-          placeholder="https://..."
-        />
-      </div>
+      {/* Image / Media */}
+      <MediaUpload
+        label="Event Image"
+        value={form.image_url}
+        onChange={(url) => setForm({ ...form, image_url: url })}
+        folder="events"
+        hint="Recommended: 1200 × 630 px · PNG or JPEG · Max 100 MB"
+      />
 
       {/* Event-only toggles */}
       {isEvent && (

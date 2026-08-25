@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Comedian } from "@/lib/supabase";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 type ComedianFormProps = {
   initialData?: Partial<Comedian>;
@@ -95,17 +96,14 @@ export default function ComedianForm({ initialData, id }: ComedianFormProps) {
         />
       </div>
 
-      {/* Headshot URL */}
-      <div>
-        <label className={labelClass}>Headshot URL</label>
-        <input
-          type="url"
-          value={form.headshot_url}
-          onChange={(e) => setForm({ ...form, headshot_url: e.target.value })}
-          className={inputClass}
-          placeholder="https://..."
-        />
-      </div>
+      {/* Headshot */}
+      <MediaUpload
+        label="Headshot Photo"
+        value={form.headshot_url}
+        onChange={(url) => setForm({ ...form, headshot_url: url })}
+        folder="comedians"
+        hint="Recommended: 400 × 400 px square · PNG or JPEG · Max 100 MB"
+      />
 
       {/* Social Links */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

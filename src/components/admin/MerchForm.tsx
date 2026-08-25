@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { MerchItem } from "@/lib/supabase";
-import Image from "next/image";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 const ALL_SIZES = ["XS", "S", "M", "L", "XL", "2XL", "3XL"];
 
@@ -27,22 +27,6 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
 
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  async function handleUpload() {
-    const file = fileRef.current?.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch("/api/admin/merch/upload", { method: "POST", body: formData });
-    if (res.ok) {
-      const { url } = await res.json();
-      setForm((f) => ({ ...f, image_url: url }));
-    }
-    setUploading(false);
-  }
 
   function toggleSize(size: string) {
     setForm((f) => ({
@@ -220,31 +204,13 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
       </div>
 
       {/* Image upload */}
-      <div>
-        <label className={labelClass}>Product Image</label>
-        <div className="flex items-center gap-4">
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/png,image/jpeg,image/webp,image/gif"
-            onChange={handleUpload}
-            className="text-sm text-muted file:mr-4 file:py-2 file:px-4 file:border file:border-charcoal/10 file:text-sm file:font-semibold file:bg-off-white-2 file:text-charcoal hover:file:bg-charcoal/5 file:cursor-pointer file:transition-colors"
-          />
-          {uploading && <span className="text-xs text-gold">Uploading...</span>}
-        </div>
-        {form.image_url && (
-          <div className="mt-3 relative w-32 h-32 overflow-hidden border border-charcoal/10">
-            <Image src={form.image_url} alt="Preview" fill className="object-cover" sizes="128px" />
-          </div>
-        )}
-        <input
-          type="text"
-          value={form.image_url}
-          onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-          className={`${inputClass} mt-2`}
-          placeholder="Or paste image URL"
-        />
-      </div>
+      <MediaUpload
+        label="Product Image"
+        value={form.image_url}
+        onChange={(url) => setForm({ ...form, image_url: url })}
+        folder="merch"
+        hint="Recommended: 800 × 800 px square · PNG or JPEG · Max 100 MB"
+      />
 
       {/* Toggles */}
       <div className="space-y-3">
