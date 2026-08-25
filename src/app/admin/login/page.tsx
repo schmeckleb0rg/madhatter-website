@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -10,7 +10,6 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
-  const router = useRouter();
   const rawCallback = searchParams.get("callbackUrl") ?? "";
   const callbackUrl =
     rawCallback.startsWith("/admin") && !rawCallback.startsWith("//")
@@ -33,7 +32,7 @@ function LoginForm() {
         setError("Invalid email or password. Try again.");
         setLoading(false);
       } else if (result?.ok) {
-        router.push(callbackUrl);
+        window.location.href = callbackUrl;
       } else {
         setError("Login failed. Please try again.");
         setLoading(false);
@@ -96,10 +95,12 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-off-white flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="font-display text-2xl font-semibold text-charcoal">
+          <p className="font-display text-4xl font-semibold text-charcoal tracking-wide uppercase mb-1">
+            Mad Hatter
+          </p>
+          <h1 className="font-mono text-xs font-medium text-muted uppercase tracking-widest">
             Admin Access
           </h1>
-          <p className="text-xs text-muted mt-2">Mad Hatter Comedy Club</p>
         </div>
         <div className="bg-white border border-charcoal/10 p-8">
           <Suspense fallback={null}>
