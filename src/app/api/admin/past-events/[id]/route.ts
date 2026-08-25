@@ -8,7 +8,7 @@ const schema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().max(2000).optional(),
   performer: z.string().max(200).optional(),
-  date: z.string().datetime(),
+  date: z.string().min(1),
   image_url: z.string().url().optional().or(z.literal("")),
 });
 

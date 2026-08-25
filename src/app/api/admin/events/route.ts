@@ -15,7 +15,7 @@ const schema = z.object({
   detailed_description: z.string().max(5000).optional(),
   performer: z.string().max(200).optional(),
   comedian_id: z.string().uuid().optional().nullable(),
-  date: z.string().datetime(),
+  date: z.string().min(1),
   doors_time: z.string().max(20).optional(),
   show_time: z.string().max(20).optional(),
   image_url: z.string().url().optional().or(z.literal("")),

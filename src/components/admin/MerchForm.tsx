@@ -53,6 +53,13 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
     }));
   }
 
+  async function handleDelete() {
+    if (!id || !confirm("Delete this item? This cannot be undone.")) return;
+    await fetch(`/api/admin/merch/${id}`, { method: "DELETE" });
+    router.push("/admin/merch");
+    router.refresh();
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("loading");
@@ -282,6 +289,15 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
         >
           {status === "loading" ? "Saving..." : id ? "Update Item" : "Add Item"}
         </button>
+        {id && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="px-6 py-3 border border-red-200 text-red-600 hover:bg-red-50 transition-colors text-sm"
+          >
+            Delete
+          </button>
+        )}
         <button
           type="button"
           onClick={() => router.back()}
