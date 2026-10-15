@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS press_articles (
 );
 
 ALTER TABLE press_articles ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "press_articles_public_read" ON press_articles
+DROP POLICY IF EXISTS "press_articles_public_read" ON press_articles;
+CREATE POLICY "press_articles_public_read" ON press_articles
   FOR SELECT USING (true);
 
 -- Blog Posts
@@ -34,7 +35,8 @@ CREATE TABLE IF NOT EXISTS blog_posts (
 );
 
 ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "blog_posts_public_read" ON blog_posts
+DROP POLICY IF EXISTS "blog_posts_public_read" ON blog_posts;
+CREATE POLICY "blog_posts_public_read" ON blog_posts
   FOR SELECT USING (true);
 
 -- Staff Members
@@ -51,7 +53,8 @@ CREATE TABLE IF NOT EXISTS staff_members (
 );
 
 ALTER TABLE staff_members ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "staff_members_public_read" ON staff_members
+DROP POLICY IF EXISTS "staff_members_public_read" ON staff_members;
+CREATE POLICY "staff_members_public_read" ON staff_members
   FOR SELECT USING (true);
 
 -- Patrons (donors, VIPs, sponsors)
@@ -68,7 +71,8 @@ CREATE TABLE IF NOT EXISTS patrons (
 );
 
 ALTER TABLE patrons ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "patrons_public_read" ON patrons
+DROP POLICY IF EXISTS "patrons_public_read" ON patrons;
+CREATE POLICY "patrons_public_read" ON patrons
   FOR SELECT USING (true);
 
 -- FAQs
@@ -83,5 +87,6 @@ CREATE TABLE IF NOT EXISTS faqs (
 );
 
 ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "faqs_public_read" ON faqs
+DROP POLICY IF EXISTS "faqs_public_read" ON faqs;
+CREATE POLICY "faqs_public_read" ON faqs
   FOR SELECT USING (true);

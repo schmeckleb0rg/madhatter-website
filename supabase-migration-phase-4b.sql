@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS membership_tiers (
 );
 
 ALTER TABLE membership_tiers ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "membership_tiers_public_read" ON membership_tiers
+DROP POLICY IF EXISTS "membership_tiers_public_read" ON membership_tiers;
+CREATE POLICY "membership_tiers_public_read" ON membership_tiers
   FOR SELECT USING (true);
 
 CREATE TABLE IF NOT EXISTS members (

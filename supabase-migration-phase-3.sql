@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS visitor_guide_partners (
 );
 
 ALTER TABLE visitor_guide_partners ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "visitor_guide_partners_public_read" ON visitor_guide_partners
+DROP POLICY IF EXISTS "visitor_guide_partners_public_read" ON visitor_guide_partners;
+CREATE POLICY "visitor_guide_partners_public_read" ON visitor_guide_partners
   FOR SELECT USING (true);
 
 -- Job Listings
@@ -38,7 +39,8 @@ CREATE TABLE IF NOT EXISTS job_listings (
 );
 
 ALTER TABLE job_listings ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "job_listings_public_read" ON job_listings
+DROP POLICY IF EXISTS "job_listings_public_read" ON job_listings;
+CREATE POLICY "job_listings_public_read" ON job_listings
   FOR SELECT USING (true);
 
 -- Job Applications
@@ -54,7 +56,8 @@ CREATE TABLE IF NOT EXISTS job_applications (
 );
 
 ALTER TABLE job_applications ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "job_applications_insert" ON job_applications
+DROP POLICY IF EXISTS "job_applications_insert" ON job_applications;
+CREATE POLICY "job_applications_insert" ON job_applications
   FOR INSERT WITH CHECK (true);
 
 -- Classes
@@ -80,7 +83,8 @@ CREATE TABLE IF NOT EXISTS classes (
 );
 
 ALTER TABLE classes ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "classes_public_read" ON classes
+DROP POLICY IF EXISTS "classes_public_read" ON classes;
+CREATE POLICY "classes_public_read" ON classes
   FOR SELECT USING (true);
 
 -- Class Enrollments
@@ -98,7 +102,8 @@ CREATE TABLE IF NOT EXISTS class_enrollments (
 );
 
 ALTER TABLE class_enrollments ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "class_enrollments_insert" ON class_enrollments
+DROP POLICY IF EXISTS "class_enrollments_insert" ON class_enrollments;
+CREATE POLICY "class_enrollments_insert" ON class_enrollments
   FOR INSERT WITH CHECK (true);
 
 -- Add room_type and virtual tour fields to rooms
