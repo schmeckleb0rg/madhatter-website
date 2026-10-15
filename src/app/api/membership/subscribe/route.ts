@@ -3,6 +3,9 @@ import { getMemberSession } from "@/lib/member-auth";
 import { getAdminClient } from "@/lib/supabase";
 import { getStripe, cancelSubscription } from "@/lib/stripe";
 
+const isStripeConfigured = () =>
+  !!(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_MAD_MEMBER_MONTHLY_PRICE_ID);
+
 export async function POST(request: Request) {
   try {
     const session = await getMemberSession();
@@ -17,15 +20,48 @@ export async function POST(request: Request) {
     const db = getAdminClient();
     const { data: member } = await db
       .from("members")
-      .select("id, stripe_customer_id, tier")
+      .select("id, stripe_customer_id, tier, points_balance")
       .eq("id", session.memberId)
       .single();
 
-    if (!member || !member.stripe_customer_id) {
+    if (!member) {
+      return NextResponse.json({ error: "Member not found." }, { status: 400 });
+    }
+
+    const origin = request.headers.get("origin") || process.env.NEXTAUTH_URL || "http://localhost:3000";
+
+    // Test mode: when Stripe is not configured, directly upgrade the tier
+    if (!isStripeConfigured()) {
+      await db
+        .from("members")
+        .update({
+          tier: requestedTier,
+          stripe_subscription_id: `test_sub_${Date.now()}`,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", member.id);
+
+      // Award bonus points
+      const bonusPoints = requestedTier === "top_hat" ? 500 : 250;
+      await db.from("points_transactions").insert({
+        member_id: member.id,
+        points: bonusPoints,
+        type: "earned",
+        description: `${requestedTier === "top_hat" ? "Top Hat" : "Mad Member"} subscription bonus (test mode)`,
+      });
+      await db
+        .from("members")
+        .update({ points_balance: (member.points_balance || 0) + bonusPoints })
+        .eq("id", member.id);
+
+      return NextResponse.json({ url: `${origin}/membership/dashboard?subscribed=true` });
+    }
+
+    // Production mode: create Stripe checkout session
+    if (!member.stripe_customer_id) {
       return NextResponse.json({ error: "Stripe customer not found." }, { status: 400 });
     }
 
-    // Determine the Stripe price ID based on tier and billing cycle
     let priceKey: string | undefined;
     if (requestedTier === "top_hat") {
       priceKey = billing === "annual"
@@ -42,7 +78,6 @@ export async function POST(request: Request) {
     }
 
     const stripe = getStripe();
-    const origin = request.headers.get("origin") || process.env.NEXTAUTH_URL || "http://localhost:3000";
 
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: member.stripe_customer_id,
@@ -79,6 +114,21 @@ export async function DELETE() {
       return NextResponse.json({ error: "No active subscription." }, { status: 400 });
     }
 
+    // Test mode: if subscription ID starts with test_, just downgrade directly
+    if (member.stripe_subscription_id.startsWith("test_sub_")) {
+      await db
+        .from("members")
+        .update({
+          tier: "free",
+          stripe_subscription_id: null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", session.memberId);
+
+      return NextResponse.json({ success: true });
+    }
+
+    // Production mode: cancel via Stripe
     await cancelSubscription(member.stripe_subscription_id);
 
     return NextResponse.json({ success: true });
