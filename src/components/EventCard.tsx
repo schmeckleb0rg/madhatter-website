@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Event } from "@/lib/supabase";
+import { isJustAnnounced, isSellingFast } from "@/lib/badges";
 
 export function formatDate(dateStr: string) {
   const d = new Date(dateStr);
@@ -38,16 +39,6 @@ function getAvailabilityBadge(event: Event) {
       </span>
     );
   }
-  if (event.ticket_capacity && event.tickets_sold != null) {
-    const remaining = event.ticket_capacity - event.tickets_sold;
-    if (remaining <= Math.ceil(event.ticket_capacity * 0.2)) {
-      return (
-        <span className="font-mono text-xs font-medium px-2 py-1" style={{ color: "#96793A", backgroundColor: "rgba(150,121,58,0.12)" }}>
-          Low tickets
-        </span>
-      );
-    }
-  }
   if (event.ticket_capacity) {
     return (
       <span className="font-mono text-xs font-medium px-2 py-1" style={{ color: "#2F6E52", backgroundColor: "rgba(47,110,82,0.10)" }}>
@@ -58,9 +49,17 @@ function getAvailabilityBadge(event: Event) {
   return null;
 }
 
-export default function EventCard({ event }: { event: Event }) {
+type EventCardProps = {
+  event: Event;
+  justAnnouncedDays?: number;
+  sellingFastThreshold?: number;
+};
+
+export default function EventCard({ event, justAnnouncedDays = 14, sellingFastThreshold = 70 }: EventCardProps) {
   const date = formatDate(event.date);
   const timing = getTimingBadge(event.date);
+  const justAnnounced = isJustAnnounced(event, justAnnouncedDays);
+  const sellingFast = isSellingFast(event, sellingFastThreshold);
 
   return (
     <div className="group bg-white grain border-2 border-charcoal/15 dark:bg-[#1C1A16] dark:border-gold/10 shadow-[2px_3px_0_rgba(27,26,23,0.06),0_1px_3px_rgba(27,26,23,0.04)] dark:shadow-[2px_3px_0_rgba(184,147,74,0.04),0_1px_3px_rgba(0,0,0,0.3)] overflow-hidden hover:border-gold/40 hover:-translate-y-1 hover:shadow-[4px_6px_0_rgba(27,26,23,0.08),0_4px_12px_rgba(27,26,23,0.06)] dark:hover:border-gold/30 dark:hover:shadow-[0_0_15px_rgba(184,147,74,0.08)] transition-all duration-300">
@@ -87,6 +86,16 @@ export default function EventCard({ event }: { event: Event }) {
           {event.is_featured && (
             <span className="px-2 py-1 bg-gold text-white text-xs font-mono font-medium tracking-wider uppercase">
               Featured
+            </span>
+          )}
+          {justAnnounced && !event.is_sold_out && (
+            <span className="px-2 py-1 text-xs font-mono font-medium tracking-wider uppercase" style={{ color: "#1A7A6D", backgroundColor: "rgba(26,122,109,0.12)" }}>
+              Just Announced
+            </span>
+          )}
+          {sellingFast && (
+            <span className="px-2 py-1 text-xs font-mono font-medium tracking-wider uppercase animate-pulse" style={{ color: "#DC5028", backgroundColor: "rgba(220,80,40,0.12)", boxShadow: "0 0 12px rgba(220,80,40,0.5)" }}>
+              Selling Fast
             </span>
           )}
           {timing && !event.is_sold_out && (
@@ -128,6 +137,23 @@ export default function EventCard({ event }: { event: Event }) {
             )}
             {getAvailabilityBadge(event)}
           </div>
+          {event.genres && event.genres.length > 0 && (
+            <div className="flex gap-1.5 mt-2 flex-wrap">
+              {event.genres.map((genre) => (
+                <span
+                  key={genre.id}
+                  className="font-mono text-[10px] font-medium tracking-wider uppercase px-2 py-0.5 rounded-full"
+                  style={{
+                    color: genre.color,
+                    background: `linear-gradient(135deg, ${genre.color}15, ${genre.color}08)`,
+                    border: `1px solid ${genre.color}30`,
+                  }}
+                >
+                  {genre.name}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

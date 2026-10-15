@@ -12,8 +12,14 @@ async function getImages(): Promise<GalleryImage[]> {
   return (data as GalleryImage[]) ?? [];
 }
 
+async function getRooms() {
+  const db = getAdminClient();
+  const { data } = await db.from("rooms").select("id, name").order("name");
+  return (data ?? []) as { id: string; name: string }[];
+}
+
 export default async function AdminGalleryPage() {
-  const images = await getImages();
+  const [images, rooms] = await Promise.all([getImages(), getRooms()]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
@@ -29,7 +35,7 @@ export default async function AdminGalleryPage() {
       {/* Upload */}
       <div className="bg-white border border-charcoal/10 p-6 mb-8">
         <h2 className="font-mono text-xs uppercase tracking-widest text-muted mb-4">Upload New Image</h2>
-        <GalleryUploadForm />
+        <GalleryUploadForm rooms={rooms} />
       </div>
 
       {/* Grid */}

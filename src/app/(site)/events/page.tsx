@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { Event, EventSlideshow } from "@/lib/supabase";
+import type { Event, EventSlideshow, EventGenre } from "@/lib/supabase";
 import { EventSchema } from "@/components/StructuredData";
 import EventsClient from "@/components/EventsClient";
 
@@ -58,22 +58,67 @@ async function getSlideshowData(): Promise<{ slides: EventSlideshow[]; speed: nu
   };
 }
 
+async function getGenres(): Promise<EventGenre[]> {
+  const { data } = await supabase
+    .from("event_genres")
+    .select("*")
+    .order("name", { ascending: true });
+  return (data as EventGenre[]) ?? [];
+}
+
+async function getEventGenreMap(): Promise<Record<string, string[]>> {
+  const { data } = await supabase
+    .from("event_genre_assignments")
+    .select("event_id, genre_id");
+  if (!data) return {};
+  const map: Record<string, string[]> = {};
+  for (const row of data) {
+    if (!map[row.event_id]) map[row.event_id] = [];
+    map[row.event_id].push(row.genre_id);
+  }
+  return map;
+}
+
+async function getBadgeSettings(): Promise<{ justAnnouncedDays: number; sellingFastThreshold: number }> {
+  const { data } = await supabase
+    .from("site_settings")
+    .select("key, value")
+    .in("key", ["just_announced_days", "selling_fast_default_threshold"]);
+  const map = Object.fromEntries((data ?? []).map((s) => [s.key, s.value]));
+  return {
+    justAnnouncedDays: parseInt(map.just_announced_days ?? "14", 10),
+    sellingFastThreshold: parseInt(map.selling_fast_default_threshold ?? "70", 10),
+  };
+}
+
 export default async function EventsPage() {
-  const [events, pageContent, tickerItems, slideshowData] = await Promise.all([
+  const [events, pageContent, tickerItems, slideshowData, badgeSettings, allGenres, genreMap] = await Promise.all([
     getEvents(),
     getPageContent(),
     getTickerItems(),
     getSlideshowData(),
+    getBadgeSettings(),
+    getGenres(),
+    getEventGenreMap(),
   ]);
+
+  // Attach genres to events
+  const eventsWithGenres = events.map((event) => ({
+    ...event,
+    genres: allGenres.filter((g) => genreMap[event.id]?.includes(g.id)),
+  }));
 
   return (
     <>
       <EventsClient
-        events={events}
+        events={eventsWithGenres}
         pageContent={pageContent}
         tickerItems={tickerItems}
         slideshowSlides={slideshowData.slides}
         slideshowSpeed={slideshowData.speed}
+        justAnnouncedDays={badgeSettings.justAnnouncedDays}
+        sellingFastThreshold={badgeSettings.sellingFastThreshold}
+        allGenres={allGenres}
       />
       {events.map((event) => (
         <EventSchema key={`schema-${event.id}`} event={event} />

@@ -32,6 +32,17 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
     ticket_capacity: (initialData as Partial<Event>)?.ticket_capacity ?? "",
     is_sold_out: (initialData as Partial<Event>)?.is_sold_out ?? false,
     is_featured: (initialData as Partial<Event>)?.is_featured ?? false,
+    force_just_announced: (initialData as Partial<Event>)?.force_just_announced ?? "auto",
+    selling_fast_override: (initialData as Partial<Event>)?.selling_fast_override ?? "auto",
+    selling_fast_threshold: (initialData as Partial<Event>)?.selling_fast_threshold ?? "",
+    event_duration_minutes: (initialData as Partial<Event>)?.event_duration_minutes ?? "",
+    event_category: (initialData as Partial<Event>)?.event_category ?? "general",
+    calendar_description: (initialData as Partial<Event>)?.calendar_description ?? "",
+    where_to_watch_later: (initialData as Partial<Event>)?.where_to_watch_later ?? "",
+    audience_etiquette: (initialData as Partial<Event>)?.audience_etiquette ?? "",
+    table_preferences: (initialData as Partial<Event>)?.table_preferences
+      ? JSON.stringify((initialData as Partial<Event>).table_preferences)
+      : "",
   });
 
   const existingLineup = (initialData as Partial<Event>)?.lineup ?? [];
@@ -63,14 +74,28 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
     setStatus("loading");
     setError("");
 
+    let parsedTablePrefs: string[] = [];
+    if (form.table_preferences) {
+      try {
+        parsedTablePrefs = JSON.parse(form.table_preferences);
+      } catch {
+        // ignore invalid JSON
+      }
+    }
+
     const eventPayload = {
       ...form,
       ticket_price_cents: form.ticket_price_cents ? Number(form.ticket_price_cents) : null,
       ticket_capacity: form.ticket_capacity ? Number(form.ticket_capacity) : null,
-      // Auto-generate display price from cents
       ticket_price: form.ticket_price_cents ? `$${(Number(form.ticket_price_cents) / 100).toFixed(2)}` : form.ticket_price || null,
       detailed_description: form.detailed_description || null,
       comedian_id: form.comedian_id || null,
+      selling_fast_threshold: form.selling_fast_threshold ? Number(form.selling_fast_threshold) : null,
+      event_duration_minutes: form.event_duration_minutes ? Number(form.event_duration_minutes) : null,
+      calendar_description: form.calendar_description || null,
+      where_to_watch_later: form.where_to_watch_later || null,
+      audience_etiquette: form.audience_etiquette || null,
+      table_preferences: parsedTablePrefs.length > 0 ? parsedTablePrefs : null,
       lineup: lineup.filter((l) => l.name.trim()).map((l) => ({
         name: l.name.trim(),
         role: l.role.trim() || undefined,
@@ -313,6 +338,137 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
               </button>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Event Category (event-only) */}
+      {isEvent && (
+        <div>
+          <label className={labelClass}>Event Category</label>
+          <select
+            value={form.event_category}
+            onChange={(e) => setForm({ ...form, event_category: e.target.value as "general" | "weekly" | "festival" | "live-taping" })}
+            className={inputClass}
+          >
+            <option value="general">General</option>
+            <option value="weekly">Weekly Show</option>
+            <option value="festival">Festival</option>
+            <option value="live-taping">Live Taping</option>
+          </select>
+        </div>
+      )}
+
+      {/* Live Taping fields (shown when event_category is live-taping) */}
+      {isEvent && form.event_category === "live-taping" && (
+        <div className="border border-charcoal/10 p-5 space-y-5">
+          <div className="font-mono text-xs uppercase tracking-widest text-gold">Live Taping Details</div>
+          <div>
+            <label className={labelClass}>Where to Watch Later</label>
+            <input
+              type="text"
+              value={form.where_to_watch_later}
+              onChange={(e) => setForm({ ...form, where_to_watch_later: e.target.value })}
+              className={inputClass}
+              placeholder="e.g., YouTube, Netflix, Hulu"
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Audience Etiquette</label>
+            <textarea
+              rows={3}
+              value={form.audience_etiquette}
+              onChange={(e) => setForm({ ...form, audience_etiquette: e.target.value })}
+              className={`${inputClass} resize-none`}
+              placeholder="Special instructions for audience during taping (phones, noise, etc.)"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Badges & Overrides (event-only) */}
+      {isEvent && (
+        <div className="border border-charcoal/10 p-5 space-y-5">
+          <div className="font-mono text-xs uppercase tracking-widest text-gold">Badge Overrides</div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div>
+              <label className={labelClass}>Just Announced</label>
+              <select
+                value={form.force_just_announced}
+                onChange={(e) => setForm({ ...form, force_just_announced: e.target.value as "on" | "off" | "auto" })}
+                className={inputClass}
+              >
+                <option value="auto">Auto (based on created date)</option>
+                <option value="on">Force On</option>
+                <option value="off">Force Off</option>
+              </select>
+            </div>
+            <div>
+              <label className={labelClass}>Selling Fast</label>
+              <select
+                value={form.selling_fast_override}
+                onChange={(e) => setForm({ ...form, selling_fast_override: e.target.value as "on" | "off" | "auto" })}
+                className={inputClass}
+              >
+                <option value="auto">Auto (based on % sold)</option>
+                <option value="on">Force On</option>
+                <option value="off">Force Off</option>
+              </select>
+            </div>
+            <div>
+              <label className={labelClass}>Selling Fast Threshold %</label>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={form.selling_fast_threshold}
+                onChange={(e) => setForm({ ...form, selling_fast_threshold: e.target.value })}
+                className={inputClass}
+                placeholder="Default: 70"
+              />
+              <p className="text-xs text-muted mt-1">Override the site-wide default for this event.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Calendar & Table Preferences (event-only) */}
+      {isEvent && (
+        <div className="border border-charcoal/10 p-5 space-y-5">
+          <div className="font-mono text-xs uppercase tracking-widest text-gold">Calendar & Seating</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className={labelClass}>Event Duration (minutes)</label>
+              <input
+                type="number"
+                min="0"
+                value={form.event_duration_minutes}
+                onChange={(e) => setForm({ ...form, event_duration_minutes: e.target.value })}
+                className={inputClass}
+                placeholder="Default: 120"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Calendar Description</label>
+              <input
+                type="text"
+                value={form.calendar_description}
+                onChange={(e) => setForm({ ...form, calendar_description: e.target.value })}
+                className={inputClass}
+                placeholder="Custom text for calendar entries"
+              />
+            </div>
+          </div>
+          <div>
+            <label className={labelClass}>Table Preferences (JSON array)</label>
+            <input
+              type="text"
+              value={form.table_preferences}
+              onChange={(e) => setForm({ ...form, table_preferences: e.target.value })}
+              className={inputClass}
+              placeholder='["Front Row", "Near Stage", "Back / Quieter", "No Preference"]'
+            />
+            <p className="text-xs text-muted mt-1">JSON array of seating options shown during checkout.</p>
+          </div>
         </div>
       )}
 

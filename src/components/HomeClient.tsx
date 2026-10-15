@@ -3,8 +3,16 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import EmailPopup from "@/components/EmailPopup";
+import HeroVideo from "@/components/HeroVideo";
 
-export default function HomeClient({ background, mobileBackground }: { background: string; mobileBackground: string | null }) {
+type HomeClientProps = {
+  background: string;
+  mobileBackground: string | null;
+  heroVideoUrl: string | null;
+  heroVideoType: "upload" | "youtube" | "vimeo" | "none";
+};
+
+export default function HomeClient({ background, mobileBackground, heroVideoUrl, heroVideoType }: HomeClientProps) {
   const [popupOpen, setPopupOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -17,21 +25,28 @@ export default function HomeClient({ background, mobileBackground }: { backgroun
   }, []);
 
   const bgImage = isMobile && mobileBackground ? mobileBackground : background;
+  const showVideo = heroVideoUrl && heroVideoType !== "none";
 
   return (
     <>
-      {/* Full-screen background — uses mobile image on portrait/small screens if uploaded */}
+      {/* Full-screen background — video or image */}
       <div
-        className="fixed inset-0 cursor-pointer"
+        className="fixed inset-0 cursor-pointer overflow-hidden"
         style={{
-          backgroundImage: `url('${bgImage}')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
           backgroundColor: "#000",
+          ...(!showVideo ? {
+            backgroundImage: `url('${bgImage}')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          } : {}),
         }}
         onClick={() => setPopupOpen(true)}
-      />
+      >
+        {showVideo && (
+          <HeroVideo videoUrl={heroVideoUrl} videoType={heroVideoType} />
+        )}
+      </div>
 
       {/* Hidden access link — larger touch target on mobile */}
       <Link

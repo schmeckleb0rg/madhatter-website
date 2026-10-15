@@ -6,21 +6,36 @@ import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
 const navItems = [
+  // Content
   { href: "/admin/dashboard", label: "Dashboard" },
   { href: "/admin/events", label: "Events" },
   { href: "/admin/comedians", label: "Comedians" },
   { href: "/admin/past-events", label: "Past Shows" },
+  { href: "/admin/classes", label: "Classes" },
   { href: "/admin/rooms", label: "Rooms" },
-  { href: "/admin/merch", label: "Merch" },
   { href: "/admin/gallery", label: "Gallery" },
   { href: "/admin/slideshow", label: "Slideshow" },
+  { href: "/admin/blog", label: "Blog" },
+  { href: "/admin/press-articles", label: "Press" },
+  // Commerce
   { href: "/admin/orders", label: "Orders" },
+  { href: "/admin/gift-cards", label: "Gift Cards" },
+  { href: "/admin/merch", label: "Merch" },
+  { href: "/admin/membership", label: "Membership" },
+  { href: "/admin/genres", label: "Genres" },
+  // Inquiries
   { href: "/admin/inquiries", label: "Inquiries" },
   { href: "/admin/messages", label: "Messages" },
   { href: "/admin/messaging", label: "Messaging" },
   { href: "/admin/private-inquiries", label: "Private" },
+  // Site & Pages
   { href: "/admin/content", label: "Content" },
   { href: "/admin/about", label: "About" },
+  { href: "/admin/visitor-guide", label: "Visitor Guide" },
+  { href: "/admin/staff", label: "Staff" },
+  { href: "/admin/patrons", label: "Patrons" },
+  { href: "/admin/faqs", label: "FAQs" },
+  { href: "/admin/employment", label: "Employment" },
   { href: "/admin/site", label: "Site" },
 ];
 

@@ -13,6 +13,8 @@ async function requireAuth() {
 const insertSchema = z.object({
   image_url: z.string().url(),
   caption: z.string().max(500).optional(),
+  room_id: z.string().uuid().optional().nullable(),
+  tags: z.array(z.string().max(100)).max(20).optional(),
 });
 
 export async function GET() {
@@ -35,7 +37,7 @@ export async function POST(request: Request) {
   const parsed = insertSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Invalid data" }, { status: 400 });
 
-  const { image_url, caption } = parsed.data;
+  const { image_url, caption, room_id, tags } = parsed.data;
   const db = getAdminClient();
 
   const { data: existing } = await db
@@ -49,6 +51,8 @@ export async function POST(request: Request) {
     image_url,
     caption: caption || null,
     sort_order: nextOrder,
+    room_id: room_id || null,
+    tags: tags || [],
   }).select().single();
 
   if (error) return NextResponse.json({ error: "Insert failed" }, { status: 500 });

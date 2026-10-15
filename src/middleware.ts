@@ -21,6 +21,17 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
+  // Rate limit membership auth routes at the edge
+  if (pathname.startsWith("/api/membership/register") || pathname.startsWith("/api/membership/login")) {
+    const allowed = edgeRateLimit(ip, 5, 60_000);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many attempts. Please try again later." },
+        { status: 429, headers: { "Retry-After": "60" } }
+      );
+    }
+  }
+
   // Rate limit public API routes at the edge
   if (pathname.startsWith("/api/contact") || pathname.startsWith("/api/inquiries") || pathname.startsWith("/api/checkout")) {
     const allowed = edgeRateLimit(ip, 10, 60_000);
@@ -49,5 +60,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/contact", "/api/inquiries", "/api/checkout"],
+  matcher: ["/admin/:path*", "/api/contact", "/api/inquiries", "/api/checkout", "/api/membership/register", "/api/membership/login"],
 };

@@ -18,6 +18,9 @@ const schema = z.object({
   features: z.string().max(2000).optional(),
   capacity: z.number().int().min(0).optional().nullable(),
   image_url: z.string().url().optional().or(z.literal("")),
+  room_type: z.string().max(50).optional(),
+  rates: z.string().max(2000).optional().nullable(),
+  equipment_specs: z.string().max(2000).optional().nullable(),
 });
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -53,6 +56,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     features,
     capacity: d.capacity ?? null,
     image_url: d.image_url || null,
+    room_type: d.room_type ? sanitizeText(d.room_type) : "general",
+    rates: d.rates ? sanitizeText(d.rates) : null,
+    equipment_specs: d.equipment_specs ? sanitizeText(d.equipment_specs) : null,
   }).eq("id", id).select().single();
 
   if (error) return NextResponse.json({ error: "Update failed" }, { status: 500 });

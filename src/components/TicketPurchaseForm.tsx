@@ -6,13 +6,15 @@ type TicketPurchaseFormProps = {
   eventId: string;
   priceCents: number;
   remaining: number;
+  tablePreferences?: string[];
 };
 
-export default function TicketPurchaseForm({ eventId, priceCents, remaining }: TicketPurchaseFormProps) {
+export default function TicketPurchaseForm({ eventId, priceCents, remaining, tablePreferences }: TicketPurchaseFormProps) {
   const maxQty = Math.min(10, remaining);
   const [quantity, setQuantity] = useState(1);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [tablePreference, setTablePreference] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -26,7 +28,13 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining }: T
     const res = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ event_id: eventId, quantity, email, name: name || undefined }),
+      body: JSON.stringify({
+        event_id: eventId,
+        quantity,
+        email,
+        name: name || undefined,
+        table_preference: tablePreference || undefined,
+      }),
     });
 
     if (!res.ok) {
@@ -87,6 +95,34 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining }: T
         </select>
       </div>
 
+      {/* Table Preference */}
+      {tablePreferences && tablePreferences.length > 0 ? (
+        <div>
+          <label className={labelClass}>Table Preference</label>
+          <select
+            value={tablePreference}
+            onChange={(e) => setTablePreference(e.target.value)}
+            className={inputClass}
+          >
+            <option value="">No preference</option>
+            {tablePreferences.map((pref) => (
+              <option key={pref} value={pref}>{pref}</option>
+            ))}
+          </select>
+        </div>
+      ) : (
+        <div>
+          <label className={labelClass}>Table Preference</label>
+          <input
+            type="text"
+            value={tablePreference}
+            onChange={(e) => setTablePreference(e.target.value)}
+            className={inputClass}
+            placeholder="e.g., Near the stage, Booth if available"
+          />
+        </div>
+      )}
+
       {/* Subtotal */}
       <div className="flex items-center justify-between py-3 border-t border-charcoal/10 dark:border-gold/10">
         <span className="text-sm text-muted dark:text-[#7A7264]">Subtotal</span>
@@ -104,7 +140,7 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining }: T
       </button>
 
       <p className="text-xs text-muted text-center dark:text-[#7A7264]">
-        You&apos;ll be redirected to Stripe&apos;s secure checkout to complete your purchase.
+        You&apos;ll be redirected to Square&apos;s secure checkout to complete your purchase.
       </p>
     </form>
   );

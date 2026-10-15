@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminClient } from "@/lib/supabase";
 import { createHmac } from "crypto";
+import { sendTicketConfirmation, sendGiftCardEmail } from "@/lib/email";
 
 function verifySquareWebhook(body: string, signature: string): boolean {
   const webhookSignatureKey = process.env.SQUARE_WEBHOOK_SIGNATURE_KEY;
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
     // Idempotency: check if already processed
     const { data: existingOrder } = await db
       .from("orders")
-      .select("id, status, event_id, merch_item_id, order_type, quantity")
+      .select("id, status, event_id, merch_item_id, order_type, quantity, email, name, amount_cents, member_id")
       .eq("square_order_id", orderId)
       .single();
 
@@ -101,6 +102,56 @@ export async function POST(request: Request) {
       }
     }
 
+    // Send ticket confirmation email
+    if (existingOrder.order_type === "ticket" && existingOrder.event_id) {
+      const { data: eventData } = await db
+        .from("events")
+        .select("title, date, show_time, doors_time")
+        .eq("id", existingOrder.event_id)
+        .single();
+
+      if (eventData) {
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+        sendTicketConfirmation({
+          email: existingOrder.email,
+          eventTitle: eventData.title,
+          eventDate: eventData.date,
+          showTime: eventData.show_time,
+          doorsTime: eventData.doors_time,
+          quantity: existingOrder.quantity,
+          totalAmount: `$${(existingOrder.amount_cents / 100).toFixed(2)}`,
+          orderId: existingOrder.id,
+          qrData: `${siteUrl}/tickets/verify?order=${existingOrder.id}`,
+        });
+      }
+    }
+
+    // Credit loyalty points to member
+    if (existingOrder.member_id) {
+      const pointsEarned = Math.floor(existingOrder.amount_cents / 100); // 1 point per dollar
+      if (pointsEarned > 0) {
+        await db.from("points_transactions").insert({
+          member_id: existingOrder.member_id,
+          points: pointsEarned,
+          type: "earned",
+          description: `Purchase: ${existingOrder.order_type === "ticket" ? "Tickets" : "Merch"} (Order #${existingOrder.id.slice(0, 8)})`,
+          order_id: existingOrder.id,
+        });
+        // Update member points balance
+        const { data: member } = await db
+          .from("members")
+          .select("points_balance")
+          .eq("id", existingOrder.member_id)
+          .single();
+        if (member) {
+          await db
+            .from("members")
+            .update({ points_balance: (member.points_balance || 0) + pointsEarned })
+            .eq("id", existingOrder.member_id);
+        }
+      }
+    }
+
     // Handle merch orders: decrement inventory
     if (existingOrder.order_type === "merch" && existingOrder.merch_item_id) {
       const { data: merchItem } = await db
@@ -115,6 +166,47 @@ export async function POST(request: Request) {
           .from("merch_items")
           .update({ inventory_count: newCount })
           .eq("id", existingOrder.merch_item_id);
+      }
+    }
+  }
+
+  // Handle gift card purchases: activate the card and send email
+  if (event.type === "payment.completed") {
+    const payment = event.data?.object?.payment;
+    const gcOrderId = payment?.order_id;
+    if (gcOrderId) {
+      const { data: giftCard } = await db
+        .from("gift_cards")
+        .select("*")
+        .eq("square_order_id", gcOrderId)
+        .eq("is_active", false)
+        .single();
+
+      if (giftCard) {
+        await db
+          .from("gift_cards")
+          .update({ is_active: true })
+          .eq("id", giftCard.id);
+
+        // Record purchase transaction
+        await db.from("gift_card_transactions").insert({
+          gift_card_id: giftCard.id,
+          amount_cents: giftCard.original_amount_cents,
+          type: "purchase",
+        });
+
+        // Send email to recipient
+        if (giftCard.recipient_email) {
+          sendGiftCardEmail({
+            recipientEmail: giftCard.recipient_email,
+            recipientName: giftCard.recipient_name,
+            senderName: giftCard.issued_by_name,
+            amount: `$${(giftCard.original_amount_cents / 100).toFixed(2)}`,
+            code: giftCard.code,
+            message: giftCard.message,
+            expiresAt: giftCard.expires_at,
+          });
+        }
       }
     }
   }

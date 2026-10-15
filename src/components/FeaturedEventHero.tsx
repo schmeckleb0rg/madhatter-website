@@ -2,9 +2,18 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Event } from "@/lib/supabase";
 import { formatDate } from "@/components/EventCard";
+import { isJustAnnounced, isSellingFast } from "@/lib/badges";
 
-export default function FeaturedEventHero({ event }: { event: Event }) {
+type FeaturedEventHeroProps = {
+  event: Event;
+  justAnnouncedDays?: number;
+  sellingFastThreshold?: number;
+};
+
+export default function FeaturedEventHero({ event, justAnnouncedDays = 14, sellingFastThreshold = 70 }: FeaturedEventHeroProps) {
   const date = formatDate(event.date);
+  const justAnnounced = isJustAnnounced(event, justAnnouncedDays);
+  const sellingFast = isSellingFast(event, sellingFastThreshold);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 border-2 border-charcoal/15 dark:border-gold/10 overflow-hidden group">
@@ -28,8 +37,20 @@ export default function FeaturedEventHero({ event }: { event: Event }) {
             <span className="font-display text-3xl text-muted/20">MH</span>
           </div>
         )}
-        <div className="absolute top-4 left-4 px-3 py-1 bg-gold font-mono text-xs text-white tracking-widest uppercase">
-          Featured
+        <div className="absolute top-4 left-4 flex gap-2">
+          <span className="px-3 py-1 bg-gold font-mono text-xs text-white tracking-widest uppercase">
+            Featured
+          </span>
+          {justAnnounced && !event.is_sold_out && (
+            <span className="px-2 py-1 text-[10px] font-mono font-medium tracking-wider uppercase" style={{ color: "#1A7A6D", backgroundColor: "rgba(26,122,109,0.15)" }}>
+              Just Announced
+            </span>
+          )}
+          {sellingFast && (
+            <span className="px-2 py-1 text-[10px] font-mono font-medium tracking-wider uppercase animate-pulse" style={{ color: "#DC5028", backgroundColor: "rgba(220,80,40,0.15)", boxShadow: "0 0 12px rgba(220,80,40,0.5)" }}>
+              Selling Fast
+            </span>
+          )}
         </div>
         {event.is_sold_out && (
           <div className="absolute inset-0 bg-charcoal/60 flex items-center justify-center">

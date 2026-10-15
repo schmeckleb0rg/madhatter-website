@@ -25,6 +25,14 @@ const schema = z.object({
   lineup: z.array(lineupItemSchema).optional(),
   is_sold_out: z.boolean().default(false),
   is_featured: z.boolean().default(false),
+  force_just_announced: z.enum(["auto", "on", "off"]).default("auto"),
+  selling_fast_override: z.enum(["auto", "on", "off"]).default("auto"),
+  selling_fast_threshold: z.number().int().min(0).max(100).optional().nullable(),
+  event_duration_minutes: z.number().int().min(0).optional().nullable(),
+  event_category: z.enum(["general", "weekly", "festival", "live-taping"]).default("general"),
+  calendar_description: z.string().max(2000).optional().nullable(),
+  table_preferences: z.array(z.string()).optional().nullable(),
+  genre_ids: z.array(z.string().uuid()).optional(),
 });
 
 async function requireAuth() {
@@ -72,12 +80,30 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       show_time: d.show_time || null,
       is_sold_out: d.is_sold_out,
       is_featured: d.is_featured,
+      force_just_announced: d.force_just_announced,
+      selling_fast_override: d.selling_fast_override,
+      selling_fast_threshold: d.selling_fast_threshold ?? null,
+      event_duration_minutes: d.event_duration_minutes ?? null,
+      event_category: d.event_category,
+      calendar_description: d.calendar_description ?? null,
+      table_preferences: d.table_preferences ?? null,
     })
     .eq("id", id)
     .select()
     .single();
 
   if (error) return NextResponse.json({ error: "Update failed" }, { status: 500 });
+
+  // Update genre assignments
+  if (d.genre_ids !== undefined) {
+    await db.from("event_genre_assignments").delete().eq("event_id", id);
+    if (d.genre_ids.length > 0) {
+      await db.from("event_genre_assignments").insert(
+        d.genre_ids.map((genre_id) => ({ event_id: id, genre_id }))
+      );
+    }
+  }
+
   return NextResponse.json(data);
 }
 

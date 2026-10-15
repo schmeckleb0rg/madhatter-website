@@ -35,6 +35,20 @@ export type Event = {
   is_sold_out: boolean;
   is_featured: boolean;
   created_at: string;
+  // Phase 1 additions
+  force_just_announced: "on" | "off" | "auto";
+  selling_fast_override: "on" | "off" | "auto";
+  selling_fast_threshold: number | null;
+  table_preferences: string[];
+  event_duration_minutes: number;
+  calendar_description: string | null;
+  event_category: "general" | "weekly" | "festival" | "live-taping";
+  where_to_watch_later: string | null;
+  audience_etiquette: string | null;
+  seating_map_enabled: boolean;
+  // Phase 2 additions (genres via join)
+  genres?: EventGenre[];
+  event_series_id?: string | null;
 };
 
 export type PastEvent = {
@@ -85,7 +99,11 @@ export type Order = {
   status: "pending" | "completed" | "failed" | "refunded";
   created_at: string;
   updated_at: string;
-  events?: { title: string; date: string } | null;
+  events?: { title: string; date: string; show_time?: string; doors_time?: string; image_url?: string } | null;
+  table_preference: string | null;
+  gift_card_code: string | null;
+  gift_card_amount_cents: number;
+  member_id: string | null;
 };
 
 export type AboutContent = {
@@ -111,6 +129,8 @@ export type GalleryImage = {
   image_url: string;
   caption: string | null;
   sort_order: number;
+  room_id: string | null;
+  tags: string[];
   created_at: string;
 };
 
@@ -142,6 +162,10 @@ export type Room = {
   capacity: number | null;
   sort_order: number;
   created_at: string;
+  room_type: string;
+  virtual_tour_images: string[];
+  rates: string | null;
+  equipment_specs: string | null;
 };
 
 export type PrivateEventInquiry = {
@@ -209,4 +233,89 @@ export type AdminUser = {
   permissions: Record<string, boolean>;
   created_at: string;
   updated_at: string;
+};
+
+// Phase 1: Gift Cards
+export type GiftCard = {
+  id: string;
+  code: string;
+  balance_cents: number;
+  original_amount_cents: number;
+  redeemed_amount_cents: number;
+  issued_to_email: string | null;
+  issued_by_name: string | null;
+  recipient_name: string | null;
+  recipient_email: string | null;
+  message: string | null;
+  expires_at: string | null;
+  is_voided: boolean;
+  is_active: boolean;
+  square_order_id: string | null;
+  created_at: string;
+};
+
+export type GiftCardTransaction = {
+  id: string;
+  gift_card_id: string;
+  amount_cents: number;
+  order_id: string | null;
+  type: "purchase" | "redemption" | "void";
+  created_at: string;
+};
+
+// Phase 2: Event Genres
+export type EventGenre = {
+  id: string;
+  name: string;
+  color: string;
+  created_at: string;
+};
+
+// Press Articles
+export type PressArticle = {
+  id: string;
+  outlet_name: string;
+  headline: string;
+  url: string;
+  publication_date: string | null;
+  thumbnail_url: string | null;
+  featured_quote: string | null;
+  is_featured: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+// Staff Members
+export type StaffMember = {
+  id: string;
+  name: string;
+  role: string;
+  location: string | null;
+  bio: string | null;
+  photo_url: string | null;
+  sort_order: number;
+  created_at: string;
+};
+
+// Patrons
+export type Patron = {
+  id: string;
+  name: string;
+  type: "donor" | "vip" | "sponsor";
+  tier: string | null;
+  logo_url: string | null;
+  website_url: string | null;
+  description: string | null;
+  sort_order: number;
+  created_at: string;
+};
+
+// FAQs
+export type FAQ = {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+  sort_order: number;
+  created_at: string;
 };

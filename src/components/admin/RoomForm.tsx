@@ -15,6 +15,9 @@ export default function RoomForm({ initialData, id }: { initialData?: Partial<Ro
     features: Array.isArray(initialData?.features) ? initialData.features.join(", ") : "",
     capacity: initialData?.capacity?.toString() ?? "",
     image_url: initialData?.image_url ?? "",
+    room_type: initialData?.room_type ?? "general",
+    rates: initialData?.rates ?? "",
+    equipment_specs: initialData?.equipment_specs ?? "",
   });
 
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
@@ -32,6 +35,9 @@ export default function RoomForm({ initialData, id }: { initialData?: Partial<Ro
       features: form.features || undefined,
       capacity: form.capacity ? Number(form.capacity) : null,
       image_url: form.image_url || "",
+      room_type: form.room_type || "general",
+      rates: form.rates || null,
+      equipment_specs: form.equipment_specs || null,
     };
 
     const res = await fetch(id ? `/api/admin/rooms/${id}` : "/api/admin/rooms", {
@@ -126,6 +132,43 @@ export default function RoomForm({ initialData, id }: { initialData?: Partial<Ro
           onChange={(e) => setForm({ ...form, capacity: e.target.value })}
           className={inputClass}
           placeholder="200"
+        />
+      </div>
+
+      <div>
+        <label className={labelClass}>Room Type</label>
+        <select
+          value={form.room_type}
+          onChange={(e) => setForm({ ...form, room_type: e.target.value })}
+          className={inputClass}
+        >
+          <option value="general">General</option>
+          <option value="performance">Performance</option>
+          <option value="private">Private Event</option>
+          <option value="podcast">Podcast Studio</option>
+          <option value="greenroom">Green Room</option>
+        </select>
+      </div>
+
+      <div>
+        <label className={labelClass}>Rates</label>
+        <textarea
+          rows={3}
+          value={form.rates}
+          onChange={(e) => setForm({ ...form, rates: e.target.value })}
+          className={`${inputClass} resize-none`}
+          placeholder="Pricing info for rentals (e.g., $500/hr, $2000 half-day)"
+        />
+      </div>
+
+      <div>
+        <label className={labelClass}>Equipment Specs</label>
+        <textarea
+          rows={3}
+          value={form.equipment_specs}
+          onChange={(e) => setForm({ ...form, equipment_specs: e.target.value })}
+          className={`${inputClass} resize-none`}
+          placeholder="Sound system, lighting rig, projector, microphones, etc."
         />
       </div>
 

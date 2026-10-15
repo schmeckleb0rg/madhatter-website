@@ -4,10 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import MediaUpload from "@/components/admin/MediaUpload";
 
-export default function GalleryUploadForm() {
+type Room = { id: string; name: string };
+
+export default function GalleryUploadForm({ rooms }: { rooms?: Room[] }) {
   const router = useRouter();
   const [imageUrl, setImageUrl] = useState("");
   const [caption, setCaption] = useState("");
+  const [roomId, setRoomId] = useState("");
+  const [tagsInput, setTagsInput] = useState("");
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -23,7 +27,12 @@ export default function GalleryUploadForm() {
       const res = await fetch("/api/admin/gallery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_url: imageUrl, caption: caption || undefined }),
+        body: JSON.stringify({
+          image_url: imageUrl,
+          caption: caption || undefined,
+          room_id: roomId || null,
+          tags: tagsInput ? tagsInput.split(",").map((t) => t.trim()).filter(Boolean) : [],
+        }),
       });
 
       if (!res.ok) {
@@ -35,6 +44,8 @@ export default function GalleryUploadForm() {
 
       setImageUrl("");
       setCaption("");
+      setRoomId("");
+      setTagsInput("");
       setStatus("idle");
       router.refresh();
     } catch {
@@ -63,6 +74,34 @@ export default function GalleryUploadForm() {
           onChange={(e) => setCaption(e.target.value)}
           placeholder="Add a caption..."
           maxLength={200}
+          className={inputClass}
+        />
+      </div>
+
+      {rooms && rooms.length > 0 && (
+        <div>
+          <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-2">
+            Room (optional)
+          </label>
+          <select value={roomId} onChange={(e) => setRoomId(e.target.value)} className={inputClass}>
+            <option value="">No room assigned</option>
+            {rooms.map((room) => (
+              <option key={room.id} value={room.id}>{room.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div>
+        <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-2">
+          Tags (optional, comma-separated)
+        </label>
+        <input
+          type="text"
+          value={tagsInput}
+          onChange={(e) => setTagsInput(e.target.value)}
+          placeholder="interior, stage, bar, event"
+          maxLength={500}
           className={inputClass}
         />
       </div>

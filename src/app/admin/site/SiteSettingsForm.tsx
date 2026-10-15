@@ -5,6 +5,30 @@ import { useState, useRef } from "react";
 type Settings = Record<string, string | undefined>;
 
 export default function SiteSettingsForm({ initial }: { initial: Settings }) {
+  const [badges, setBadges] = useState({
+    just_announced_days: initial.just_announced_days ?? "14",
+    selling_fast_default_threshold: initial.selling_fast_default_threshold ?? "70",
+  });
+  const [badgesStatus, setBadgesStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  const [heroVideo, setHeroVideo] = useState({
+    hero_video_url: initial.hero_video_url ?? "",
+    hero_video_type: initial.hero_video_type ?? "none",
+  });
+  const [heroVideoStatus, setHeroVideoStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  const [confirmation, setConfirmation] = useState({
+    confirmation_page_text: initial.confirmation_page_text ?? "",
+    confirmation_cta_text: initial.confirmation_cta_text ?? "",
+  });
+  const [confirmationStatus, setConfirmationStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  const [parking, setParking] = useState({
+    parking_map_embed_url: initial.parking_map_embed_url ?? "",
+    employment_application_email: initial.employment_application_email ?? "",
+  });
+  const [parkingStatus, setParkingStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
   const [seo, setSeo] = useState({
     seo_title: initial.seo_title ?? "",
     seo_description: initial.seo_description ?? "",
@@ -61,6 +85,50 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
 
   const inputClass =
     "w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors";
+
+  async function saveBadges() {
+    setBadgesStatus("saving");
+    const res = await fetch("/api/admin/site", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(badges),
+    });
+    setBadgesStatus(res.ok ? "saved" : "error");
+    if (res.ok) setTimeout(() => setBadgesStatus("idle"), 2000);
+  }
+
+  async function saveHeroVideo() {
+    setHeroVideoStatus("saving");
+    const res = await fetch("/api/admin/site", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(heroVideo),
+    });
+    setHeroVideoStatus(res.ok ? "saved" : "error");
+    if (res.ok) setTimeout(() => setHeroVideoStatus("idle"), 2000);
+  }
+
+  async function saveConfirmation() {
+    setConfirmationStatus("saving");
+    const res = await fetch("/api/admin/site", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(confirmation),
+    });
+    setConfirmationStatus(res.ok ? "saved" : "error");
+    if (res.ok) setTimeout(() => setConfirmationStatus("idle"), 2000);
+  }
+
+  async function saveParking() {
+    setParkingStatus("saving");
+    const res = await fetch("/api/admin/site", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(parking),
+    });
+    setParkingStatus(res.ok ? "saved" : "error");
+    if (res.ok) setTimeout(() => setParkingStatus("idle"), 2000);
+  }
 
   async function saveSeo() {
     setSeoStatus("saving");
@@ -125,6 +193,152 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
 
   return (
     <div className="space-y-8">
+
+      {/* Event Badge Settings */}
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
+          <div>
+            <h2 className="text-base font-bold text-charcoal">Event Badge Settings</h2>
+            <p className="text-xs text-muted mt-0.5">Controls &quot;Just Announced&quot; and &quot;Selling Fast&quot; badge behavior site-wide.</p>
+          </div>
+          <button
+            onClick={saveBadges}
+            disabled={badgesStatus === "saving"}
+            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors w-full sm:w-auto"
+          >
+            {badgesStatus === "saving" ? "Saving..." : badgesStatus === "saved" ? "Saved" : "Save"}
+          </button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Just Announced — Days</label>
+            <input type="number" min="1" max="90" value={badges.just_announced_days}
+              onChange={(e) => setBadges({ ...badges, just_announced_days: e.target.value })} className={inputClass}
+              placeholder="14" />
+            <p className="text-xs text-muted mt-1">Events created within this many days show the &quot;Just Announced&quot; badge.</p>
+          </div>
+          <div>
+            <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Selling Fast — Threshold %</label>
+            <input type="number" min="1" max="99" value={badges.selling_fast_default_threshold}
+              onChange={(e) => setBadges({ ...badges, selling_fast_default_threshold: e.target.value })} className={inputClass}
+              placeholder="70" />
+            <p className="text-xs text-muted mt-1">Events with this % of tickets sold show &quot;Selling Fast&quot;. Can be overridden per event.</p>
+          </div>
+        </div>
+        {badgesStatus === "error" && <p className="text-xs mt-3" style={{ color: "#9C4A38" }}>Failed to save.</p>}
+      </div>
+
+      {/* Homepage Video */}
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
+          <div>
+            <h2 className="text-base font-bold text-charcoal">Homepage Video</h2>
+            <p className="text-xs text-muted mt-0.5">Optional hero video on the homepage. Set type to &quot;None&quot; to disable.</p>
+          </div>
+          <button
+            onClick={saveHeroVideo}
+            disabled={heroVideoStatus === "saving"}
+            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors w-full sm:w-auto"
+          >
+            {heroVideoStatus === "saving" ? "Saving..." : heroVideoStatus === "saved" ? "Saved" : "Save"}
+          </button>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Video Type</label>
+            <select value={heroVideo.hero_video_type}
+              onChange={(e) => setHeroVideo({ ...heroVideo, hero_video_type: e.target.value })} className={inputClass}>
+              <option value="none">None (disabled)</option>
+              <option value="upload">Uploaded Video</option>
+              <option value="youtube">YouTube Embed</option>
+              <option value="vimeo">Vimeo Embed</option>
+            </select>
+          </div>
+          {heroVideo.hero_video_type !== "none" && (
+            <div>
+              <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">
+                {heroVideo.hero_video_type === "youtube" ? "YouTube Video URL" : heroVideo.hero_video_type === "vimeo" ? "Vimeo Video URL" : "Video File URL"}
+              </label>
+              <input type="text" maxLength={500} value={heroVideo.hero_video_url}
+                onChange={(e) => setHeroVideo({ ...heroVideo, hero_video_url: e.target.value })} className={inputClass}
+                placeholder={heroVideo.hero_video_type === "youtube" ? "https://youtube.com/watch?v=..." : heroVideo.hero_video_type === "vimeo" ? "https://vimeo.com/..." : "https://your-cdn.com/video.mp4"} />
+              <p className="text-xs text-muted mt-1">
+                {heroVideo.hero_video_type === "upload" ? "Direct link to an MP4 file. Will autoplay muted and loop." : "Paste the full URL."}
+              </p>
+            </div>
+          )}
+        </div>
+        {heroVideoStatus === "error" && <p className="text-xs mt-3" style={{ color: "#9C4A38" }}>Failed to save.</p>}
+      </div>
+
+      {/* Checkout & Confirmation */}
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
+          <div>
+            <h2 className="text-base font-bold text-charcoal">Checkout & Confirmation</h2>
+            <p className="text-xs text-muted mt-0.5">Customize the ticket confirmation page text and call-to-action.</p>
+          </div>
+          <button
+            onClick={saveConfirmation}
+            disabled={confirmationStatus === "saving"}
+            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors w-full sm:w-auto"
+          >
+            {confirmationStatus === "saving" ? "Saving..." : confirmationStatus === "saved" ? "Saved" : "Save"}
+          </button>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Confirmation Page Text</label>
+            <textarea rows={3} maxLength={1000} value={confirmation.confirmation_page_text}
+              onChange={(e) => setConfirmation({ ...confirmation, confirmation_page_text: e.target.value })}
+              className={`${inputClass} resize-none`}
+              placeholder="Thanks for your purchase! We can't wait to see you at the show." />
+            <p className="text-xs text-muted mt-1">Shown on the order confirmation page after checkout.</p>
+          </div>
+          <div>
+            <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">CTA Button Text</label>
+            <input type="text" maxLength={100} value={confirmation.confirmation_cta_text}
+              onChange={(e) => setConfirmation({ ...confirmation, confirmation_cta_text: e.target.value })} className={inputClass}
+              placeholder="Browse More Events" />
+            <p className="text-xs text-muted mt-1">Text for the main button on the confirmation page. Defaults to &quot;Browse More Events&quot;.</p>
+          </div>
+        </div>
+        {confirmationStatus === "error" && <p className="text-xs mt-3" style={{ color: "#9C4A38" }}>Failed to save.</p>}
+      </div>
+
+      {/* Parking & Miscellaneous */}
+      <div className="bg-white border border-charcoal/10 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
+          <div>
+            <h2 className="text-base font-bold text-charcoal">Parking & Miscellaneous</h2>
+            <p className="text-xs text-muted mt-0.5">Additional settings for visitor info and employment pages.</p>
+          </div>
+          <button
+            onClick={saveParking}
+            disabled={parkingStatus === "saving"}
+            className="text-xs px-4 py-1.5 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors w-full sm:w-auto"
+          >
+            {parkingStatus === "saving" ? "Saving..." : parkingStatus === "saved" ? "Saved" : "Save"}
+          </button>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Parking Map Embed URL</label>
+            <input type="text" maxLength={1000} value={parking.parking_map_embed_url}
+              onChange={(e) => setParking({ ...parking, parking_map_embed_url: e.target.value })} className={inputClass}
+              placeholder="https://www.google.com/maps/embed?pb=..." />
+            <p className="text-xs text-muted mt-1">Google Maps embed URL for the parking section on the visitor info page.</p>
+          </div>
+          <div>
+            <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Employment Application Email</label>
+            <input type="text" maxLength={200} value={parking.employment_application_email}
+              onChange={(e) => setParking({ ...parking, employment_application_email: e.target.value })} className={inputClass}
+              placeholder="jobs@madhattercomedy.com" />
+            <p className="text-xs text-muted mt-1">Email address to receive job application notifications.</p>
+          </div>
+        </div>
+        {parkingStatus === "error" && <p className="text-xs mt-3" style={{ color: "#9C4A38" }}>Failed to save.</p>}
+      </div>
 
       {/* Venue Address & Contact */}
       <div className="bg-white border border-charcoal/10 p-4 sm:p-6">

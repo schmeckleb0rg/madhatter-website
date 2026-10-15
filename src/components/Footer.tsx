@@ -87,9 +87,9 @@ export default function Footer({
               {[
                 { href: "/events", label: "Upcoming Events" },
                 { href: "/comedians", label: "Comedians" },
-                { href: "/past-events", label: "Past Shows" },
-                { href: "/open-mic", label: "Open Mic" },
-                { href: "/private-events", label: "Private Events" },
+                { href: "/past-events", label: "Past Productions" },
+                { href: "/classes", label: "Comedy Classes" },
+                { href: "/gift-cards", label: "Gift Cards" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -103,19 +103,19 @@ export default function Footer({
             </ul>
           </div>
 
-          {/* More */}
+          {/* Venue */}
           <div>
             <h3 className="font-mono text-xs font-medium text-muted-dark uppercase tracking-widest mb-4">
-              More
+              Venue
             </h3>
             <ul className="space-y-2">
               {[
-                { href: "/classes", label: "Comedy Classes" },
-                { href: "/rooms", label: "Rooms" },
+                { href: "/event-spaces", label: "Event Spaces" },
                 { href: "/merch", label: "Merch" },
-                { href: "/press", label: "Media & Press" },
+                { href: "/press", label: "In The News" },
                 { href: "/visitor-info", label: "Visitor Info" },
                 { href: "/about", label: "About" },
+                { href: "/faqs", label: "FAQs" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link

@@ -91,3 +91,100 @@ export function EventSchema({ event }: {
     />
   );
 }
+
+export function ArticleSchema({ article }: {
+  article: {
+    title: string;
+    slug: string;
+    author_name: string | null;
+    publish_date: string;
+    cover_image_url: string | null;
+  };
+}) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://madhattercomedy.com";
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.title,
+    url: `${siteUrl}/blog/${article.slug}`,
+    datePublished: article.publish_date,
+    ...(article.cover_image_url && { image: article.cover_image_url }),
+    ...(article.author_name && {
+      author: { "@type": "Person", name: article.author_name },
+    }),
+    publisher: {
+      "@type": "Organization",
+      name: "Mad Hatter Comedy Club",
+      url: siteUrl,
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function CourseSchema({ course }: {
+  course: {
+    title: string;
+    description: string | null;
+    instructor: string | null;
+    price_cents: number | null;
+  };
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: course.title,
+    description: course.description || "Comedy class at Mad Hatter Comedy Club",
+    ...(course.instructor && {
+      instructor: { "@type": "Person", name: course.instructor },
+    }),
+    provider: {
+      "@type": "Organization",
+      name: "Mad Hatter Comedy Club",
+      url: process.env.NEXT_PUBLIC_SITE_URL || "https://madhattercomedy.com",
+    },
+    ...(course.price_cents && {
+      offers: {
+        "@type": "Offer",
+        price: (course.price_cents / 100).toFixed(2),
+        priceCurrency: "USD",
+      },
+    }),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function FAQPageSchema({ faqs }: {
+  faqs: { question: string; answer: string }[];
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}

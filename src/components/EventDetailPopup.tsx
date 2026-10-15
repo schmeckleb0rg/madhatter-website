@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Event } from "@/lib/supabase";
 import { formatDate } from "@/components/EventCard";
+import ShareBar from "@/components/ShareBar";
+import AddToCalendar from "@/components/AddToCalendar";
 
 type EventDetailPopupProps = {
   event: Event | null;
@@ -12,8 +14,6 @@ type EventDetailPopupProps = {
 };
 
 export default function EventDetailPopup({ event, onClose }: EventDetailPopupProps) {
-  const [copied, setCopied] = useState(false);
-
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -31,14 +31,10 @@ export default function EventDetailPopup({ event, onClose }: EventDetailPopupPro
   if (!event) return null;
 
   const date = formatDate(event.date);
-
-  function handleShare() {
-    const url = `${window.location.origin}/events#${event!.id}`;
-    navigator.clipboard.writeText(url).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
+  const eventUrl = typeof window !== "undefined" ? `${window.location.origin}/events/${event.id}` : "";
+  const dateStr = new Date(event.date).toLocaleDateString("en-US", {
+    weekday: "long", month: "long", day: "numeric", year: "numeric",
+  });
 
   return (
     <div
@@ -164,7 +160,7 @@ export default function EventDetailPopup({ event, onClose }: EventDetailPopupPro
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 mt-6 sm:mt-8">
+          <div className="flex flex-wrap gap-3 mt-6 sm:mt-8">
             {!event.is_sold_out && (
               <>
                 {event.ticket_price_cents && event.ticket_capacity ? (
@@ -184,12 +180,29 @@ export default function EventDetailPopup({ event, onClose }: EventDetailPopupPro
                 )}
               </>
             )}
-            <button
-              onClick={handleShare}
-              className="px-4 py-3 border border-charcoal/20 dark:border-gold/20 text-charcoal dark:text-[#C4BDA8] text-sm font-medium hover:bg-off-white-2 transition-colors"
-            >
-              {copied ? "Copied!" : "Share"}
-            </button>
+            <AddToCalendar
+              title={event.title}
+              date={event.date}
+              durationMinutes={event.event_duration_minutes}
+              location="Mad Hatter Comedy Club"
+              description={event.calendar_description || event.description || undefined}
+              eventUrl={eventUrl}
+              doorsTime={event.doors_time || undefined}
+            />
+          </div>
+
+          {/* Share */}
+          <div className="mt-4">
+            <ShareBar
+              url={eventUrl}
+              title={event.title}
+              description={
+                event.performer
+                  ? `${event.performer} — ${dateStr} at Mad Hatter Comedy Club`
+                  : `${dateStr} at Mad Hatter Comedy Club`
+              }
+              imageUrl={event.image_url || undefined}
+            />
           </div>
         </div>
       </div>

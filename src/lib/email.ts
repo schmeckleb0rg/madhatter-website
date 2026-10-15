@@ -133,3 +133,142 @@ export async function sendWelcomeEmail(data: {
     console.error("Failed to send welcome email:", err);
   });
 }
+
+export async function sendTicketConfirmation(data: {
+  email: string;
+  eventTitle: string;
+  eventDate: string;
+  showTime: string | null;
+  doorsTime: string | null;
+  quantity: number;
+  totalAmount: string;
+  orderId: string;
+  qrData: string;
+}) {
+  const r = getResend();
+  if (!r) return;
+
+  const dateStr = new Date(data.eventDate).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  const html = `
+    <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #F6F2E9; padding: 40px 24px;">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <h1 style="color: #1B1A17; font-size: 28px; margin: 0; font-family: Georgia, serif;">You're In!</h1>
+        <p style="color: #6E6759; font-size: 14px; margin-top: 8px;">Your tickets for ${data.eventTitle} are confirmed.</p>
+      </div>
+      <div style="background: white; border: 1px solid rgba(27,26,23,0.1); padding: 24px;">
+        <p style="color: #6E6759; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 16px; font-family: monospace;">Order Details</p>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr><td style="padding: 6px 0; color: #6E6759; font-size: 14px;">Event</td><td style="padding: 6px 0; text-align: right; color: #1B1A17; font-weight: bold; font-size: 14px;">${data.eventTitle}</td></tr>
+          <tr><td style="padding: 6px 0; color: #6E6759; font-size: 14px;">Date</td><td style="padding: 6px 0; text-align: right; color: #1B1A17; font-family: monospace; font-size: 14px;">${dateStr}</td></tr>
+          ${data.showTime ? `<tr><td style="padding: 6px 0; color: #6E6759; font-size: 14px;">Show Time</td><td style="padding: 6px 0; text-align: right; color: #1B1A17; font-family: monospace; font-size: 14px;">${data.showTime}</td></tr>` : ""}
+          ${data.doorsTime ? `<tr><td style="padding: 6px 0; color: #6E6759; font-size: 14px;">Doors</td><td style="padding: 6px 0; text-align: right; color: #1B1A17; font-family: monospace; font-size: 14px;">${data.doorsTime}</td></tr>` : ""}
+          <tr><td style="padding: 6px 0; color: #6E6759; font-size: 14px;">Tickets</td><td style="padding: 6px 0; text-align: right; color: #1B1A17; font-size: 14px;">${data.quantity}</td></tr>
+          <tr style="border-top: 1px solid rgba(27,26,23,0.1);"><td style="padding: 12px 0 6px; color: #6E6759; font-size: 14px;">Total</td><td style="padding: 12px 0 6px; text-align: right; color: #1B1A17; font-weight: bold; font-size: 18px;">${data.totalAmount}</td></tr>
+        </table>
+      </div>
+      <div style="text-align: center; margin-top: 24px;">
+        <p style="color: #6E6759; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: monospace;">Present at Door</p>
+        <p style="color: #6E6759; font-size: 12px; margin-top: 4px;">Order #${data.orderId.slice(0, 8).toUpperCase()}</p>
+      </div>
+      <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(27,26,23,0.1);">
+        <p style="color: #B8934A; font-size: 16px; font-family: Georgia, serif; margin: 0;">Mad Hatter Comedy Club</p>
+        <p style="color: #6E6759; font-size: 12px; margin-top: 4px;">1046 W Kinzie St, Chicago, IL 60642</p>
+        <p style="color: #B8934A; font-size: 12px; margin-top: 8px;">Full bar available. 21+ show.</p>
+      </div>
+    </div>
+  `;
+
+  await r.emails.send({
+    from: FROM_EMAIL,
+    to: data.email,
+    subject: `Your Mad Hatter Tickets — ${data.eventTitle}`,
+    html,
+  }).catch((err) => {
+    console.error("Failed to send ticket confirmation email:", err);
+  });
+}
+
+export async function notifyJobApplication(data: {
+  name: string;
+  email: string;
+  phone: string | null;
+  listingTitle: string;
+}) {
+  const r = getResend();
+  if (!r) return;
+
+  await r.emails.send({
+    from: FROM_EMAIL,
+    to: ADMIN_EMAIL,
+    subject: `New Job Application: ${data.listingTitle} — ${data.name}`,
+    text: [
+      `New job application received:`,
+      ``,
+      `Position: ${data.listingTitle}`,
+      `Name: ${data.name}`,
+      `Email: ${data.email}`,
+      `Phone: ${data.phone || "N/A"}`,
+      ``,
+      `---`,
+      `View in admin: ${process.env.NEXT_PUBLIC_SITE_URL || ""}/admin/employment`,
+    ].join("\n"),
+  }).catch((err) => {
+    console.error("Failed to send job application notification email:", err);
+  });
+}
+
+export async function sendGiftCardEmail(data: {
+  recipientEmail: string;
+  recipientName: string | null;
+  senderName: string | null;
+  amount: string;
+  code: string;
+  message: string | null;
+  expiresAt: string | null;
+}) {
+  const r = getResend();
+  if (!r) return;
+
+  const expiryText = data.expiresAt
+    ? new Date(data.expiresAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+    : "No expiration";
+
+  const html = `
+    <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1B1A17; padding: 40px 24px; color: #F6F2E9;">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <h1 style="color: #B8934A; font-size: 28px; margin: 0;">Mad Hatter</h1>
+        <p style="font-size: 14px; margin-top: 4px; color: #F6F2E9;">Comedy Club Gift Card</p>
+      </div>
+      <div style="background: #252420; border: 1px solid rgba(184,147,74,0.2); padding: 32px; text-align: center;">
+        <p style="color: #B8934A; font-size: 42px; font-weight: bold; margin: 0;">${data.amount}</p>
+        <p style="color: #6E6759; font-size: 12px; text-transform: uppercase; letter-spacing: 3px; margin: 16px 0 0;">Gift Card Code</p>
+        <p style="color: #F6F2E9; font-size: 24px; font-family: monospace; letter-spacing: 4px; margin: 8px 0;">${data.code}</p>
+        ${data.message ? `
+          <div style="border-top: 1px solid rgba(184,147,74,0.2); margin-top: 24px; padding-top: 16px;">
+            <p style="color: #F6F2E9; font-style: italic;">"${data.message}"</p>
+            ${data.senderName ? `<p style="color: #6E6759; font-size: 13px;">— ${data.senderName}</p>` : ""}
+          </div>
+        ` : ""}
+      </div>
+      <div style="text-align: center; margin-top: 24px;">
+        <p style="color: #6E6759; font-size: 13px;">Redeem at madhattercomedy.com or at the box office.</p>
+        <p style="color: #6E6759; font-size: 12px;">Expires: ${expiryText}</p>
+      </div>
+    </div>
+  `;
+
+  await r.emails.send({
+    from: FROM_EMAIL,
+    to: data.recipientEmail,
+    subject: "You've Received a Mad Hatter Gift Card!",
+    html,
+  }).catch((err) => {
+    console.error("Failed to send gift card email:", err);
+  });
+}
