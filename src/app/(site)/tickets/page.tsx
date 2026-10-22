@@ -16,6 +16,7 @@ async function getUpcomingEvents() {
     .select("id, title, date")
     .gte("date", new Date().toISOString())
     .eq("is_sold_out", false)
+    .neq("is_cancelled", true)
     .order("date", { ascending: true });
   return data ?? [];
 }

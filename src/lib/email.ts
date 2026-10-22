@@ -259,6 +259,51 @@ export async function sendPasswordResetEmail(data: {
   });
 }
 
+export async function sendEventCancellationEmail(data: {
+  email: string;
+  name: string | null;
+  eventTitle: string;
+  eventDate: string;
+  message: string;
+}) {
+  const r = getResend();
+  if (!r) return;
+
+  const greeting = data.name ? `Dear ${data.name}` : "Hello";
+
+  const html = `
+    <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #F6F2E9; padding: 40px 24px;">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <h1 style="color: #1B1A17; font-size: 28px; margin: 0; font-family: Georgia, serif;">Event Cancellation</h1>
+        <p style="color: #6E6759; font-size: 14px; margin-top: 8px;">Mad Hatter Comedy Club</p>
+      </div>
+      <div style="background: white; border: 1px solid rgba(27,26,23,0.1); padding: 24px;">
+        <p style="color: #1B1A17; font-size: 14px; margin: 0 0 16px;">${greeting},</p>
+        <p style="color: #1B1A17; font-size: 14px; margin: 0 0 16px;">We regret to inform you that the following event has been cancelled:</p>
+        <div style="background: #F6F2E9; border-left: 3px solid #B8934A; padding: 16px; margin: 0 0 16px;">
+          <p style="color: #1B1A17; font-size: 16px; font-weight: bold; margin: 0;">${data.eventTitle}</p>
+          <p style="color: #6E6759; font-size: 14px; margin: 8px 0 0;">${data.eventDate}</p>
+        </div>
+        <p style="color: #1B1A17; font-size: 14px; margin: 0 0 16px; white-space: pre-line;">${data.message}</p>
+        <p style="color: #1B1A17; font-size: 14px; margin: 0;">If you purchased tickets, a refund will be processed. Please allow a few business days for the refund to appear.</p>
+      </div>
+      <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(27,26,23,0.1);">
+        <p style="color: #6E6759; font-size: 12px;">Questions? Contact us at ${process.env.ADMIN_NOTIFICATION_EMAIL || "hello@madhattercomedy.com"}</p>
+        <p style="color: #B8934A; font-size: 14px; font-family: Georgia, serif; margin-top: 16px;">Mad Hatter Comedy Club</p>
+      </div>
+    </div>
+  `;
+
+  await r.emails.send({
+    from: FROM_EMAIL,
+    to: data.email,
+    subject: `Event Cancelled: ${data.eventTitle}`,
+    html,
+  }).catch((err) => {
+    console.error("Failed to send event cancellation email:", err);
+  });
+}
+
 export async function sendGiftCardEmail(data: {
   recipientEmail: string;
   recipientName: string | null;

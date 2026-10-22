@@ -54,6 +54,10 @@ export type Event = {
   ticket_tiers: { name: string; price_cents: number; description?: string }[] | null;
   slug: string | null;
   is_rsvp: boolean;
+  // Phase 7 additions (cancellation)
+  is_cancelled: boolean;
+  cancellation_reason: string | null;
+  cancelled_at: string | null;
   // Phase 2 additions (genres via join)
   genres?: EventGenre[];
   event_series_id?: string | null;
@@ -286,6 +290,17 @@ export type PromoCode = {
   expires_at: string | null;
   is_active: boolean;
   created_at: string;
+};
+
+// Phase 7: Per-Event Email Templates
+export type EventEmailTemplate = {
+  id: string;
+  event_id: string;
+  template_type: "confirmation" | "cancellation" | "event_cancellation" | "reminder";
+  subject: string;
+  body: string;
+  created_at: string;
+  updated_at: string;
 };
 
 // Phase 2: Event Genres

@@ -15,6 +15,7 @@ async function getEvents(): Promise<Event[]> {
     .from("events")
     .select("*")
     .gte("date", new Date().toISOString())
+    .neq("is_cancelled", true)
     .order("date", { ascending: true });
   return data ?? [];
 }

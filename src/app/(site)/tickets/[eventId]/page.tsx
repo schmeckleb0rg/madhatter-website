@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ eventId: 
 
 export default async function TicketPurchasePage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = await params;
-  const { data: event } = await supabase.from("events").select("*").eq("id", eventId).single();
+  const { data: event } = await supabase.from("events").select("*").eq("id", eventId).neq("is_cancelled", true).single();
 
   if (!event || !event.ticket_price_cents || !event.ticket_capacity) {
     notFound();

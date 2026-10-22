@@ -19,6 +19,7 @@ async function getEvent(id: string): Promise<Event | null> {
     .from("events")
     .select("*")
     .eq("id", id)
+    .neq("is_cancelled", true)
     .single();
   return data;
 }

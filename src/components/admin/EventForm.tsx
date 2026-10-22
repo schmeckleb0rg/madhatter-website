@@ -94,6 +94,23 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
   const [genres, setGenres] = useState<EventGenre[]>([]);
   const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>([]);
 
+  // Email templates (loaded for existing events)
+  const [emailTemplates, setEmailTemplates] = useState<Record<string, { subject: string; body: string }>>({
+    confirmation: { subject: "", body: "" },
+    cancellation: { subject: "", body: "" },
+    event_cancellation: { subject: "", body: "" },
+    reminder: { subject: "", body: "" },
+  });
+  const [templatesSaving, setTemplatesSaving] = useState(false);
+  const [templatesSaved, setTemplatesSaved] = useState(false);
+  const [expandedTemplate, setExpandedTemplate] = useState<string | null>(null);
+
+  // Cancel event state
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [cancelMessage, setCancelMessage] = useState("");
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelResult, setCancelResult] = useState<string | null>(null);
+
   const ticketsSold = isEvent ? (initEvent?.tickets_sold ?? 0) : 0;
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
@@ -111,12 +128,30 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
       fetch(`/api/admin/events/${id}`)
         .then((r) => r.json())
         .then((event) => {
-          // genre_ids are fetched separately — load from event_genre_assignments
           if (event?.genres) {
             setSelectedGenreIds(event.genres.map((g: EventGenre) => g.id));
           }
         })
         .catch(() => {});
+
+      // Fetch email templates for this event
+      fetch(`/api/admin/events/${id}/email-templates`)
+        .then((r) => r.json())
+        .then((templates) => {
+          if (Array.isArray(templates)) {
+            const mapped: Record<string, { subject: string; body: string }> = {};
+            for (const t of templates) {
+              mapped[t.template_type] = { subject: t.subject, body: t.body };
+            }
+            setEmailTemplates((prev) => ({ ...prev, ...mapped }));
+          }
+        })
+        .catch(() => {});
+
+      // Pre-fill cancel message
+      setCancelMessage(
+        `We regret to inform you that ${initEvent?.title || "this event"} has been cancelled. We apologize for any inconvenience.`
+      );
     }
   }, [isEvent, id]);
 
@@ -157,6 +192,60 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
       .replace(/-+/g, "-")
       .slice(0, 100);
     setForm({ ...form, slug });
+  }
+
+  async function saveEmailTemplates() {
+    if (!id) return;
+    setTemplatesSaving(true);
+    setTemplatesSaved(false);
+    try {
+      const res = await fetch(`/api/admin/events/${id}/email-templates`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          templates: Object.entries(emailTemplates).map(([type, data]) => ({
+            template_type: type,
+            subject: data.subject,
+            body: data.body,
+          })),
+        }),
+      });
+      if (res.ok) {
+        setTemplatesSaved(true);
+        setTimeout(() => setTemplatesSaved(false), 3000);
+      }
+    } catch {
+      // silently fail
+    }
+    setTemplatesSaving(false);
+  }
+
+  async function handleCancelEvent() {
+    if (!id || !cancelMessage.trim()) return;
+    setCancelling(true);
+    setCancelResult(null);
+    try {
+      const res = await fetch(`/api/admin/events/${id}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: cancelMessage }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setCancelResult(`Event cancelled. ${data.emailsSent} cancellation email(s) sent.`);
+        setShowCancelConfirm(false);
+        // Refresh the page to show cancelled state
+        setTimeout(() => {
+          router.push("/admin/events");
+          router.refresh();
+        }, 2000);
+      } else {
+        setCancelResult(data.error || "Failed to cancel event.");
+      }
+    } catch {
+      setCancelResult("Connection error. Please try again.");
+    }
+    setCancelling(false);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -813,6 +902,167 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
             />
             RSVP Event (no ticket purchase)
           </label>
+        </div>
+      )}
+
+      {/* Email Templates (only when editing) */}
+      {isEvent && id && (
+        <div className="border border-charcoal/10 p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className={sectionHeader}>Event Emails</div>
+            <button
+              type="button"
+              onClick={saveEmailTemplates}
+              disabled={templatesSaving}
+              className="text-xs px-3 py-1 bg-charcoal text-off-white hover:bg-charcoal-2 disabled:opacity-50 transition-colors"
+            >
+              {templatesSaving ? "Saving..." : templatesSaved ? "Saved!" : "Save Templates"}
+            </button>
+          </div>
+          <p className="text-xs text-muted -mt-2">
+            Customize emails sent to attendees. Placeholders: {"{{name}}, {{email}}, {{event_title}}, {{event_date}}, {{event_time}}, {{order_id}}, {{quantity}}"}
+          </p>
+
+          {(["confirmation", "cancellation", "event_cancellation", "reminder"] as const).map((type) => {
+            const labels: Record<string, string> = {
+              confirmation: "Confirmation Email",
+              cancellation: "Order Cancellation Email",
+              event_cancellation: "Event Cancellation Email",
+              reminder: "Reminder Email",
+            };
+            const hints: Record<string, string> = {
+              confirmation: "Sent when someone purchases tickets or RSVPs.",
+              cancellation: "Sent when an individual order is cancelled or refunded.",
+              event_cancellation: "Sent to all attendees if the entire event is cancelled.",
+              reminder: "Sent as a reminder before the event (e.g., day before).",
+            };
+            const isExpanded = expandedTemplate === type;
+            return (
+              <div key={type} className="border border-charcoal/5">
+                <button
+                  type="button"
+                  onClick={() => setExpandedTemplate(isExpanded ? null : type)}
+                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-off-white-2 transition-colors"
+                >
+                  <div className="text-left">
+                    <span className="text-sm font-medium text-charcoal">{labels[type]}</span>
+                    <span className="text-xs text-muted ml-2">
+                      {emailTemplates[type]?.subject ? "(configured)" : "(default)"}
+                    </span>
+                  </div>
+                  <span className={`text-muted text-xs transition-transform ${isExpanded ? "rotate-90" : ""}`}>&rarr;</span>
+                </button>
+                {isExpanded && (
+                  <div className="px-4 pb-4 space-y-3">
+                    <p className="text-xs text-muted">{hints[type]}</p>
+                    <div>
+                      <label className={labelClass}>Subject</label>
+                      <input
+                        type="text"
+                        value={emailTemplates[type]?.subject ?? ""}
+                        onChange={(e) =>
+                          setEmailTemplates((prev) => ({
+                            ...prev,
+                            [type]: { ...prev[type], subject: e.target.value },
+                          }))
+                        }
+                        className={inputClass}
+                        placeholder="Leave blank for default"
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Body</label>
+                      <textarea
+                        rows={5}
+                        value={emailTemplates[type]?.body ?? ""}
+                        onChange={(e) =>
+                          setEmailTemplates((prev) => ({
+                            ...prev,
+                            [type]: { ...prev[type], body: e.target.value },
+                          }))
+                        }
+                        className={`${inputClass} resize-none`}
+                        placeholder="Leave blank for default email template"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Cancel Event (only when editing and not already cancelled) */}
+      {isEvent && id && !initEvent?.is_cancelled && (
+        <div className="border border-red-200 bg-red-50/30 p-5 space-y-4">
+          <div className="font-mono text-xs uppercase tracking-widest text-red-600">Danger Zone</div>
+
+          {cancelResult && (
+            <p className="text-sm font-medium" style={{ color: cancelResult.startsWith("Event cancelled") ? "#166534" : "#9C4A38" }}>
+              {cancelResult}
+            </p>
+          )}
+
+          {!showCancelConfirm ? (
+            <button
+              type="button"
+              onClick={() => setShowCancelConfirm(true)}
+              className="px-5 py-2.5 bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors"
+            >
+              Cancel Event
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm text-red-700 font-medium">
+                This will cancel the event and send a cancellation email to all ticket holders and RSVPs.
+                This action cannot be undone.
+              </p>
+              <div>
+                <label className={labelClass}>Cancellation Message</label>
+                <textarea
+                  rows={4}
+                  value={cancelMessage}
+                  onChange={(e) => setCancelMessage(e.target.value)}
+                  className={`${inputClass} resize-none`}
+                  placeholder="Message to send to all attendees..."
+                />
+                <p className="text-xs text-muted mt-1">This message will be included in the cancellation email to all attendees.</p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleCancelEvent}
+                  disabled={cancelling || !cancelMessage.trim()}
+                  className="px-5 py-2 bg-red-600 text-white text-sm font-semibold hover:bg-red-700 disabled:opacity-50 transition-colors"
+                >
+                  {cancelling ? "Cancelling..." : "Confirm Cancellation"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCancelConfirm(false)}
+                  className="px-5 py-2 border border-charcoal/10 text-sm text-muted hover:text-charcoal transition-colors"
+                >
+                  Go Back
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Show cancelled notice if already cancelled */}
+      {isEvent && id && initEvent?.is_cancelled && (
+        <div className="border border-red-200 bg-red-50/30 p-5">
+          <div className="font-mono text-xs uppercase tracking-widest text-red-600 mb-2">Event Cancelled</div>
+          <p className="text-sm text-charcoal">
+            This event was cancelled{initEvent.cancelled_at
+              ? ` on ${new Date(initEvent.cancelled_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`
+              : ""}.
+          </p>
+          {initEvent.cancellation_reason && (
+            <p className="text-sm text-muted mt-2 whitespace-pre-line">{initEvent.cancellation_reason}</p>
+          )}
         </div>
       )}
 

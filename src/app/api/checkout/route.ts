@@ -63,6 +63,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Event not found" }, { status: 404 });
     }
 
+    if (event.is_cancelled) {
+      return NextResponse.json({ error: "This event has been cancelled" }, { status: 400 });
+    }
+
     if (!event.ticket_price_cents || !event.ticket_capacity) {
       return NextResponse.json({ error: "This event does not support online ticket sales" }, { status: 400 });
     }

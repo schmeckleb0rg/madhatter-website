@@ -12,6 +12,7 @@ async function getEventBySlug(slug: string): Promise<Event | null> {
     .from("events")
     .select("*")
     .eq("slug", slug)
+    .neq("is_cancelled", true)
     .single();
   return data;
 }

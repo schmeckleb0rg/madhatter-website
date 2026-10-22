@@ -22,7 +22,8 @@ async function getUpcomingEvents(): Promise<Event[]> {
   const { data } = await supabase
     .from("events")
     .select("id, performer, comedian_id")
-    .gte("date", new Date().toISOString());
+    .gte("date", new Date().toISOString())
+    .neq("is_cancelled", true);
   return (data as Event[]) ?? [];
 }
 
