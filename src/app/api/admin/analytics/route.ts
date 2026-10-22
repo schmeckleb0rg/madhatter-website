@@ -56,6 +56,7 @@ export async function GET(request: Request) {
     .map(([path, { views, totalDuration, durationCount }]) => ({
       path,
       views,
+      totalDuration,
       avgDuration: durationCount > 0 ? Math.round(totalDuration / durationCount) : 0,
     }))
     .sort((a, b) => b.views - a.views)
