@@ -10,13 +10,5 @@ export async function GET() {
   }
 
   const stats = await getUsageStats();
-
-  // Temporary diagnostic — remove after verifying Upstash env vars
-  const envDebug = {
-    hasUrl: !!process.env.UPSTASH_REDIS_REST_URL,
-    hasToken: !!process.env.UPSTASH_REDIS_REST_TOKEN,
-    urlPrefix: process.env.UPSTASH_REDIS_REST_URL?.slice(0, 20) || "(empty)",
-  };
-
-  return NextResponse.json({ ...stats, _envDebug: envDebug });
+  return NextResponse.json(stats);
 }

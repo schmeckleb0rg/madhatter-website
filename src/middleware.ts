@@ -71,6 +71,11 @@ function getRouteLimit(pathname: string): { limit: number; windowMs: number } | 
     return { limit: 3, windowMs: 60_000 };
   }
 
+  // Analytics — generous (every page load triggers one)
+  if (pathname.startsWith("/api/analytics")) {
+    return { limit: 30, windowMs: 60_000 };
+  }
+
   // Read-only lookups — generous
   if (pathname.startsWith("/api/gift-cards/lookup") ||
       pathname.startsWith("/api/gift-cards/redeem") ||
@@ -168,6 +173,8 @@ export const config = {
     "/api/gift-cards/:path*",
     "/api/membership/:path*",
     "/api/calendar/:path*",
+    // Analytics
+    "/api/analytics/:path*",
     // Webhooks (matched for logging, not rate limited)
     "/api/webhooks/:path*",
   ],

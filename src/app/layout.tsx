@@ -4,6 +4,7 @@ import "./globals.css";
 import { supabase } from "@/lib/supabase";
 import { LocalBusinessSchema } from "@/components/StructuredData";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import PageviewTracker from "@/components/PageviewTracker";
 import { getVenueInfo } from "@/lib/venue";
 
 const fraunces = Fraunces({
@@ -70,6 +71,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
         <GoogleAnalytics />
+        <PageviewTracker />
         <LocalBusinessSchema venue={venue} />
         {children}
       </body>

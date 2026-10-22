@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { getAdminClient } from "@/lib/supabase";
 import Link from "next/link";
 import RateLimitMeter from "@/components/admin/RateLimitMeter";
+import AnalyticsChart from "@/components/admin/AnalyticsChart";
 
 async function getStats() {
   const db = getAdminClient();
@@ -116,6 +117,12 @@ export default async function DashboardPage() {
             <div className="font-mono text-xs text-muted mt-1">{tile.label}</div>
           </Link>
         ))}
+      </div>
+
+      {/* Site Traffic Analytics */}
+      <div className="mb-10">
+        <h2 className="font-mono text-xs font-medium text-muted uppercase tracking-wide mb-4">Site Traffic</h2>
+        <AnalyticsChart />
       </div>
 
       {/* Security & Rate Limiting */}
