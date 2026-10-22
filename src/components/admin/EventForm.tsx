@@ -425,7 +425,7 @@ export default function EventForm({ type, initialData, id }: EventFormProps) {
                     setForm({ ...form, ticket_price_dollars: val });
                   }}
                   className={`${inputClass} pl-7`}
-                  placeholder="20 or 16.50"
+                  placeholder="Price"
                 />
               </div>
             </div>
