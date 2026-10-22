@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ShareBar from "@/components/ShareBar";
 import AddToCalendar from "@/components/AddToCalendar";
+import RSVPForm from "@/components/RSVPForm";
 import { fullAddress, getVenueInfo } from "@/lib/venue";
 import { EventSchema } from "@/components/StructuredData";
 
@@ -111,12 +112,12 @@ export default async function EventPage({ params }: Props) {
 
           {/* Event Image */}
           {event.image_url && (
-            <div className="relative aspect-video w-full bg-off-white-2 dark:bg-[#161412] overflow-hidden mb-8">
+            <div className="relative aspect-[1200/630] w-full bg-off-white-2 dark:bg-[#161412] overflow-hidden mb-8">
               <Image
                 src={event.image_url}
                 alt={event.title}
                 fill
-                className="object-cover"
+                className="object-contain"
                 sizes="(max-width: 768px) 100vw, 768px"
                 priority
               />
@@ -163,6 +164,12 @@ export default async function EventPage({ params }: Props) {
                 <div className="font-mono text-sm text-charcoal dark:text-[#F0ECE3]">{event.show_time}</div>
               </div>
             )}
+            {event.end_time && (
+              <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-3 text-center">
+                <div className="text-xs text-muted dark:text-[#7A7264] uppercase tracking-wide mb-1">Ends</div>
+                <div className="font-mono text-sm text-charcoal dark:text-[#F0ECE3]">{event.end_time}</div>
+              </div>
+            )}
             {priceDisplay && (
               <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-3 text-center">
                 <div className="text-xs text-muted dark:text-[#7A7264] uppercase tracking-wide mb-1">Price</div>
@@ -178,6 +185,53 @@ export default async function EventPage({ params }: Props) {
               </div>
             )}
           </div>
+
+          {/* Custom Time Slots */}
+          {event.custom_time_slots && event.custom_time_slots.length > 0 && (
+            <div className="mb-8">
+              <h2 className="font-mono text-xs font-medium text-muted dark:text-[#7A7264] uppercase tracking-wide mb-3">
+                Schedule
+              </h2>
+              <div className="space-y-2">
+                {event.custom_time_slots.map((slot, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between py-2 border-b border-charcoal/5 dark:border-gold/5 last:border-0"
+                  >
+                    <span className="text-charcoal dark:text-[#F0ECE3] font-medium">{slot.label}</span>
+                    <span className="font-mono text-sm text-muted dark:text-[#7A7264]">{slot.time}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Ticket Tiers */}
+          {event.ticket_tiers && event.ticket_tiers.length > 0 && (
+            <div className="mb-8">
+              <h2 className="font-mono text-xs font-medium text-muted dark:text-[#7A7264] uppercase tracking-wide mb-3">
+                Ticket Options
+              </h2>
+              <div className="space-y-3">
+                {event.ticket_tiers.map((tier, i) => (
+                  <div
+                    key={i}
+                    className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-4 flex items-center justify-between"
+                  >
+                    <div>
+                      <span className="text-charcoal dark:text-[#F0ECE3] font-semibold">{tier.name}</span>
+                      {tier.description && (
+                        <p className="text-xs text-muted dark:text-[#7A7264] mt-1">{tier.description}</p>
+                      )}
+                    </div>
+                    <span className="font-mono text-charcoal dark:text-[#F0ECE3] font-semibold">
+                      ${(tier.price_cents / 100).toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Description */}
           {(event.detailed_description || event.description) && (
@@ -228,9 +282,16 @@ export default async function EventPage({ params }: Props) {
             </div>
           )}
 
+          {/* RSVP Form (for RSVP events) */}
+          {event.is_rsvp && !event.is_sold_out && (
+            <div className="mb-8">
+              <RSVPForm eventId={event.id} eventTitle={event.title} />
+            </div>
+          )}
+
           {/* Actions: Buy Tickets + Add to Calendar + Share */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8 pt-4 border-t border-charcoal/10 dark:border-gold/10">
-            {!event.is_sold_out && (
+            {!event.is_sold_out && !event.is_rsvp && (
               <Link
                 href={
                   event.ticket_price_cents && event.ticket_capacity
@@ -252,6 +313,7 @@ export default async function EventPage({ params }: Props) {
               description={event.calendar_description || event.description || undefined}
               eventUrl={eventUrl}
               doorsTime={event.doors_time || undefined}
+              timezone={event.timezone || "America/Chicago"}
             />
           </div>
 

@@ -64,13 +64,13 @@ export default function EventCard({ event, justAnnouncedDays = 14, sellingFastTh
   return (
     <div className="group bg-white grain border-2 border-charcoal/15 dark:bg-[#1C1A16] dark:border-gold/10 shadow-[2px_3px_0_rgba(27,26,23,0.06),0_1px_3px_rgba(27,26,23,0.04)] dark:shadow-[2px_3px_0_rgba(184,147,74,0.04),0_1px_3px_rgba(0,0,0,0.3)] overflow-hidden hover:border-gold/40 hover:-translate-y-1 hover:shadow-[4px_6px_0_rgba(27,26,23,0.08),0_4px_12px_rgba(27,26,23,0.06)] dark:hover:border-gold/30 dark:hover:shadow-[0_0_15px_rgba(184,147,74,0.08)] transition-all duration-300">
       {/* Image */}
-      <div className="relative h-40 sm:h-48 bg-off-white-2 dark:bg-[#161412] overflow-hidden">
+      <div className="relative aspect-[1200/630] bg-off-white-2 dark:bg-[#161412] overflow-hidden">
         {event.image_url ? (
           <Image
             src={event.image_url}
             alt={event.title}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="object-contain group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (

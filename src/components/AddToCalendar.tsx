@@ -10,6 +10,7 @@ type AddToCalendarProps = {
   description?: string;
   eventUrl?: string;
   doorsTime?: string;
+  timezone?: string; // IANA timezone (e.g., "America/Chicago")
 };
 
 function formatDateForGoogle(date: Date): string {
@@ -33,6 +34,7 @@ export default function AddToCalendar(props: AddToCalendarProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const duration = props.durationMinutes || 120;
+  const timezone = props.timezone || "America/Chicago";
 
   const startDate = new Date(props.date);
   const endDate = new Date(startDate.getTime() + duration * 60 * 1000);
@@ -48,13 +50,13 @@ export default function AddToCalendar(props: AddToCalendarProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Google Calendar
-  const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(props.title)}&dates=${formatDateForGoogle(startDate)}/${formatDateForGoogle(endDate)}&details=${encodeURIComponent(desc)}&location=${encodeURIComponent(props.location)}`;
+  // Google Calendar — include timezone parameter
+  const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(props.title)}&dates=${formatDateForGoogle(startDate)}/${formatDateForGoogle(endDate)}&details=${encodeURIComponent(desc)}&location=${encodeURIComponent(props.location)}&ctz=${encodeURIComponent(timezone)}`;
 
   // Outlook
   const outlookUrl = `https://outlook.live.com/calendar/0/action/compose?subject=${encodeURIComponent(props.title)}&startdt=${startDate.toISOString()}&enddt=${endDate.toISOString()}&body=${encodeURIComponent(desc)}&location=${encodeURIComponent(props.location)}`;
 
-  // ICS file download
+  // ICS file download — include VTIMEZONE
   function downloadICS() {
     const icsContent = [
       "BEGIN:VCALENDAR",
@@ -63,8 +65,8 @@ export default function AddToCalendar(props: AddToCalendarProps) {
       "CALSCALE:GREGORIAN",
       "METHOD:PUBLISH",
       "BEGIN:VEVENT",
-      `DTSTART:${formatDateForICS(startDate)}`,
-      `DTEND:${formatDateForICS(endDate)}`,
+      `DTSTART;TZID=${timezone}:${formatDateForICS(startDate)}`,
+      `DTEND;TZID=${timezone}:${formatDateForICS(endDate)}`,
       `SUMMARY:${props.title}`,
       `DESCRIPTION:${desc.replace(/\n/g, "\\n")}`,
       `LOCATION:${props.location}`,

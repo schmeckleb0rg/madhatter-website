@@ -46,6 +46,13 @@ export type Event = {
   where_to_watch_later: string | null;
   audience_etiquette: string | null;
   seating_map_enabled: boolean;
+  // Phase 6 additions
+  timezone: string;
+  end_time: string | null;
+  custom_time_slots: { label: string; time: string }[] | null;
+  ticket_tiers: { name: string; price_cents: number; description?: string }[] | null;
+  slug: string | null;
+  is_rsvp: boolean;
   // Phase 2 additions (genres via join)
   genres?: EventGenre[];
   event_series_id?: string | null;
@@ -260,6 +267,23 @@ export type GiftCardTransaction = {
   amount_cents: number;
   order_id: string | null;
   type: "purchase" | "redemption" | "void";
+  created_at: string;
+};
+
+// Phase 6: Promo Codes
+export type PromoCode = {
+  id: string;
+  code: string;
+  description: string | null;
+  discount_type: "dollars_off" | "percent_off" | "early_access";
+  discount_value: number;
+  event_id: string | null;
+  is_site_wide: boolean;
+  max_uses: number | null;
+  current_uses: number;
+  min_purchase_cents: number | null;
+  expires_at: string | null;
+  is_active: boolean;
   created_at: string;
 };
 

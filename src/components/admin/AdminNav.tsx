@@ -22,6 +22,7 @@ const navItems = [
   { href: "/admin/gift-cards", label: "Gift Cards" },
   { href: "/admin/merch", label: "Merch" },
   { href: "/admin/membership", label: "Membership" },
+  { href: "/admin/promo-codes", label: "Promo Codes" },
   { href: "/admin/genres", label: "Genres" },
   // Inquiries
   { href: "/admin/inquiries", label: "Inquiries" },

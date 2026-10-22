@@ -33,7 +33,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Rate limit public API routes at the edge
-  if (pathname.startsWith("/api/contact") || pathname.startsWith("/api/inquiries") || pathname.startsWith("/api/checkout")) {
+  if (pathname.startsWith("/api/contact") || pathname.startsWith("/api/inquiries") || pathname.startsWith("/api/checkout") || pathname.startsWith("/api/rsvp")) {
     const allowed = edgeRateLimit(ip, 10, 60_000);
     if (!allowed) {
       return NextResponse.json(
@@ -43,8 +43,24 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Protect all /admin routes except /admin/login
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+  // Rate limit password reset endpoints
+  if (pathname.startsWith("/api/admin/forgot-password") || pathname.startsWith("/api/admin/reset-password")) {
+    const allowed = edgeRateLimit(ip, 5, 60_000);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many attempts. Please try again later." },
+        { status: 429, headers: { "Retry-After": "60" } }
+      );
+    }
+  }
+
+  // Protect all /admin routes except login and password reset pages
+  if (
+    pathname.startsWith("/admin") &&
+    pathname !== "/admin/login" &&
+    pathname !== "/admin/forgot-password" &&
+    pathname !== "/admin/reset-password"
+  ) {
     const session = await auth();
 
     if (!session) {
@@ -60,5 +76,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/contact", "/api/inquiries", "/api/checkout", "/api/membership/register", "/api/membership/login"],
+  matcher: ["/admin/:path*", "/api/contact", "/api/inquiries", "/api/checkout", "/api/rsvp", "/api/membership/register", "/api/membership/login", "/api/admin/forgot-password", "/api/admin/reset-password"],
 };

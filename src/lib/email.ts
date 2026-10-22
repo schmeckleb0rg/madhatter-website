@@ -223,6 +223,41 @@ export async function notifyJobApplication(data: {
   });
 }
 
+export async function sendPasswordResetEmail(data: {
+  email: string;
+  resetUrl: string;
+}) {
+  const r = getResend();
+  if (!r) return;
+
+  const html = `
+    <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #F6F2E9; padding: 40px 24px;">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <h1 style="color: #1B1A17; font-size: 28px; margin: 0; font-family: Georgia, serif;">Reset Your Password</h1>
+        <p style="color: #6E6759; font-size: 14px; margin-top: 8px;">We received a request to reset your admin password.</p>
+      </div>
+      <div style="background: white; border: 1px solid rgba(27,26,23,0.1); padding: 24px; text-align: center;">
+        <p style="color: #1B1A17; font-size: 14px; margin: 0 0 24px;">Click the button below to set a new password. This link expires in 1 hour.</p>
+        <a href="${data.resetUrl}" style="display: inline-block; background: #1B1A17; color: #F6F2E9; font-weight: bold; font-size: 14px; text-decoration: none; padding: 14px 32px;">Reset Password</a>
+        <p style="color: #6E6759; font-size: 12px; margin-top: 24px; line-height: 1.5;">If the button doesn't work, copy and paste this link into your browser:<br/><span style="color: #B8934A; word-break: break-all;">${data.resetUrl}</span></p>
+      </div>
+      <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(27,26,23,0.1);">
+        <p style="color: #6E6759; font-size: 12px; line-height: 1.5;">If you did not request this password reset, you can safely ignore this email. Your password will remain unchanged.</p>
+        <p style="color: #B8934A; font-size: 14px; font-family: Georgia, serif; margin-top: 16px;">Mad Hatter Comedy Club</p>
+      </div>
+    </div>
+  `;
+
+  await r.emails.send({
+    from: FROM_EMAIL,
+    to: data.email,
+    subject: "Reset Your Mad Hatter Admin Password",
+    html,
+  }).catch((err) => {
+    console.error("Failed to send password reset email:", err);
+  });
+}
+
 export async function sendGiftCardEmail(data: {
   recipientEmail: string;
   recipientName: string | null;

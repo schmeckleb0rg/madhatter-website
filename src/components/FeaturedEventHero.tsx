@@ -18,13 +18,13 @@ export default function FeaturedEventHero({ event, justAnnouncedDays = 14, selli
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 border-2 border-charcoal/15 dark:border-gold/10 overflow-hidden group">
       {/* Image */}
-      <div className="relative h-48 sm:h-64 lg:h-96 bg-off-white-2 overflow-hidden spotlight-sweep">
+      <div className="relative aspect-[1200/630] lg:aspect-auto lg:h-auto bg-off-white-2 overflow-hidden spotlight-sweep">
         {event.image_url ? (
           <Image
             src={event.image_url}
             alt={event.title}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
+            className="object-contain group-hover:scale-105 transition-transform duration-700"
             sizes="(max-width: 1024px) 100vw, 50vw"
             priority
           />

@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -75,6 +76,15 @@ function LoginForm() {
           className="w-full bg-off-white border border-charcoal/10 px-4 py-3 text-charcoal text-sm focus:outline-none focus:border-gold/50 transition-colors"
           placeholder="Enter password"
         />
+      </div>
+
+      <div className="flex justify-end -mt-1">
+        <Link
+          href="/admin/forgot-password"
+          className="text-xs text-muted hover:text-charcoal transition-colors"
+        >
+          Forgot Password?
+        </Link>
       </div>
 
       {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
