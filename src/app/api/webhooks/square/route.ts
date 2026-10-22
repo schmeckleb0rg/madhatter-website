@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { getAdminClient } from "@/lib/supabase";
-import { createHmac } from "crypto";
+import { createHmac, timingSafeEqual } from "crypto";
 import { sendTicketConfirmation, sendGiftCardEmail } from "@/lib/email";
+
+const MAX_WEBHOOK_AGE_MS = 5 * 60 * 1000; // 5 minutes — reject stale webhooks (replay protection)
 
 function verifySquareWebhook(body: string, signature: string): boolean {
   const webhookSignatureKey = process.env.SQUARE_WEBHOOK_SIGNATURE_KEY;
@@ -14,16 +16,20 @@ function verifySquareWebhook(body: string, signature: string): boolean {
   hmac.update(notificationUrl + body);
   const expectedSignature = hmac.digest("base64");
 
-  // Constant-time comparison
-  if (signature.length !== expectedSignature.length) return false;
-  let mismatch = 0;
-  for (let i = 0; i < signature.length; i++) {
-    mismatch |= signature.charCodeAt(i) ^ expectedSignature.charCodeAt(i);
-  }
-  return mismatch === 0;
+  // Timing-safe comparison using Node.js built-in (prevents timing attacks)
+  const sig = Buffer.from(signature, "utf-8");
+  const expected = Buffer.from(expectedSignature, "utf-8");
+  if (sig.length !== expected.length) return false;
+  return timingSafeEqual(sig, expected);
 }
 
 export async function POST(request: Request) {
+  // Validate Content-Type
+  const contentType = request.headers.get("content-type");
+  if (!contentType?.includes("application/json")) {
+    return NextResponse.json({ error: "Invalid content type" }, { status: 400 });
+  }
+
   const body = await request.text();
   const signature = request.headers.get("x-square-hmacsha256-signature");
 
@@ -40,6 +46,14 @@ export async function POST(request: Request) {
     event = JSON.parse(body);
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  // Replay protection — reject events older than 5 minutes
+  if (event.created_at) {
+    const eventAge = Date.now() - new Date(event.created_at).getTime();
+    if (eventAge > MAX_WEBHOOK_AGE_MS) {
+      return NextResponse.json({ received: true, skipped: "stale_event" });
+    }
   }
 
   const db = getAdminClient();

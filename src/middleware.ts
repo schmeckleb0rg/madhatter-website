@@ -1,60 +1,132 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createHash } from "crypto";
 
-// Edge-compatible in-memory rate limiter
+// Edge-compatible in-memory rate limiter (Layer 1 — fast rejection)
+// This is supplemented by Upstash Redis in API routes (Layer 2 — accurate enforcement)
 const requestCounts = new Map<string, { count: number; resetAt: number }>();
 
-function edgeRateLimit(ip: string, limit: number, windowMs: number): boolean {
+function hashIP(ip: string): string {
+  return createHash("sha256").update(ip).digest("hex").slice(0, 16);
+}
+
+function edgeRateLimit(ip: string, limit: number, windowMs: number): { allowed: boolean; remaining: number } {
   const now = Date.now();
-  const entry = requestCounts.get(ip);
-  if (!entry || now > entry.resetAt) {
-    requestCounts.set(ip, { count: 1, resetAt: now + windowMs });
-    return true;
+  const key = hashIP(ip); // Privacy: don't store raw IPs
+
+  // Clean up expired entries (check a few on each call instead of setInterval)
+  if (requestCounts.size > 1000) {
+    for (const [k, v] of requestCounts) {
+      if (now > v.resetAt) requestCounts.delete(k);
+      if (requestCounts.size <= 500) break;
+    }
   }
-  if (entry.count >= limit) return false;
+
+  const entry = requestCounts.get(key);
+  if (!entry || now > entry.resetAt) {
+    requestCounts.set(key, { count: 1, resetAt: now + windowMs });
+    return { allowed: true, remaining: limit - 1 };
+  }
+  if (entry.count >= limit) {
+    return { allowed: false, remaining: 0 };
+  }
   entry.count++;
-  return true;
+  return { allowed: true, remaining: limit - entry.count };
+}
+
+// Route-to-tier mapping for rate limit configuration
+function getRouteLimit(pathname: string): { limit: number; windowMs: number } | null {
+  // Auth routes — strict
+  if (pathname.startsWith("/api/membership/register") ||
+      pathname.startsWith("/api/membership/login") ||
+      pathname.startsWith("/api/admin/forgot-password") ||
+      pathname.startsWith("/api/admin/reset-password")) {
+    return { limit: 5, windowMs: 60_000 };
+  }
+
+  // Payment routes — strict
+  if (pathname.startsWith("/api/checkout") ||
+      pathname.startsWith("/api/gift-cards/purchase") ||
+      pathname.startsWith("/api/membership/subscribe")) {
+    return { limit: 3, windowMs: 60_000 };
+  }
+
+  // Form submissions — moderate
+  if (pathname.startsWith("/api/contact") ||
+      pathname.startsWith("/api/inquiries") ||
+      pathname.startsWith("/api/private-events") ||
+      pathname.startsWith("/api/event-spaces") ||
+      pathname.startsWith("/api/employment/apply") ||
+      pathname.startsWith("/api/classes/enroll") ||
+      pathname.startsWith("/api/rsvp")) {
+    return { limit: 5, windowMs: 60_000 };
+  }
+
+  // Newsletter/subscribe
+  if (pathname.startsWith("/api/subscribe")) {
+    return { limit: 3, windowMs: 60_000 };
+  }
+
+  // Read-only lookups — generous
+  if (pathname.startsWith("/api/gift-cards/lookup") ||
+      pathname.startsWith("/api/gift-cards/redeem") ||
+      pathname.startsWith("/api/membership/me") ||
+      pathname.startsWith("/api/membership/logout") ||
+      pathname.startsWith("/api/calendar")) {
+    return { limit: 15, windowMs: 60_000 };
+  }
+
+  // Admin API routes — generous but bounded
+  if (pathname.startsWith("/api/admin")) {
+    return { limit: 30, windowMs: 60_000 };
+  }
+
+  // Webhooks — no rate limiting (they have signature verification)
+  if (pathname.startsWith("/api/webhooks")) {
+    return null;
+  }
+
+  // Default for any other API route
+  if (pathname.startsWith("/api/")) {
+    return { limit: 10, windowMs: 60_000 };
+  }
+
+  return null;
 }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
-  // Rate limit membership auth routes at the edge
-  if (pathname.startsWith("/api/membership/register") || pathname.startsWith("/api/membership/login")) {
-    const allowed = edgeRateLimit(ip, 5, 60_000);
-    if (!allowed) {
-      return NextResponse.json(
-        { error: "Too many attempts. Please try again later." },
-        { status: 429, headers: { "Retry-After": "60" } }
-      );
-    }
-  }
-
-  // Rate limit public API routes at the edge
-  if (pathname.startsWith("/api/contact") || pathname.startsWith("/api/inquiries") || pathname.startsWith("/api/checkout") || pathname.startsWith("/api/rsvp")) {
-    const allowed = edgeRateLimit(ip, 10, 60_000);
+  // --- Rate limiting for API routes (Layer 1) ---
+  const routeLimit = getRouteLimit(pathname);
+  if (routeLimit) {
+    const { allowed, remaining } = edgeRateLimit(ip, routeLimit.limit, routeLimit.windowMs);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many requests. Please try again later." },
-        { status: 429, headers: { "Retry-After": "60" } }
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(Math.ceil(routeLimit.windowMs / 1000)),
+            "X-RateLimit-Limit": String(routeLimit.limit),
+            "X-RateLimit-Remaining": "0",
+          },
+        }
       );
+    }
+
+    // Attach remaining count as header for downstream use
+    const response = NextResponse.next();
+    response.headers.set("X-RateLimit-Remaining", String(remaining));
+    // For API routes that don't need admin auth, return early
+    if (pathname.startsWith("/api/") && !pathname.startsWith("/admin")) {
+      return response;
     }
   }
 
-  // Rate limit password reset endpoints
-  if (pathname.startsWith("/api/admin/forgot-password") || pathname.startsWith("/api/admin/reset-password")) {
-    const allowed = edgeRateLimit(ip, 5, 60_000);
-    if (!allowed) {
-      return NextResponse.json(
-        { error: "Too many attempts. Please try again later." },
-        { status: 429, headers: { "Retry-After": "60" } }
-      );
-    }
-  }
-
-  // Protect all /admin routes except login and password reset pages
+  // --- Admin route protection ---
   if (
     pathname.startsWith("/admin") &&
     pathname !== "/admin/login" &&
@@ -76,5 +148,24 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/contact", "/api/inquiries", "/api/checkout", "/api/rsvp", "/api/membership/register", "/api/membership/login", "/api/admin/forgot-password", "/api/admin/reset-password"],
+  matcher: [
+    // Admin pages and API
+    "/admin/:path*",
+    "/api/admin/:path*",
+    // Public API routes
+    "/api/contact",
+    "/api/inquiries",
+    "/api/checkout",
+    "/api/rsvp",
+    "/api/subscribe",
+    "/api/private-events",
+    "/api/event-spaces/:path*",
+    "/api/employment/:path*",
+    "/api/classes/:path*",
+    "/api/gift-cards/:path*",
+    "/api/membership/:path*",
+    "/api/calendar/:path*",
+    // Webhooks (matched for logging, not rate limited)
+    "/api/webhooks/:path*",
+  ],
 };

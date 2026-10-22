@@ -1,3 +1,4 @@
+import "server-only";
 import { SquareClient, SquareEnvironment } from "square";
 
 let squareClient: SquareClient | null = null;

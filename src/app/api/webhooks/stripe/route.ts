@@ -91,12 +91,9 @@ export async function POST(request: Request) {
     }
 
     case "invoice.payment_failed": {
-      const invoice = event.data.object;
-      const customerId = invoice.customer as string;
-
-      // Could send an email notification here
-      // For now, Stripe handles retry logic automatically
-      console.warn(`Payment failed for customer ${customerId}`);
+      // Stripe handles retry logic automatically.
+      // Log without exposing customer ID for privacy.
+      console.warn("Stripe invoice payment failed — Stripe will retry automatically.");
       break;
     }
   }

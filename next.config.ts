@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Remove X-Powered-By header (don't reveal framework to attackers)
+  poweredByHeader: false,
+
   images: {
     remotePatterns: [
       {
@@ -24,7 +27,10 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-DNS-Prefetch-Control", value: "off" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(self)" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), payment=(self), interest-cohort=()",
+          },
           {
             key: "Content-Security-Policy",
             value: [

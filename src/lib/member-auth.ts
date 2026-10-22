@@ -1,11 +1,11 @@
+import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { hash, compare } from "bcryptjs";
 import { cookies } from "next/headers";
+import { MEMBER_JWT_SECRET } from "@/lib/env";
 
 const COOKIE_NAME = "mh-member-session";
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.MEMBER_JWT_SECRET || process.env.NEXTAUTH_SECRET || "member-secret-change-me"
-);
+const JWT_SECRET = MEMBER_JWT_SECRET;
 
 export type MemberSession = {
   memberId: string;

@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { getAdminClient } from "@/lib/supabase";
 import Link from "next/link";
+import RateLimitMeter from "@/components/admin/RateLimitMeter";
 
 async function getStats() {
   const db = getAdminClient();
@@ -115,6 +116,14 @@ export default async function DashboardPage() {
             <div className="font-mono text-xs text-muted mt-1">{tile.label}</div>
           </Link>
         ))}
+      </div>
+
+      {/* Security & Rate Limiting */}
+      <div className="mb-10">
+        <h2 className="font-mono text-xs font-medium text-muted uppercase tracking-wide mb-4">Security</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <RateLimitMeter />
+        </div>
       </div>
 
       {/* Quick links */}

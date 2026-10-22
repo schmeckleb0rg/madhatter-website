@@ -8,6 +8,9 @@ out/
 # env files
 .env*.local
 
+# claude
+.claude/
+
 # misc
 .DS_Store
 *.tsbuildinfo
