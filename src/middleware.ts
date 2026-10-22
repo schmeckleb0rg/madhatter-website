@@ -1,19 +1,22 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createHash } from "crypto";
 
 // Edge-compatible in-memory rate limiter (Layer 1 — fast rejection)
 // This is supplemented by Upstash Redis in API routes (Layer 2 — accurate enforcement)
 const requestCounts = new Map<string, { count: number; resetAt: number }>();
 
-function hashIP(ip: string): string {
-  return createHash("sha256").update(ip).digest("hex").slice(0, 16);
+// Edge-compatible IP hashing using Web Crypto API (not Node.js crypto)
+async function hashIP(ip: string): Promise<string> {
+  const data = new TextEncoder().encode(ip);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.slice(0, 8).map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-function edgeRateLimit(ip: string, limit: number, windowMs: number): { allowed: boolean; remaining: number } {
+async function edgeRateLimit(ip: string, limit: number, windowMs: number): Promise<{ allowed: boolean; remaining: number }> {
   const now = Date.now();
-  const key = hashIP(ip); // Privacy: don't store raw IPs
+  const key = await hashIP(ip); // Privacy: don't store raw IPs
 
   // Clean up expired entries (check a few on each call instead of setInterval)
   if (requestCounts.size > 1000) {
@@ -102,7 +105,7 @@ export async function middleware(request: NextRequest) {
   // --- Rate limiting for API routes (Layer 1) ---
   const routeLimit = getRouteLimit(pathname);
   if (routeLimit) {
-    const { allowed, remaining } = edgeRateLimit(ip, routeLimit.limit, routeLimit.windowMs);
+    const { allowed, remaining } = await edgeRateLimit(ip, routeLimit.limit, routeLimit.windowMs);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many requests. Please try again later." },
