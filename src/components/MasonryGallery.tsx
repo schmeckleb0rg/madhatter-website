@@ -13,6 +13,8 @@ export default function MasonryGallery({ images }: { images: GalleryImage[] }) {
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const goNext = useCallback(() => {
     setLightboxIdx((prev) => prev === null ? null : (prev + 1) % images.length);
@@ -22,12 +24,20 @@ export default function MasonryGallery({ images }: { images: GalleryImage[] }) {
     setLightboxIdx((prev) => prev === null ? null : (prev - 1 + images.length) % images.length);
   }, [images.length]);
 
-  // Lock body scroll when lightbox is open
+  // Lock body scroll and move focus when lightbox opens; restore on close
+  const prevLightboxIdx = useRef<number | null>(null);
   useEffect(() => {
     if (lightboxIdx !== null) {
       document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
+      closeBtnRef.current?.focus();
+      return () => {
+        document.body.style.overflow = "";
+        // Return focus to the thumbnail that opened the lightbox
+        const idx = prevLightboxIdx.current;
+        if (idx !== null) triggerRefs.current[idx]?.focus();
+      };
     }
+    prevLightboxIdx.current = lightboxIdx;
   }, [lightboxIdx]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -56,7 +66,9 @@ export default function MasonryGallery({ images }: { images: GalleryImage[] }) {
         {images.map((img, i) => (
           <button
             key={img.id}
-            onClick={() => setLightboxIdx(i)}
+            ref={(el) => { triggerRefs.current[i] = el; }}
+            onClick={() => { prevLightboxIdx.current = i; setLightboxIdx(i); }}
+            aria-label={`View image${img.caption ? `: ${img.caption}` : ""}`}
             className="block w-full break-inside-avoid overflow-hidden group relative bg-off-white-2 dark:bg-[#161412] border-0 p-0 cursor-pointer"
           >
             <Image
@@ -84,13 +96,15 @@ export default function MasonryGallery({ images }: { images: GalleryImage[] }) {
           onKeyDown={handleKeyDown}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          tabIndex={0}
           role="dialog"
+          aria-modal="true"
+          aria-label={lightboxIdx !== null && images[lightboxIdx].caption ? images[lightboxIdx].caption! : "Image lightbox"}
         >
           <button
+            ref={closeBtnRef}
             onClick={(e) => { e.stopPropagation(); setLightboxIdx(null); }}
             className="absolute top-4 right-4 text-white/70 hover:text-white text-3xl z-10 w-10 h-10 flex items-center justify-center"
-            aria-label="Close"
+            aria-label="Close lightbox"
           >
             &times;
           </button>

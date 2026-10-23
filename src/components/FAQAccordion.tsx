@@ -10,6 +10,7 @@ type Props = {
 export default function FAQAccordion({ question, answer }: Props) {
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
@@ -18,16 +19,22 @@ export default function FAQAccordion({ question, answer }: Props) {
     }
   }, [answer]);
 
+  // Generate a stable panel id from the question text
+  const panelId = `faq-panel-${question.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").slice(0, 40)}`;
+
   return (
     <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={panelId}
         className="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-off-white/50 dark:hover:bg-white/5 transition-colors"
       >
         <span className="text-sm font-semibold text-charcoal dark:text-[#F0ECE3] pr-4 leading-snug">
           {question}
         </span>
         <span
+          aria-hidden="true"
           className={`flex-shrink-0 w-5 h-5 flex items-center justify-center text-gold transition-transform duration-300 ${
             open ? "rotate-45" : ""
           }`}
@@ -39,6 +46,10 @@ export default function FAQAccordion({ question, answer }: Props) {
         </span>
       </button>
       <div
+        id={panelId}
+        ref={panelRef}
+        role="region"
+        aria-hidden={!open}
         style={{ maxHeight: open ? `${height}px` : "0px" }}
         className="overflow-hidden transition-all duration-300 ease-in-out"
       >
