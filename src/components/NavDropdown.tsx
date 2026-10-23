@@ -31,14 +31,28 @@ export default function NavDropdown({ label, href, items }: NavDropdownProps) {
     timeoutRef.current = setTimeout(() => setOpen(false), 150);
   }, []);
 
+  // Keyboard users: open on focus, close when focus leaves the entire dropdown
+  const handleFocus = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpen(true);
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    timeoutRef.current = setTimeout(() => setOpen(false), 150);
+  }, []);
+
   return (
     <div
       className="relative"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
     >
       <Link
         href={href}
+        aria-expanded={open}
+        aria-haspopup="true"
         className={`text-sm font-medium relative pb-0.5 flex items-center gap-1 after:absolute after:left-0 after:-bottom-0.5 after:h-px after:bg-gold after:transition-all after:duration-300 ${
           isActive
             ? "text-charcoal dark:text-[#F0ECE3] after:w-full"
@@ -51,6 +65,7 @@ export default function NavDropdown({ label, href, items }: NavDropdownProps) {
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>

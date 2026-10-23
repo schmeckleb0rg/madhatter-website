@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type EmailPopupProps = {
   isOpen: boolean;
@@ -11,8 +11,8 @@ export default function EmailPopup({ isOpen, onClose }: EmailPopupProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Reset on open
   useEffect(() => {
     if (isOpen) {
       setEmail("");
@@ -21,18 +21,45 @@ export default function EmailPopup({ isOpen, onClose }: EmailPopupProps) {
     }
   }, [isOpen]);
 
-  // Close on Escape
   useEffect(() => {
+    if (!isOpen) return;
+
+    // Move focus into dialog
+    const firstFocusable = dialogRef.current?.querySelector<HTMLElement>(
+      'button, input, [tabindex]:not([tabindex="-1"])'
+    );
+    firstFocusable?.focus();
+
     function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      // Focus trap
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = Array.from(
+          dialogRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        );
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
-    if (isOpen) {
-      document.addEventListener("keydown", handleKey);
-      return () => document.removeEventListener("keydown", handleKey);
-    }
+
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
   }, [isOpen, onClose]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault();
     setStatus("loading");
     setErrorMsg("");
@@ -63,38 +90,43 @@ export default function EmailPopup({ isOpen, onClose }: EmailPopupProps) {
   return (
     <div
       className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:px-4"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="email-popup-title"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70 dark:bg-black/85 animate-fadeIn" />
+      <div className="absolute inset-0 bg-black/70 dark:bg-black/85 animate-fadeIn" aria-hidden="true" />
 
-      {/* Modal — slides up from bottom on mobile */}
-      <div className="relative bg-off-white dark:bg-[#1C1A16] w-full sm:max-w-md p-6 sm:p-10 animate-fadeInUp rounded-t-xl sm:rounded-none sm:border sm:border-charcoal/10">
+      {/* Modal */}
+      <div
+        ref={dialogRef}
+        className="relative bg-off-white dark:bg-[#1C1A16] w-full sm:max-w-md p-6 sm:p-10 animate-fadeInUp rounded-t-xl sm:rounded-none sm:border sm:border-charcoal/10"
+      >
         {/* Drag handle on mobile */}
-        <div className="sm:hidden flex justify-center -mt-2 mb-4">
+        <div className="sm:hidden flex justify-center -mt-2 mb-4" aria-hidden="true">
           <div className="w-10 h-1 rounded-full bg-charcoal/20 dark:bg-gold/20" />
         </div>
+
         {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 w-10 h-10 sm:w-auto sm:h-auto flex items-center justify-center text-muted dark:text-[#7A7264] hover:text-charcoal dark:hover:text-[#F0ECE3] transition-colors"
-          aria-label="Close"
+          aria-label="Close newsletter signup"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
         {status === "success" ? (
           <div className="text-center py-4">
-            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold/10 dark:bg-gold/15 flex items-center justify-center">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold/10 dark:bg-gold/15 flex items-center justify-center" aria-hidden="true">
               <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="font-display text-2xl font-semibold text-charcoal dark:text-[#F0ECE3] mb-2">
+            <h3 id="email-popup-title" className="font-display text-2xl font-semibold text-charcoal dark:text-[#F0ECE3] mb-2">
               You&apos;re on the list!
             </h3>
             <p className="text-muted dark:text-[#7A7264] text-sm">
@@ -104,10 +136,8 @@ export default function EmailPopup({ isOpen, onClose }: EmailPopupProps) {
         ) : (
           <>
             <div className="text-center mb-6">
-              <p className="font-mono text-xs tracking-widest uppercase text-gold mb-2">
-                Stay in the Loop
-              </p>
-              <h3 className="font-display text-2xl font-semibold text-charcoal dark:text-[#F0ECE3]">
+              <p className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Stay in the Loop</p>
+              <h3 id="email-popup-title" className="font-display text-2xl font-semibold text-charcoal dark:text-[#F0ECE3]">
                 Get on the List
               </h3>
               <p className="text-muted dark:text-[#7A7264] text-sm mt-2">
@@ -116,25 +146,27 @@ export default function EmailPopup({ isOpen, onClose }: EmailPopupProps) {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="email"
-                required
-                maxLength={200}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="w-full bg-white dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 px-4 py-3 text-charcoal dark:text-[#F0ECE3] text-sm focus:outline-none focus:border-gold/50 transition-colors dark:placeholder:text-[#7A7264]/50"
-              />
+              <div>
+                <label htmlFor="email-popup-input" className="sr-only">Email address</label>
+                <input
+                  id="email-popup-input"
+                  type="email"
+                  required
+                  maxLength={200}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  autoComplete="email"
+                  className="w-full bg-white dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 px-4 py-3 text-charcoal dark:text-[#F0ECE3] text-sm focus:outline-none focus:border-gold/50 transition-colors dark:placeholder:text-[#7A7264]/50"
+                />
+              </div>
 
               {errorMsg && (
-                <p className="text-sm" style={{ color: "#9C4A38" }}>{errorMsg}</p>
+                <p role="alert" className="text-sm" style={{ color: "#9C4A38" }}>{errorMsg}</p>
               )}
 
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                className="btn-shimmer w-full py-3 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 dark:bg-gold dark:text-[#0D0C0A] dark:hover:bg-[#D4A84B] disabled:opacity-50 transition-colors"
-              >
+              <button type="submit" disabled={status === "loading"}
+                className="btn-shimmer w-full py-3 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 dark:bg-gold dark:text-[#0D0C0A] dark:hover:bg-[#D4A84B] disabled:opacity-50 transition-colors">
                 {status === "loading" ? "Subscribing..." : "Subscribe"}
               </button>
             </form>

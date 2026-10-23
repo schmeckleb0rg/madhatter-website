@@ -152,6 +152,8 @@ export default function Navbar() {
             className="flex items-center justify-center w-11 h-11 -mr-2 text-muted dark:text-[#7A7264] hover:text-charcoal dark:hover:text-[#F0ECE3] transition-colors"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {open ? (
@@ -166,6 +168,8 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
+        id="mobile-menu"
+        aria-hidden={!open}
         className={`lg:hidden bg-off-white dark:bg-[#0D0C0A] border-t border-charcoal/10 dark:border-gold/10 overflow-hidden transition-all duration-300 ease-in-out ${
           open ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
         }`}
@@ -176,6 +180,7 @@ export default function Navbar() {
             <div key={nav.label}>
               <button
                 onClick={() => toggleMobileSection(nav.label)}
+                aria-expanded={expandedMobile === nav.label}
                 className={`flex items-center justify-between w-full text-base font-medium py-3 transition-colors border-b border-charcoal/5 dark:border-gold/5 ${
                   isDropdownActive(nav) ? "text-charcoal dark:text-[#F0ECE3]" : "text-muted dark:text-[#7A7264] hover:text-charcoal dark:hover:text-[#F0ECE3]"
                 }`}

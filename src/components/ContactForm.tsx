@@ -61,10 +61,12 @@ export default function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className={labelClass}>
-            Name <span className="text-gold">*</span>
+          <label htmlFor="contact-name" className={labelClass}>
+            Name <span className="text-gold" aria-hidden="true">*</span>
+            <span className="sr-only">(required)</span>
           </label>
           <input
+            id="contact-name"
             type="text"
             required
             maxLength={100}
@@ -72,13 +74,16 @@ export default function ContactForm() {
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             className={inputClass}
             placeholder="Your name"
+            autoComplete="name"
           />
         </div>
         <div>
-          <label className={labelClass}>
-            Email <span className="text-gold">*</span>
+          <label htmlFor="contact-email" className={labelClass}>
+            Email <span className="text-gold" aria-hidden="true">*</span>
+            <span className="sr-only">(required)</span>
           </label>
           <input
+            id="contact-email"
             type="email"
             required
             maxLength={200}
@@ -86,27 +91,32 @@ export default function ContactForm() {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             className={inputClass}
             placeholder="you@example.com"
+            autoComplete="email"
           />
         </div>
       </div>
 
       <div>
-        <label className={labelClass}>Subject</label>
+        <label htmlFor="contact-subject" className={labelClass}>Subject</label>
         <input
+          id="contact-subject"
           type="text"
           maxLength={200}
           value={form.subject}
           onChange={(e) => setForm({ ...form, subject: e.target.value })}
           className={inputClass}
           placeholder="What's this about?"
+          autoComplete="off"
         />
       </div>
 
       <div>
-        <label className={labelClass}>
-          Message <span className="text-gold">*</span>
+        <label htmlFor="contact-message" className={labelClass}>
+          Message <span className="text-gold" aria-hidden="true">*</span>
+          <span className="sr-only">(required)</span>
         </label>
         <textarea
+          id="contact-message"
           rows={5}
           required
           maxLength={2000}
@@ -117,7 +127,9 @@ export default function ContactForm() {
         />
       </div>
 
-      {errorMsg && <p className="text-sm" style={{ color: "#9C4A38" }}>{errorMsg}</p>}
+      {errorMsg && (
+        <p role="alert" className="text-sm" style={{ color: "#9C4A38" }}>{errorMsg}</p>
+      )}
 
       <button
         type="submit"

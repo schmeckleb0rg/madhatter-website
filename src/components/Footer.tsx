@@ -82,7 +82,7 @@ export default function Footer({
           </div>
 
           {/* Shows */}
-          <div>
+          <nav aria-label="Shows">
             <h3 className="font-mono text-xs font-medium text-muted-dark uppercase tracking-widest mb-4">
               Shows
             </h3>
@@ -104,10 +104,10 @@ export default function Footer({
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Venue */}
-          <div>
+          <nav aria-label="Venue">
             <h3 className="font-mono text-xs font-medium text-muted-dark uppercase tracking-widest mb-4">
               Venue
             </h3>
@@ -130,7 +130,7 @@ export default function Footer({
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Contact */}
           <div>

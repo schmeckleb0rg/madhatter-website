@@ -3,63 +3,34 @@
 import { useState } from "react";
 
 const eventTypes = ["Corporate", "Birthday", "Wedding", "Private Show", "Other"];
-const budgetRanges = [
-  "Under $1,000",
-  "$1,000 - $2,500",
-  "$2,500 - $5,000",
-  "$5,000 - $10,000",
-  "$10,000+",
-];
+const budgetRanges = ["Under $1,000", "$1,000 - $2,500", "$2,500 - $5,000", "$5,000 - $10,000", "$10,000+"];
 
 export default function PrivateEventForm() {
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    event_type: "",
-    guest_count: "",
-    preferred_date: "",
-    budget_range: "",
-    message: "",
+    name: "", email: "", phone: "", company: "", event_type: "",
+    guest_count: "", preferred_date: "", budget_range: "", message: "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault();
     setStatus("loading");
     setErrorMsg("");
-
     try {
       const res = await fetch("/api/private-events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          guest_count: form.guest_count ? parseInt(form.guest_count, 10) : null,
-        }),
+        body: JSON.stringify({ ...form, guest_count: form.guest_count ? parseInt(form.guest_count, 10) : null }),
       });
-
       if (!res.ok) {
         const data = await res.json();
         setErrorMsg(data.error ?? "Something went wrong.");
         setStatus("error");
         return;
       }
-
       setStatus("success");
-      setForm({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        event_type: "",
-        guest_count: "",
-        preferred_date: "",
-        budget_range: "",
-        message: "",
-      });
+      setForm({ name: "", email: "", phone: "", company: "", event_type: "", guest_count: "", preferred_date: "", budget_range: "", message: "" });
     } catch {
       setErrorMsg("Network error. Please try again.");
       setStatus("error");
@@ -69,16 +40,9 @@ export default function PrivateEventForm() {
   if (status === "success") {
     return (
       <div className="bg-off-white-2 border border-gold/30 p-10 text-center dark:bg-[#1C1A16] dark:border-gold/10">
-        <h3 className="font-display text-xl font-semibold text-charcoal mb-2 dark:text-[#F0ECE3]">
-          Inquiry Received!
-        </h3>
-        <p className="text-muted text-sm dark:text-[#7A7264]">
-          Thanks for your interest! Our events team will be in touch within 24 hours.
-        </p>
-        <button
-          onClick={() => setStatus("idle")}
-          className="mt-6 text-sm text-gold hover:underline"
-        >
+        <h3 className="font-display text-xl font-semibold text-charcoal mb-2 dark:text-[#F0ECE3]">Inquiry Received!</h3>
+        <p className="text-muted text-sm dark:text-[#7A7264]">Thanks for your interest! Our events team will be in touch within 24 hours.</p>
+        <button onClick={() => setStatus("idle")} className="mt-6 text-sm text-gold hover:underline">
           Submit another inquiry
         </button>
       </div>
@@ -93,139 +57,85 @@ export default function PrivateEventForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className={labelClass}>
-            Name <span className="text-gold">*</span>
+          <label htmlFor="pe-name" className={labelClass}>
+            Name <span className="text-gold" aria-hidden="true">*</span><span className="sr-only">(required)</span>
           </label>
-          <input
-            type="text"
-            required
-            maxLength={100}
-            value={form.name}
+          <input id="pe-name" type="text" required maxLength={100} value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className={inputClass}
-            placeholder="Your name"
-          />
+            className={inputClass} placeholder="Your name" autoComplete="name" />
         </div>
         <div>
-          <label className={labelClass}>
-            Email <span className="text-gold">*</span>
+          <label htmlFor="pe-email" className={labelClass}>
+            Email <span className="text-gold" aria-hidden="true">*</span><span className="sr-only">(required)</span>
           </label>
-          <input
-            type="email"
-            required
-            maxLength={200}
-            value={form.email}
+          <input id="pe-email" type="email" required maxLength={200} value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className={inputClass}
-            placeholder="you@example.com"
-          />
+            className={inputClass} placeholder="you@example.com" autoComplete="email" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className={labelClass}>Phone</label>
-          <input
-            type="tel"
-            maxLength={20}
-            value={form.phone}
+          <label htmlFor="pe-phone" className={labelClass}>Phone</label>
+          <input id="pe-phone" type="tel" maxLength={20} value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            className={inputClass}
-            placeholder="(312) 555-0100"
-          />
+            className={inputClass} placeholder="(312) 555-0100" autoComplete="tel" />
         </div>
         <div>
-          <label className={labelClass}>Company</label>
-          <input
-            type="text"
-            maxLength={100}
-            value={form.company}
+          <label htmlFor="pe-company" className={labelClass}>Company</label>
+          <input id="pe-company" type="text" maxLength={100} value={form.company}
             onChange={(e) => setForm({ ...form, company: e.target.value })}
-            className={inputClass}
-            placeholder="Company name (if applicable)"
-          />
+            className={inputClass} placeholder="Company name (if applicable)" autoComplete="organization" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className={labelClass}>
-            Event Type <span className="text-gold">*</span>
+          <label htmlFor="pe-event-type" className={labelClass}>
+            Event Type <span className="text-gold" aria-hidden="true">*</span><span className="sr-only">(required)</span>
           </label>
-          <select
-            required
-            value={form.event_type}
-            onChange={(e) => setForm({ ...form, event_type: e.target.value })}
-            className={inputClass}
-          >
+          <select id="pe-event-type" required value={form.event_type}
+            onChange={(e) => setForm({ ...form, event_type: e.target.value })} className={inputClass}>
             <option value="">Select type...</option>
-            {eventTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
+            {eventTypes.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
         </div>
         <div>
-          <label className={labelClass}>Estimated Guest Count</label>
-          <input
-            type="number"
-            min={1}
-            max={500}
-            value={form.guest_count}
+          <label htmlFor="pe-guests" className={labelClass}>Estimated Guest Count</label>
+          <input id="pe-guests" type="number" min={1} max={500} value={form.guest_count}
             onChange={(e) => setForm({ ...form, guest_count: e.target.value })}
-            className={inputClass}
-            placeholder="e.g. 50"
-          />
+            className={inputClass} placeholder="e.g. 50" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className={labelClass}>Preferred Date</label>
-          <input
-            type="date"
-            value={form.preferred_date}
-            onChange={(e) => setForm({ ...form, preferred_date: e.target.value })}
-            className={inputClass}
-          />
+          <label htmlFor="pe-date" className={labelClass}>Preferred Date</label>
+          <input id="pe-date" type="date" value={form.preferred_date}
+            onChange={(e) => setForm({ ...form, preferred_date: e.target.value })} className={inputClass} />
         </div>
         <div>
-          <label className={labelClass}>Budget Range</label>
-          <select
-            value={form.budget_range}
-            onChange={(e) => setForm({ ...form, budget_range: e.target.value })}
-            className={inputClass}
-          >
+          <label htmlFor="pe-budget" className={labelClass}>Budget Range</label>
+          <select id="pe-budget" value={form.budget_range}
+            onChange={(e) => setForm({ ...form, budget_range: e.target.value })} className={inputClass}>
             <option value="">Select range...</option>
-            {budgetRanges.map((range) => (
-              <option key={range} value={range}>
-                {range}
-              </option>
-            ))}
+            {budgetRanges.map((range) => <option key={range} value={range}>{range}</option>)}
           </select>
         </div>
       </div>
 
       <div>
-        <label className={labelClass}>Message</label>
-        <textarea
-          rows={4}
-          maxLength={2000}
-          value={form.message}
+        <label htmlFor="pe-message" className={labelClass}>Message</label>
+        <textarea id="pe-message" rows={4} maxLength={2000} value={form.message}
           onChange={(e) => setForm({ ...form, message: e.target.value })}
           className={`${inputClass} resize-none`}
-          placeholder="Tell us about your event, any special requirements, etc."
-        />
+          placeholder="Tell us about your event, any special requirements, etc." />
       </div>
 
-      {errorMsg && <p className="text-sm" style={{ color: "#9C4A38" }}>{errorMsg}</p>}
+      {errorMsg && <p role="alert" className="text-sm" style={{ color: "#9C4A38" }}>{errorMsg}</p>}
 
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="w-full py-4 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors dark:bg-gold dark:text-[#0D0C0A] dark:hover:bg-[#D4A84B] btn-shimmer"
-      >
+      <button type="submit" disabled={status === "loading"}
+        className="w-full py-4 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors dark:bg-gold dark:text-[#0D0C0A] dark:hover:bg-[#D4A84B] btn-shimmer">
         {status === "loading" ? "Submitting..." : "Submit Inquiry"}
       </button>
     </form>

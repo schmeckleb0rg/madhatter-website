@@ -17,7 +17,7 @@ function LoginForm() {
       ? rawCallback
       : "/admin/dashboard";
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -48,10 +48,11 @@ function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2">
+        <label htmlFor="login-email" className="block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2">
           Email
         </label>
         <input
+          id="login-email"
           type="email"
           required
           value={email}
@@ -64,10 +65,11 @@ function LoginForm() {
       </div>
 
       <div>
-        <label className="block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2">
+        <label htmlFor="login-password" className="block font-mono text-xs font-medium text-muted uppercase tracking-wide mb-2">
           Password
         </label>
         <input
+          id="login-password"
           type="password"
           required
           value={password}
@@ -87,7 +89,7 @@ function LoginForm() {
         </Link>
       </div>
 
-      {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
+      {error && <p role="alert" className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
 
       <button
         type="submit"

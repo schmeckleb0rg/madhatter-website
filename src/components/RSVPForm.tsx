@@ -8,16 +8,11 @@ type RSVPFormProps = {
 };
 
 export default function RSVPForm({ eventId, eventTitle }: RSVPFormProps) {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    party_size: "1",
-    message: "",
-  });
+  const [form, setForm] = useState({ name: "", email: "", party_size: "1", message: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     setStatus("loading");
     setError("");
@@ -52,7 +47,7 @@ export default function RSVPForm({ eventId, eventTitle }: RSVPFormProps) {
   if (status === "success") {
     return (
       <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6 text-center space-y-3">
-        <div className="text-2xl">&#10003;</div>
+        <div className="text-2xl" aria-hidden="true">&#10003;</div>
         <h3 className="font-display text-lg font-semibold text-charcoal dark:text-[#F0ECE3]">
           You&apos;re on the list!
         </h3>
@@ -65,6 +60,7 @@ export default function RSVPForm({ eventId, eventTitle }: RSVPFormProps) {
 
   const inputClass =
     "w-full bg-off-white dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 px-4 py-3 text-charcoal dark:text-[#F0ECE3] text-sm focus:outline-none focus:border-gold/50 transition-colors";
+  const labelClass = "block font-mono text-xs uppercase tracking-widest text-muted dark:text-[#7A7264] mb-2";
 
   return (
     <form onSubmit={handleSubmit} className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 p-6 space-y-5">
@@ -73,42 +69,27 @@ export default function RSVPForm({ eventId, eventTitle }: RSVPFormProps) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block font-mono text-xs uppercase tracking-widest text-muted dark:text-[#7A7264] mb-2">
-            Name *
+          <label htmlFor="rsvp-name" className={labelClass}>
+            Name <span aria-hidden="true">*</span><span className="sr-only">(required)</span>
           </label>
-          <input
-            type="text"
-            required
-            value={form.name}
+          <input id="rsvp-name" type="text" required value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className={inputClass}
-            placeholder="Your name"
-          />
+            className={inputClass} placeholder="Your name" autoComplete="name" />
         </div>
         <div>
-          <label className="block font-mono text-xs uppercase tracking-widest text-muted dark:text-[#7A7264] mb-2">
-            Email *
+          <label htmlFor="rsvp-email" className={labelClass}>
+            Email <span aria-hidden="true">*</span><span className="sr-only">(required)</span>
           </label>
-          <input
-            type="email"
-            required
-            value={form.email}
+          <input id="rsvp-email" type="email" required value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className={inputClass}
-            placeholder="your@email.com"
-          />
+            className={inputClass} placeholder="your@email.com" autoComplete="email" />
         </div>
       </div>
 
       <div>
-        <label className="block font-mono text-xs uppercase tracking-widest text-muted dark:text-[#7A7264] mb-2">
-          Party Size
-        </label>
-        <select
-          value={form.party_size}
-          onChange={(e) => setForm({ ...form, party_size: e.target.value })}
-          className={inputClass}
-        >
+        <label htmlFor="rsvp-party-size" className={labelClass}>Party Size</label>
+        <select id="rsvp-party-size" value={form.party_size}
+          onChange={(e) => setForm({ ...form, party_size: e.target.value })} className={inputClass}>
           {Array.from({ length: 10 }, (_, i) => (
             <option key={i + 1} value={(i + 1).toString()}>
               {i + 1} {i === 0 ? "person" : "people"}
@@ -118,25 +99,16 @@ export default function RSVPForm({ eventId, eventTitle }: RSVPFormProps) {
       </div>
 
       <div>
-        <label className="block font-mono text-xs uppercase tracking-widest text-muted dark:text-[#7A7264] mb-2">
-          Message (optional)
-        </label>
-        <textarea
-          rows={3}
-          value={form.message}
+        <label htmlFor="rsvp-message" className={labelClass}>Message (optional)</label>
+        <textarea id="rsvp-message" rows={3} value={form.message}
           onChange={(e) => setForm({ ...form, message: e.target.value })}
-          className={`${inputClass} resize-none`}
-          placeholder="Any special requests..."
-        />
+          className={`${inputClass} resize-none`} placeholder="Any special requests..." />
       </div>
 
-      {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
+      {error && <p role="alert" className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
 
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="w-full py-3 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors dark:bg-gold dark:text-[#0D0C0A] dark:hover:bg-[#D4A84B]"
-      >
+      <button type="submit" disabled={status === "loading"}
+        className="w-full py-3 bg-charcoal text-off-white font-semibold hover:bg-charcoal-2 disabled:opacity-50 transition-colors dark:bg-gold dark:text-[#0D0C0A] dark:hover:bg-[#D4A84B]">
         {status === "loading" ? "Submitting..." : "Confirm RSVP"}
       </button>
     </form>

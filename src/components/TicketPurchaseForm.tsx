@@ -20,7 +20,7 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining, tab
 
   const subtotal = (priceCents * quantity) / 100;
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("loading");
     setError("");
@@ -56,33 +56,44 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining, tab
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Name */}
       <div>
-        <label className={labelClass}>Name</label>
+        <label htmlFor="ticket-name" className={labelClass}>Name</label>
         <input
+          id="ticket-name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className={inputClass}
           placeholder="Your name"
+          autoComplete="name"
         />
       </div>
 
       {/* Email */}
       <div>
-        <label className={labelClass}>Email *</label>
+        <label htmlFor="ticket-email" className={labelClass}>
+          Email <span aria-hidden="true">*</span>
+          <span className="sr-only">(required)</span>
+        </label>
         <input
+          id="ticket-email"
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className={inputClass}
           placeholder="you@example.com"
+          autoComplete="email"
         />
       </div>
 
       {/* Quantity */}
       <div>
-        <label className={labelClass}>Number of Tickets *</label>
+        <label htmlFor="ticket-qty" className={labelClass}>
+          Number of Tickets <span aria-hidden="true">*</span>
+          <span className="sr-only">(required)</span>
+        </label>
         <select
+          id="ticket-qty"
           value={quantity}
           onChange={(e) => setQuantity(Number(e.target.value))}
           className={inputClass}
@@ -98,8 +109,9 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining, tab
       {/* Table Preference */}
       {tablePreferences && tablePreferences.length > 0 ? (
         <div>
-          <label className={labelClass}>Table Preference</label>
+          <label htmlFor="ticket-table" className={labelClass}>Table Preference</label>
           <select
+            id="ticket-table"
             value={tablePreference}
             onChange={(e) => setTablePreference(e.target.value)}
             className={inputClass}
@@ -112,8 +124,9 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining, tab
         </div>
       ) : (
         <div>
-          <label className={labelClass}>Table Preference</label>
+          <label htmlFor="ticket-table" className={labelClass}>Table Preference</label>
           <input
+            id="ticket-table"
             type="text"
             value={tablePreference}
             onChange={(e) => setTablePreference(e.target.value)}
@@ -129,7 +142,9 @@ export default function TicketPurchaseForm({ eventId, priceCents, remaining, tab
         <span className="text-lg font-bold text-charcoal dark:text-[#F0ECE3]">${subtotal.toFixed(2)}</span>
       </div>
 
-      {error && <p className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>}
+      {error && (
+        <p role="alert" className="text-sm" style={{ color: "#9C4A38" }}>{error}</p>
+      )}
 
       <button
         type="submit"

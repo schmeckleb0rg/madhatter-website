@@ -204,6 +204,14 @@ html.dark .btn-shimmer::before {
   }
 }
 
+/* ─── Accessible keyboard focus indicator ─────────────────────────── */
+/* Unlayered styles take precedence over @layer utilities (CSS Cascade 5)  */
+/* so this correctly overrides focus:outline-none for keyboard navigation.  */
+*:focus-visible {
+  outline: 2px solid #B8934A;
+  outline-offset: 2px;
+}
+
 /* Prevent horizontal overflow on mobile */
 html, body {
   overflow-x: hidden;
