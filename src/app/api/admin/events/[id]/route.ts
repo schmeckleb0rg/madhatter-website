@@ -66,7 +66,17 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   const db = getAdminClient();
   const { data, error } = await db.from("events").select("*").eq("id", id).single();
   if (error) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json(data);
+
+  // Fetch genre assignments so the form can show checked categories
+  const { data: genreRows } = await db
+    .from("event_genre_assignments")
+    .select("genre_id, event_genres(id, name, color)")
+    .eq("event_id", id);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const genres = (genreRows || []).map((row: any) => row.event_genres).filter(Boolean);
+
+  return NextResponse.json({ ...data, genres });
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
