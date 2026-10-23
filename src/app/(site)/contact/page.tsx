@@ -202,7 +202,7 @@ export default async function ContactPage() {
               title="Mad Hatter Comedy Club Location"
               src={mapEmbedUrl(venue)}
               width="100%"
-              height="250"
+              height="500"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"

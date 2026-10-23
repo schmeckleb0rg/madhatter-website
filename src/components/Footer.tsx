@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { VenueInfo } from "@/lib/venue";
 import AccessibilityButton from "@/components/AccessibilityButton";
+import TermsButton from "@/components/TermsButton";
+import PrivacyPolicyButton from "@/components/PrivacyPolicyButton";
 
 export type SocialLinks = {
   instagram?: string;
@@ -13,10 +15,14 @@ export default function Footer({
   venue,
   socialLinks,
   accessibilityStatement,
+  termsStatement,
+  privacyStatement,
 }: {
   venue: VenueInfo;
   socialLinks?: SocialLinks;
   accessibilityStatement?: string;
+  termsStatement?: string;
+  privacyStatement?: string;
 }) {
   return (
     <footer className="bg-charcoal dark:bg-[#080706] mt-16 sm:mt-24">
@@ -166,12 +172,8 @@ export default function Footer({
           </p>
           <div className="flex items-center gap-4">
             <AccessibilityButton statement={accessibilityStatement} />
-            <Link
-              href="/admin/login"
-              className="text-xs text-muted-dark/50 hover:text-muted-dark transition-colors"
-            >
-              Admin
-            </Link>
+            <TermsButton statement={termsStatement} />
+            <PrivacyPolicyButton statement={privacyStatement} />
           </div>
         </div>
       </div>

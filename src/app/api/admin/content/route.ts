@@ -14,7 +14,7 @@ async function requireAuth() {
 const putSchema = z.object({
   page_key: z.string().min(1).max(100),
   section_key: z.string().min(1).max(100),
-  content: z.string().max(5000),
+  content: z.string().max(50000),
 });
 
 export async function GET() {

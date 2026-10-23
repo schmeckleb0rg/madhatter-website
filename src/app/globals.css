@@ -190,13 +190,80 @@ html.dark .btn-shimmer::before {
   background: linear-gradient(90deg, transparent, rgba(184, 147, 74, 0.15), transparent);
 }
 
+/* ─── Sidebar nav animations ─── */
+
+/* Staggered entrance for nav items */
+@keyframes navSlideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.nav-item-enter {
+  animation: navSlideIn 0.3s ease-out both;
+}
+
+/* Hover glow for nav links — gold left indicator */
+.nav-link-glow {
+  position: relative;
+  transition: all 0.2s ease;
+}
+.nav-link-glow::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: #B8934A;
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+.nav-link-glow:hover::before,
+.nav-link-glow.active::before {
+  height: 60%;
+}
+
+/* Accordion expand animation */
+@keyframes accordionExpand {
+  from { max-height: 0; opacity: 0; }
+  to { max-height: 500px; opacity: 1; }
+}
+.accordion-enter {
+  animation: accordionExpand 0.3s ease-out both;
+  overflow: hidden;
+}
+
+/* Logo subtle glow on hover */
+.nav-logo {
+  transition: filter 0.3s ease;
+}
+.nav-logo:hover {
+  filter: drop-shadow(0 0 8px rgba(184, 147, 74, 0.4)) drop-shadow(0 0 16px rgba(184, 147, 74, 0.2));
+}
+
+/* Background color shift on section hover */
+.nav-section-hover {
+  transition: background-color 0.3s ease, color 0.2s ease;
+}
+.nav-section-hover:hover {
+  background-color: rgba(184, 147, 74, 0.08);
+}
+html.dark .nav-section-hover:hover {
+  background-color: rgba(184, 147, 74, 0.12);
+}
+
 /* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
   .animate-typewriter,
   .spotlight-sweep::after,
   .animate-curtain,
-  .animate-card-entrance {
+  .animate-card-entrance,
+  .nav-item-enter,
+  .accordion-enter {
     animation: none !important;
+    opacity: 1;
+    transform: none;
+    max-height: 500px;
   }
   .animate-typewriter {
     max-width: 100%;

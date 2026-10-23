@@ -12,9 +12,64 @@ const PAGE_LABELS: Record<string, string> = {
   contact: "Contact",
   ticker: "Ticker",
   accessibility: "Accessibility Statement",
+  terms: "Terms & Conditions",
+  privacy: "Privacy Policy",
 };
 
+const DEFAULT_PRIVACY_POLICY = `<h2>Information We Collect</h2>
+<p>When you visit our website, purchase tickets, or interact with our services, we may collect the following types of information:</p>
+<ul>
+  <li><strong>Personal Information:</strong> Name, email address, phone number, and billing address when you purchase tickets, sign up for classes, or contact us.</li>
+  <li><strong>Payment Information:</strong> Credit card and payment details are processed securely through our third-party payment processors. We do not store full payment card details on our servers.</li>
+  <li><strong>Usage Data:</strong> Information about how you interact with our website, including pages visited, time spent on pages, and referring URLs.</li>
+  <li><strong>Device Information:</strong> Browser type, operating system, and device type used to access our website.</li>
+</ul>
+
+<h2>How We Use Your Information</h2>
+<p>We use the information we collect for the following purposes:</p>
+<ul>
+  <li><strong>Order Fulfillment:</strong> To process ticket purchases, gift cards, merchandise orders, and class registrations.</li>
+  <li><strong>Communication:</strong> To send order confirmations, event updates, and respond to inquiries you submit through our contact form.</li>
+  <li><strong>Website Improvement:</strong> To analyze usage patterns and improve our website's functionality and user experience.</li>
+  <li><strong>Marketing:</strong> With your consent, to send promotional materials about upcoming shows and events. You can opt out at any time.</li>
+</ul>
+
+<h2>Information Sharing</h2>
+<p>We do not sell, trade, or rent your personal information to third parties. We may share your information with:</p>
+<ul>
+  <li><strong>Service Providers:</strong> Third-party companies that help us operate our website, process payments, and deliver services (e.g., payment processors, email service providers).</li>
+  <li><strong>Legal Requirements:</strong> When required by law, court order, or governmental authority.</li>
+</ul>
+
+<h2>Data Security</h2>
+<p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
+
+<h2>Cookies</h2>
+<p>Our website uses cookies to enhance your browsing experience. Cookies are small text files stored on your device that help us remember your preferences and understand how you use our site. You can control cookie settings through your browser preferences.</p>
+
+<h2>Your Rights</h2>
+<p>You have the right to:</p>
+<ul>
+  <li>Access the personal information we hold about you</li>
+  <li>Request correction of inaccurate information</li>
+  <li>Request deletion of your personal information</li>
+  <li>Opt out of marketing communications</li>
+  <li>Withdraw consent for data processing where applicable</li>
+</ul>
+
+<h2>Children's Privacy</h2>
+<p>Our website is not directed at children under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe we have inadvertently collected such information, please contact us so we can promptly remove it.</p>
+
+<h2>Changes to This Policy</h2>
+<p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date. We encourage you to review this policy periodically.</p>
+
+<h2>Contact Us</h2>
+<p>If you have questions about this Privacy Policy or how we handle your personal information, please contact us through our website's contact form or email us directly.</p>`;
+
 type GroupedContent = Record<string, PageContent[]>;
+
+const isLegalContent = (key: string) =>
+  key === "accessibility" || key === "terms" || key === "privacy";
 
 export default function ContentEditorForm({ initial }: { initial: PageContent[] }) {
   const grouped: GroupedContent = {};
@@ -22,6 +77,15 @@ export default function ContentEditorForm({ initial }: { initial: PageContent[] 
     if (!grouped[item.page_key]) grouped[item.page_key] = [];
     grouped[item.page_key].push(item);
   });
+
+  // Pre-fill privacy policy with default content if the section exists but is empty
+  if (grouped["privacy"]) {
+    grouped["privacy"] = grouped["privacy"].map((item) =>
+      item.section_key === "statement" && !item.content
+        ? { ...item, content: DEFAULT_PRIVACY_POLICY }
+        : item
+    );
+  }
 
   const [data, setData] = useState<GroupedContent>(grouped);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
@@ -67,7 +131,6 @@ export default function ContentEditorForm({ initial }: { initial: PageContent[] 
 
   const pageKeys = Object.keys(PAGE_LABELS);
   const allKeys = [...new Set([...pageKeys, ...Object.keys(data)])];
-  const isAccessibility = (key: string) => key === "accessibility";
 
   return (
     <div className="space-y-4">
@@ -76,6 +139,7 @@ export default function ContentEditorForm({ initial }: { initial: PageContent[] 
         const isOpen = openSections[pageKey] ?? false;
         const status = saving[pageKey] ?? "idle";
         const label = PAGE_LABELS[pageKey] ?? pageKey;
+        const isLegal = isLegalContent(pageKey);
 
         return (
           <div key={pageKey} className="bg-white border border-charcoal/10">
@@ -93,9 +157,9 @@ export default function ContentEditorForm({ initial }: { initial: PageContent[] 
 
             {isOpen && (
               <div className="px-6 pb-6 space-y-4 border-t border-charcoal/10">
-                {isAccessibility(pageKey) && (
+                {isLegal && (
                   <p className="text-xs text-muted pt-4 leading-relaxed">
-                    Content is stored as HTML and rendered in the footer Accessibility popup. Edit the HTML below to update the statement text.
+                    Content is stored as HTML and rendered in the footer popup. Edit the HTML below to update the statement text.
                   </p>
                 )}
                 {items.length === 0 && (
@@ -107,11 +171,11 @@ export default function ContentEditorForm({ initial }: { initial: PageContent[] 
                       {item.section_key.replace(/_/g, " ")}
                     </label>
                     <textarea
-                      rows={isAccessibility(pageKey) ? 20 : 3}
-                      maxLength={isAccessibility(pageKey) ? 50000 : 5000}
+                      rows={isLegal ? 20 : 3}
+                      maxLength={isLegal ? 50000 : 5000}
                       value={item.content}
                       onChange={(e) => updateContent(pageKey, item.section_key, e.target.value)}
-                      className={`${inputClass} ${isAccessibility(pageKey) ? "resize-y" : "resize-none"}`}
+                      className={`${inputClass} ${isLegal ? "resize-y" : "resize-none"}`}
                     />
                   </div>
                 ))}

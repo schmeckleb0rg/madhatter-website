@@ -41,11 +41,33 @@ async function getAccessibilityStatement(): Promise<string | undefined> {
   return data?.content || undefined;
 }
 
+async function getTermsStatement(): Promise<string | undefined> {
+  const { data } = await supabase
+    .from("page_content")
+    .select("content")
+    .eq("page_key", "terms")
+    .eq("section_key", "statement")
+    .single();
+  return data?.content || undefined;
+}
+
+async function getPrivacyStatement(): Promise<string | undefined> {
+  const { data } = await supabase
+    .from("page_content")
+    .select("content")
+    .eq("page_key", "privacy")
+    .eq("section_key", "statement")
+    .single();
+  return data?.content || undefined;
+}
+
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const [venue, socialLinks, accessibilityStatement] = await Promise.all([
+  const [venue, socialLinks, accessibilityStatement, termsStatement, privacyStatement] = await Promise.all([
     getVenueInfo(),
     getSocialLinks(),
     getAccessibilityStatement(),
+    getTermsStatement(),
+    getPrivacyStatement(),
   ]);
 
   return (
@@ -58,8 +80,10 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         Skip to main content
       </a>
       <Navbar />
-      <main id="main-content">{children}</main>
-      <Footer venue={venue} socialLinks={socialLinks} accessibilityStatement={accessibilityStatement} />
+      <div className="lg:ml-[220px]">
+        <main id="main-content">{children}</main>
+        <Footer venue={venue} socialLinks={socialLinks} accessibilityStatement={accessibilityStatement} termsStatement={termsStatement} privacyStatement={privacyStatement} />
+      </div>
     </ThemeProvider>
   );
 }
