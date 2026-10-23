@@ -11,6 +11,7 @@ const PAGE_LABELS: Record<string, string> = {
   rooms: "Rooms",
   contact: "Contact",
   ticker: "Ticker",
+  accessibility: "Accessibility Statement",
 };
 
 type GroupedContent = Record<string, PageContent[]>;
@@ -66,6 +67,7 @@ export default function ContentEditorForm({ initial }: { initial: PageContent[] 
 
   const pageKeys = Object.keys(PAGE_LABELS);
   const allKeys = [...new Set([...pageKeys, ...Object.keys(data)])];
+  const isAccessibility = (key: string) => key === "accessibility";
 
   return (
     <div className="space-y-4">
@@ -91,6 +93,11 @@ export default function ContentEditorForm({ initial }: { initial: PageContent[] 
 
             {isOpen && (
               <div className="px-6 pb-6 space-y-4 border-t border-charcoal/10">
+                {isAccessibility(pageKey) && (
+                  <p className="text-xs text-muted pt-4 leading-relaxed">
+                    Content is stored as HTML and rendered in the footer Accessibility popup. Edit the HTML below to update the statement text.
+                  </p>
+                )}
                 {items.length === 0 && (
                   <p className="text-xs text-muted pt-4">No content sections found for this page.</p>
                 )}
@@ -100,11 +107,11 @@ export default function ContentEditorForm({ initial }: { initial: PageContent[] 
                       {item.section_key.replace(/_/g, " ")}
                     </label>
                     <textarea
-                      rows={3}
-                      maxLength={5000}
+                      rows={isAccessibility(pageKey) ? 20 : 3}
+                      maxLength={isAccessibility(pageKey) ? 50000 : 5000}
                       value={item.content}
                       onChange={(e) => updateContent(pageKey, item.section_key, e.target.value)}
-                      className={`${inputClass} resize-none`}
+                      className={`${inputClass} ${isAccessibility(pageKey) ? "resize-y" : "resize-none"}`}
                     />
                   </div>
                 ))}

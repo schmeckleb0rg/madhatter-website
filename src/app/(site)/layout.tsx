@@ -31,14 +31,28 @@ async function getSocialLinks(): Promise<SocialLinks> {
   };
 }
 
+async function getAccessibilityStatement(): Promise<string | undefined> {
+  const { data } = await supabase
+    .from("page_content")
+    .select("content")
+    .eq("page_key", "accessibility")
+    .eq("section_key", "statement")
+    .single();
+  return data?.content || undefined;
+}
+
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const [venue, socialLinks] = await Promise.all([getVenueInfo(), getSocialLinks()]);
+  const [venue, socialLinks, accessibilityStatement] = await Promise.all([
+    getVenueInfo(),
+    getSocialLinks(),
+    getAccessibilityStatement(),
+  ]);
 
   return (
     <ThemeProvider>
       <Navbar />
       <main>{children}</main>
-      <Footer venue={venue} socialLinks={socialLinks} />
+      <Footer venue={venue} socialLinks={socialLinks} accessibilityStatement={accessibilityStatement} />
     </ThemeProvider>
   );
 }

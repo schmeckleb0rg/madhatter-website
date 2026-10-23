@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { VenueInfo } from "@/lib/venue";
+import AccessibilityButton from "@/components/AccessibilityButton";
 
 export type SocialLinks = {
   instagram?: string;
@@ -11,9 +12,11 @@ export type SocialLinks = {
 export default function Footer({
   venue,
   socialLinks,
+  accessibilityStatement,
 }: {
   venue: VenueInfo;
   socialLinks?: SocialLinks;
+  accessibilityStatement?: string;
 }) {
   return (
     <footer className="bg-charcoal dark:bg-[#080706] mt-16 sm:mt-24">
@@ -161,12 +164,15 @@ export default function Footer({
           <p className="text-xs text-muted-dark">
             &copy; {new Date().getFullYear()} Mad Hatter Comedy Club. All rights reserved.
           </p>
-          <Link
-            href="/admin/login"
-            className="text-xs text-muted-dark/50 hover:text-muted-dark transition-colors"
-          >
-            Admin
-          </Link>
+          <div className="flex items-center gap-4">
+            <AccessibilityButton statement={accessibilityStatement} />
+            <Link
+              href="/admin/login"
+              className="text-xs text-muted-dark/50 hover:text-muted-dark transition-colors"
+            >
+              Admin
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
