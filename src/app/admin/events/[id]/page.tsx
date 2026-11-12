@@ -40,7 +40,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-      timeZone: "America/New_York",
+      timeZone: "America/Chicago",
     }),
   ]);
 
@@ -106,7 +106,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
                       {new Date(guest.created_at).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
-                        timeZone: "America/New_York",
+                        timeZone: "America/Chicago",
                       })}
                     </td>
                   </tr>

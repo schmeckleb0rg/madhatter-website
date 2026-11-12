@@ -10,7 +10,7 @@ async function getStats() {
 
   // Use Eastern Time for "this month" boundary (venue timezone)
   const now = new Date();
-  const etNow = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const etNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
   const monthStart = new Date(Date.UTC(etNow.getFullYear(), etNow.getMonth(), 1)).toISOString();
 
   // Use start of today (ET) for upcoming shows — include today's events
@@ -19,7 +19,8 @@ async function getStats() {
   const [
     { count: eventCount },
     { count: comedianCount },
-    { count: pastCount },
+    { count: manualPastCount },
+    { count: autoPastCount },
     { count: orderCount },
     { count: inquiryCount },
     { count: unreadCount },
@@ -36,6 +37,7 @@ async function getStats() {
     db.from("events").select("*", { count: "exact", head: true }).gte("date", todayET),
     db.from("comedians").select("*", { count: "exact", head: true }),
     db.from("past_events").select("*", { count: "exact", head: true }),
+    db.from("events").select("*", { count: "exact", head: true }).lt("date", todayET),
     db.from("orders").select("*", { count: "exact", head: true }).eq("status", "completed"),
     db.from("ticket_inquiries").select("*", { count: "exact", head: true }),
     db.from("ticket_inquiries").select("*", { count: "exact", head: true }).eq("is_read", false),
@@ -52,6 +54,8 @@ async function getStats() {
 
   const totalRevenueCents = (allCompletedOrders ?? []).reduce((s, o) => s + o.amount_cents, 0);
   const monthRevenueCents = (thisMonthOrders ?? []).reduce((s, o) => s + o.amount_cents, 0);
+
+  const pastCount = (manualPastCount ?? 0) + (autoPastCount ?? 0);
 
   return {
     eventCount, comedianCount, pastCount, orderCount, inquiryCount, unreadCount,

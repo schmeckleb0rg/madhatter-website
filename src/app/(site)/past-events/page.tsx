@@ -9,24 +9,57 @@ export const metadata = {
   description: "A look back at the incredible comedians who've graced the Mad Hatter stage.",
 };
 
-async function getPastEvents(): Promise<PastEvent[]> {
-  const { data } = await supabase
-    .from("past_events")
-    .select("*")
-    .order("date", { ascending: false });
-  return data ?? [];
+type PastShowCard = {
+  id: string;
+  title: string;
+  description: string | null;
+  performer: string | null;
+  date: string;
+  image_url: string | null;
+};
+
+async function getPastShows(): Promise<PastShowCard[]> {
+  // Use Eastern Time for "today" boundary (venue timezone)
+  const now = new Date();
+  const etNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
+  const todayET = `${etNow.getFullYear()}-${String(etNow.getMonth() + 1).padStart(2, "0")}-${String(etNow.getDate()).padStart(2, "0")}`;
+
+  const [{ data: manualPastEvents }, { data: archivedEvents }] = await Promise.all([
+    supabase
+      .from("past_events")
+      .select("id, title, description, performer, date, image_url")
+      .order("date", { ascending: false }),
+    supabase
+      .from("events")
+      .select("id, title, description, performer, date, image_url")
+      .lt("date", todayET)
+      .order("date", { ascending: false }),
+  ]);
+
+  // Merge both sources, dedup by title+date, sort by date descending
+  const all: PastShowCard[] = [...(manualPastEvents ?? []), ...(archivedEvents ?? [])];
+  const seen = new Set<string>();
+  const deduped = all.filter((e) => {
+    const key = `${e.title}::${e.date}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  deduped.sort((a, b) => b.date.localeCompare(a.date));
+  return deduped;
 }
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
+  return new Date(dateStr + "T12:00:00").toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
+    timeZone: "America/Chicago",
   });
 }
 
 export default async function PastEventsPage() {
-  const events = await getPastEvents();
+  const events = await getPastShows();
 
   return (
     <div className="pt-20 sm:pt-24 pb-16 sm:pb-20 min-h-screen bg-off-white dark:bg-[#0D0C0A]">

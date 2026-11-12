@@ -12,7 +12,7 @@ async function requireAuth() {
 // The venue is in Eastern Time — all daily groupings use this timezone
 function toEasternDate(utcTimestamp: string): string {
   return new Date(utcTimestamp).toLocaleDateString("en-US", {
-    timeZone: "America/New_York",
+    timeZone: "America/Chicago",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
