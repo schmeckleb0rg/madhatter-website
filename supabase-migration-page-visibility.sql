@@ -12,5 +12,15 @@ VALUES
   ('page_visible_press', 'false', now()),
   ('page_visible_past_events', 'false', now()),
   ('page_visible_comedians', 'false', now()),
-  ('page_visible_merch', 'false', now())
+  ('page_visible_merch', 'false', now()),
+  -- New pages (default visible)
+  ('page_visible_faqs', 'true', now()),
+  ('page_visible_about', 'true', now()),
+  ('page_visible_visitor_info', 'true', now()),
+  ('page_visible_gift_cards', 'true', now()),
+  ('page_visible_event_spaces', 'true', now()),
+  ('page_visible_blog', 'true', now()),
+  ('page_visible_employment', 'true', now()),
+  ('page_visible_membership', 'true', now()),
+  ('page_visible_gallery', 'true', now())
 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now();

@@ -7,6 +7,11 @@ import AnalyticsChart from "@/components/admin/AnalyticsChart";
 
 async function getStats() {
   const db = getAdminClient();
+
+  // Start of current month for "this month" revenue
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
   const [
     { count: eventCount },
     { count: comedianCount },
@@ -21,8 +26,10 @@ async function getStats() {
     { count: subscriberCount },
     { count: pendingEmails },
     { count: privateInquiryCount },
+    { data: allCompletedOrders },
+    { data: thisMonthOrders },
   ] = await Promise.all([
-    db.from("events").select("*", { count: "exact", head: true }).gte("date", new Date().toISOString()),
+    db.from("events").select("*", { count: "exact", head: true }).gte("date", now.toISOString()),
     db.from("comedians").select("*", { count: "exact", head: true }),
     db.from("past_events").select("*", { count: "exact", head: true }),
     db.from("orders").select("*", { count: "exact", head: true }).eq("status", "completed"),
@@ -35,11 +42,17 @@ async function getStats() {
     db.from("subscribers").select("*", { count: "exact", head: true }).eq("is_active", true),
     db.from("email_queue").select("*", { count: "exact", head: true }).eq("status", "draft"),
     db.from("private_event_inquiries").select("*", { count: "exact", head: true }),
+    db.from("orders").select("amount_cents").eq("status", "completed"),
+    db.from("orders").select("amount_cents").eq("status", "completed").gte("created_at", monthStart),
   ]);
+
+  const totalRevenueCents = (allCompletedOrders ?? []).reduce((s, o) => s + o.amount_cents, 0);
+  const monthRevenueCents = (thisMonthOrders ?? []).reduce((s, o) => s + o.amount_cents, 0);
+
   return {
     eventCount, comedianCount, pastCount, orderCount, inquiryCount, unreadCount,
     messageCount, unreadMessages, merchCount, galleryCount, subscriberCount,
-    pendingEmails, privateInquiryCount,
+    pendingEmails, privateInquiryCount, totalRevenueCents, monthRevenueCents,
   };
 }
 
@@ -117,6 +130,38 @@ export default async function DashboardPage() {
             <div className="font-mono text-xs text-muted mt-1">{tile.label}</div>
           </Link>
         ))}
+      </div>
+
+      {/* Revenue Summary */}
+      <div className="mb-10">
+        <h2 className="font-mono text-xs font-medium text-muted uppercase tracking-wide mb-4">Revenue</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <Link
+            href="/admin/sales"
+            className="bg-white border border-charcoal/10 p-4 sm:p-5 hover:border-gold/30 transition-colors"
+          >
+            <div className="text-2xl sm:text-3xl font-bold text-gold">
+              ${((stats.totalRevenueCents ?? 0) / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+            </div>
+            <div className="font-mono text-xs text-muted mt-1">Total Revenue</div>
+          </Link>
+          <Link
+            href="/admin/sales"
+            className="bg-white border border-charcoal/10 p-4 sm:p-5 hover:border-gold/30 transition-colors"
+          >
+            <div className="text-2xl sm:text-3xl font-bold text-charcoal">
+              ${((stats.monthRevenueCents ?? 0) / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+            </div>
+            <div className="font-mono text-xs text-muted mt-1">This Month</div>
+          </Link>
+          <Link
+            href="/admin/sales"
+            className="bg-white border border-charcoal/10 p-4 sm:p-5 hover:border-gold/30 transition-colors"
+          >
+            <div className="text-sm font-semibold text-charcoal">View All Sales &rarr;</div>
+            <div className="font-mono text-xs text-muted mt-1">Detailed Metrics</div>
+          </Link>
+        </div>
       </div>
 
       {/* Site Traffic Analytics */}

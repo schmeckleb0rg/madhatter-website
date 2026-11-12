@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { getAdminClient } from "@/lib/supabase";
 import AboutEditor from "./AboutEditor";
 import type { AboutContent } from "@/lib/supabase";
+import PageVisibilityToggle from "@/components/admin/PageVisibilityToggle";
 
 async function getAboutContent(): Promise<AboutContent[]> {
   const db = getAdminClient();
@@ -15,6 +16,7 @@ export default async function AdminAboutPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+      <PageVisibilityToggle pageKey="about" label="About" />
       <h1 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair)" }}>
         About Page Content
       </h1>

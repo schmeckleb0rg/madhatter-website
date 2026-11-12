@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { getAdminClient } from "@/lib/supabase";
 import Link from "next/link";
+import PageVisibilityToggle from "@/components/admin/PageVisibilityToggle";
 
 export default async function AdminRoomsPage() {
   const db = getAdminClient();
@@ -9,6 +10,7 @@ export default async function AdminRoomsPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+      <PageVisibilityToggle pageKey="event_spaces" label="Event Spaces" />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
         <div>
           <h1 className="text-2xl font-bold text-charcoal font-display">Rooms</h1>

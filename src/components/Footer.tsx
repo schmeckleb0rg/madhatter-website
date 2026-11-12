@@ -18,6 +18,11 @@ const hiddenPageFooterMap: Record<string, string[]> = {
   classes: ["/classes"],
   merch: ["/merch"],
   press: ["/press"],
+  faqs: ["/faqs"],
+  about: ["/about"],
+  visitor_info: ["/visitor-info"],
+  gift_cards: ["/gift-cards"],
+  event_spaces: ["/event-spaces"],
 };
 
 export default function Footer({

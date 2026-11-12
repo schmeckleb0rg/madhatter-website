@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { getAdminClient } from "@/lib/supabase";
 import EmploymentAdmin from "@/components/admin/EmploymentAdmin";
+import PageVisibilityToggle from "@/components/admin/PageVisibilityToggle";
 
 type JobListing = {
   id: string;
@@ -44,5 +45,12 @@ async function getData() {
 
 export default async function AdminEmploymentPage() {
   const { listings, applications } = await getData();
-  return <EmploymentAdmin initialListings={listings} initialApplications={applications} />;
+  return (
+    <>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-10">
+        <PageVisibilityToggle pageKey="employment" label="Employment" />
+      </div>
+      <EmploymentAdmin initialListings={listings} initialApplications={applications} />
+    </>
+  );
 }

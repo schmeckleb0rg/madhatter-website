@@ -18,6 +18,15 @@ const VALID_KEYS = [
   "page_visible_past_events",
   "page_visible_comedians",
   "page_visible_merch",
+  "page_visible_faqs",
+  "page_visible_about",
+  "page_visible_visitor_info",
+  "page_visible_gift_cards",
+  "page_visible_event_spaces",
+  "page_visible_blog",
+  "page_visible_employment",
+  "page_visible_membership",
+  "page_visible_gallery",
 ];
 
 export async function GET() {

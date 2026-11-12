@@ -25,6 +25,7 @@ const navGroups: NavGroup[] = [
   {
     label: "Commerce",
     children: [
+      { href: "/admin/sales", label: "Sales" },
       { href: "/admin/orders", label: "Orders" },
       { href: "/admin/gift-cards", label: "Gift Cards" },
       { href: "/admin/merch", label: "Merch" },

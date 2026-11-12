@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { getAdminClient } from "@/lib/supabase";
 import VisitorGuideAdmin from "@/components/admin/VisitorGuideAdmin";
+import PageVisibilityToggle from "@/components/admin/PageVisibilityToggle";
 
 type Partner = {
   id: string;
@@ -26,5 +27,12 @@ async function getPartners(): Promise<Partner[]> {
 
 export default async function AdminVisitorGuidePage() {
   const partners = await getPartners();
-  return <VisitorGuideAdmin initialPartners={partners} />;
+  return (
+    <>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-10">
+        <PageVisibilityToggle pageKey="visitor_info" label="Visitor Info" />
+      </div>
+      <VisitorGuideAdmin initialPartners={partners} />
+    </>
+  );
 }

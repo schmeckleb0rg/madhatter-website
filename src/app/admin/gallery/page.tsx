@@ -5,6 +5,7 @@ import type { GalleryImage } from "@/lib/supabase";
 import GalleryUploadForm from "./GalleryUploadForm";
 import DeleteGalleryButton from "./DeleteGalleryButton";
 import Image from "next/image";
+import PageVisibilityToggle from "@/components/admin/PageVisibilityToggle";
 
 async function getImages(): Promise<GalleryImage[]> {
   const db = getAdminClient();
@@ -23,6 +24,7 @@ export default async function AdminGalleryPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+      <PageVisibilityToggle pageKey="gallery" label="Gallery" />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
         <div>
           <h1 className="text-2xl font-bold text-charcoal font-display">

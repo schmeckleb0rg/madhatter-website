@@ -75,11 +75,18 @@ const hiddenPageHrefMap: Record<string, string[]> = {
   past_events: ["/past-events"],
   comedians: ["/comedians"],
   merch: ["/merch"],
+  faqs: ["/faqs"],
+  about: ["/about"],
+  visitor_info: ["/visitor-info"],
+  gift_cards: ["/gift-cards"],
+  event_spaces: ["/event-spaces", "/event-spaces?type=private", "/event-spaces/corporate", "/event-spaces/podcast"],
+  employment: ["/employment"],
 };
 
 // Sections that should be entirely hidden when their key is hidden
 const hiddenSectionMap: Record<string, string> = {
   classes: "Classes",
+  event_spaces: "Event Space",
 };
 
 type Props = {
