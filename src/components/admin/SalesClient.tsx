@@ -1,14 +1,25 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { downloadCsv } from "@/components/admin/ExportCsvButton";
+
+type GuestEntry = {
+  name: string | null;
+  email: string;
+  quantity: number;
+  amount_cents: number;
+  created_at: string;
+  table_preference: string | null;
+  is_member: boolean;
+};
 
 type SalesData = {
   overview: {
     totalRevenueCents: number;
     ticketRevenueCents: number;
     merchRevenueCents: number;
-    giftCardRevenueCents: number;
     totalOrders: number;
+    totalTicketsSold: number;
     avgOrderCents: number;
   };
   ticketsByEvent: {
@@ -18,7 +29,7 @@ type SalesData = {
     ticketsSold: number;
     revenueCents: number;
     capacity: number | null;
-    guestList: { name: string | null; email: string; quantity: number; amount_cents: number; created_at: string }[];
+    guestList: GuestEntry[];
   }[];
   merchByItem: {
     itemId: string;
@@ -30,7 +41,9 @@ type SalesData = {
     totalIssuedCents: number;
     totalRedeemedCents: number;
     outstandingCents: number;
-    cardCount: number;
+    activeCount: number;
+    voidedCount: number;
+    pendingCount: number;
   };
   revenueByDay: {
     date: string;
@@ -45,26 +58,22 @@ function fmt(cents: number) {
   return (cents / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
 
-function downloadCsv(filename: string, rows: string[][]) {
-  const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+/** Raw decimal for CSV export — spreadsheet-friendly (no $ symbol) */
+function rawDollars(cents: number) {
+  return (cents / 100).toFixed(2);
 }
 
 export default function SalesClient() {
   const [data, setData] = useState<SalesData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [range, setRange] = useState<"7d" | "30d" | "90d" | "all">("all");
   const [tab, setTab] = useState<Tab>("events");
   const [expandedEvent, setExpandedEvent] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setError(null);
     const params = new URLSearchParams();
     if (range !== "all") {
       const now = new Date();
@@ -74,9 +83,14 @@ export default function SalesClient() {
     }
     try {
       const res = await fetch(`/api/admin/sales?${params}`);
-      if (res.ok) setData(await res.json());
+      if (res.ok) {
+        setData(await res.json());
+      } else {
+        const body = await res.json().catch(() => null);
+        setError(body?.error || `Error ${res.status}`);
+      }
     } catch {
-      // silently fail
+      setError("Network error — could not reach server.");
     }
     setLoading(false);
   }, [range]);
@@ -85,54 +99,83 @@ export default function SalesClient() {
     fetchData();
   }, [fetchData]);
 
-  if (loading) {
+  if (loading && !data) {
     return <div className="text-center py-20 text-muted text-sm">Loading sales data...</div>;
   }
 
+  if (error && !data) {
+    return <div className="text-center py-20 text-muted text-sm">Failed to load sales data: {error}</div>;
+  }
+
   if (!data) {
-    return <div className="text-center py-20 text-muted text-sm">Failed to load sales data.</div>;
+    return <div className="text-center py-20 text-muted text-sm">No data available.</div>;
   }
 
   const { overview } = data;
 
   function exportEvents() {
-    const header = ["Event", "Date", "Tickets Sold", "Capacity", "Revenue"];
-    const rows = data!.ticketsByEvent.map((e) => [
-      e.title,
-      e.date ? new Date(e.date).toLocaleDateString() : "",
-      String(e.ticketsSold),
-      e.capacity != null ? String(e.capacity) : "—",
-      fmt(e.revenueCents),
-    ]);
+    const header = ["Event", "Date", "Tickets Sold", "Capacity", "% Sold", "Revenue"];
+    const rows = data!.ticketsByEvent.map((e) => {
+      const pct = e.capacity ? Math.round((e.ticketsSold / e.capacity) * 100) : null;
+      return [
+        e.title,
+        e.date ? new Date(e.date + "T12:00:00").toLocaleDateString("en-US") : "",
+        String(e.ticketsSold),
+        e.capacity != null ? String(e.capacity) : "",
+        pct != null ? `${pct}%` : "",
+        rawDollars(e.revenueCents),
+      ];
+    });
     downloadCsv("ticket-sales.csv", [header, ...rows]);
   }
 
-  function exportEventGuests(eventTitle: string, guests: SalesData["ticketsByEvent"][0]["guestList"]) {
-    const header = ["Name", "Email", "Quantity", "Amount", "Date"];
+  function exportEventGuests(eventTitle: string, guests: GuestEntry[]) {
+    const header = ["Name", "Email", "Quantity", "Amount", "Table Preference", "Member", "Date"];
     const rows = guests.map((g) => [
-      g.name || "—",
+      g.name || "",
       g.email,
       String(g.quantity),
-      fmt(g.amount_cents),
-      new Date(g.created_at).toLocaleDateString(),
+      g.amount_cents > 0 ? rawDollars(g.amount_cents) : "0.00",
+      g.table_preference || "",
+      g.is_member ? "Yes" : "No",
+      new Date(g.created_at).toLocaleDateString("en-US"),
     ]);
     const safeName = eventTitle.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase();
     downloadCsv(`attendees-${safeName}.csv`, [header, ...rows]);
   }
 
   function exportMerch() {
-    const header = ["Item", "Units Sold", "Revenue"];
-    const rows = data!.merchByItem.map((m) => [m.name, String(m.unitsSold), fmt(m.revenueCents)]);
+    const header = ["Item", "Units Sold", "Revenue", "Avg Price Per Unit"];
+    const rows = data!.merchByItem.map((m) => [
+      m.name,
+      String(m.unitsSold),
+      rawDollars(m.revenueCents),
+      m.unitsSold > 0 ? rawDollars(Math.round(m.revenueCents / m.unitsSold)) : "0.00",
+    ]);
     downloadCsv("merch-sales.csv", [header, ...rows]);
+  }
+
+  function exportGiftCards() {
+    const gc = data!.giftCards;
+    const header = ["Metric", "Value"];
+    const rows = [
+      ["Total Issued", rawDollars(gc.totalIssuedCents)],
+      ["Total Redeemed", rawDollars(gc.totalRedeemedCents)],
+      ["Outstanding Balance", rawDollars(gc.outstandingCents)],
+      ["Active Cards", String(gc.activeCount)],
+      ["Voided Cards", String(gc.voidedCount)],
+      ["Pending Activation", String(gc.pendingCount)],
+    ];
+    downloadCsv("gift-card-summary.csv", [header, ...rows]);
   }
 
   function exportDaily() {
     const header = ["Date", "Ticket Revenue", "Merch Revenue", "Total"];
     const rows = data!.revenueByDay.map((d) => [
       d.date,
-      fmt(d.ticketCents),
-      fmt(d.merchCents),
-      fmt(d.ticketCents + d.merchCents),
+      rawDollars(d.ticketCents),
+      rawDollars(d.merchCents),
+      rawDollars(d.ticketCents + d.merchCents),
     ]);
     downloadCsv("daily-revenue.csv", [header, ...rows]);
   }
@@ -147,7 +190,7 @@ export default function SalesClient() {
   return (
     <div className="space-y-8">
       {/* Date range filter */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {(["7d", "30d", "90d", "all"] as const).map((r) => (
           <button
             key={r}
@@ -161,6 +204,9 @@ export default function SalesClient() {
             {r === "7d" ? "7 Days" : r === "30d" ? "30 Days" : r === "90d" ? "90 Days" : "All Time"}
           </button>
         ))}
+        {loading && (
+          <span className="text-xs text-muted ml-2">Updating...</span>
+        )}
       </div>
 
       {/* Overview tiles */}
@@ -168,7 +214,7 @@ export default function SalesClient() {
         <Tile label="Total Revenue" value={fmt(overview.totalRevenueCents)} highlight />
         <Tile label="Ticket Revenue" value={fmt(overview.ticketRevenueCents)} />
         <Tile label="Merch Revenue" value={fmt(overview.merchRevenueCents)} />
-        <Tile label="Gift Cards Sold" value={fmt(overview.giftCardRevenueCents)} />
+        <Tile label="Tickets Sold" value={String(overview.totalTicketsSold)} />
         <Tile label="Total Orders" value={String(overview.totalOrders)} />
         <Tile label="Avg Order" value={fmt(overview.avgOrderCents)} />
       </div>
@@ -198,7 +244,7 @@ export default function SalesClient() {
               Ticket Sales by Event ({data.ticketsByEvent.length})
             </h3>
             {data.ticketsByEvent.length > 0 && (
-              <button onClick={exportEvents} className="text-xs px-4 py-1.5 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal transition-colors">
+              <button onClick={exportEvents} aria-label="Export ticket sales as CSV" className="text-xs px-4 py-1.5 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal transition-colors">
                 Export CSV
               </button>
             )}
@@ -221,7 +267,7 @@ export default function SalesClient() {
                       <div className="min-w-0">
                         <div className="text-sm font-semibold text-charcoal truncate">{event.title}</div>
                         <div className="text-xs text-muted">
-                          {event.date ? new Date(event.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
+                          {event.date ? new Date(event.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
                         </div>
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
@@ -242,6 +288,7 @@ export default function SalesClient() {
                           {event.guestList.length > 0 && (
                             <button
                               onClick={() => exportEventGuests(event.title, event.guestList)}
+                              aria-label={`Export attendees for ${event.title} as CSV`}
                               className="text-xs px-3 py-1 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal transition-colors"
                             >
                               Export CSV
@@ -259,18 +306,23 @@ export default function SalesClient() {
                                   <th className="text-left px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Email</th>
                                   <th className="text-center px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Qty</th>
                                   <th className="text-right px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Amount</th>
+                                  <th className="text-left px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Table</th>
                                   <th className="text-right px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Date</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {event.guestList.map((g, i) => (
-                                  <tr key={i} className="border-b border-charcoal/5 last:border-0">
-                                    <td className="px-3 py-2 text-charcoal">{g.name || "—"}</td>
+                                  <tr key={`${g.email}-${g.created_at}-${i}`} className="border-b border-charcoal/5 last:border-0">
+                                    <td className="px-3 py-2 text-charcoal">
+                                      {g.name || "—"}
+                                      {g.is_member && <span className="ml-1 text-xs text-gold" title="Member">*</span>}
+                                    </td>
                                     <td className="px-3 py-2 text-muted">{g.email}</td>
                                     <td className="px-3 py-2 text-center text-charcoal">{g.quantity}</td>
                                     <td className="px-3 py-2 text-right text-charcoal font-mono">
                                       {g.amount_cents > 0 ? fmt(g.amount_cents) : "RSVP"}
                                     </td>
+                                    <td className="px-3 py-2 text-muted text-xs">{g.table_preference || "—"}</td>
                                     <td className="px-3 py-2 text-right text-muted text-xs">
                                       {new Date(g.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                                     </td>
@@ -297,7 +349,7 @@ export default function SalesClient() {
               Merch Sales ({data.merchByItem.length})
             </h3>
             {data.merchByItem.length > 0 && (
-              <button onClick={exportMerch} className="text-xs px-4 py-1.5 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal transition-colors">
+              <button onClick={exportMerch} aria-label="Export merch sales as CSV" className="text-xs px-4 py-1.5 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal transition-colors">
                 Export CSV
               </button>
             )}
@@ -312,6 +364,7 @@ export default function SalesClient() {
                     <th className="text-left px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Item</th>
                     <th className="text-center px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Units Sold</th>
                     <th className="text-right px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Revenue</th>
+                    <th className="text-right px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Avg/Unit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -320,6 +373,9 @@ export default function SalesClient() {
                       <td className="px-3 py-2 text-charcoal font-medium">{item.name}</td>
                       <td className="px-3 py-2 text-center text-charcoal">{item.unitsSold}</td>
                       <td className="px-3 py-2 text-right text-charcoal font-mono">{fmt(item.revenueCents)}</td>
+                      <td className="px-3 py-2 text-right text-muted font-mono text-xs">
+                        {item.unitsSold > 0 ? fmt(Math.round(item.revenueCents / item.unitsSold)) : "—"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -331,14 +387,21 @@ export default function SalesClient() {
 
       {tab === "giftcards" && (
         <div>
-          <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-3">
-            Gift Card Summary
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-mono text-xs uppercase tracking-widest text-muted">
+              Gift Card Summary
+            </h3>
+            <button onClick={exportGiftCards} aria-label="Export gift card summary as CSV" className="text-xs px-4 py-1.5 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal transition-colors">
+              Export CSV
+            </button>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <Tile label="Total Issued" value={fmt(data.giftCards.totalIssuedCents)} />
             <Tile label="Total Redeemed" value={fmt(data.giftCards.totalRedeemedCents)} />
-            <Tile label="Outstanding" value={fmt(data.giftCards.outstandingCents)} highlight />
-            <Tile label="Cards Issued" value={String(data.giftCards.cardCount)} />
+            <Tile label="Outstanding Balance" value={fmt(data.giftCards.outstandingCents)} highlight />
+            <Tile label="Active Cards" value={String(data.giftCards.activeCount)} />
+            <Tile label="Voided" value={String(data.giftCards.voidedCount)} />
+            <Tile label="Pending Activation" value={String(data.giftCards.pendingCount)} />
           </div>
         </div>
       )}
@@ -350,7 +413,7 @@ export default function SalesClient() {
               Daily Revenue ({data.revenueByDay.length} days)
             </h3>
             {data.revenueByDay.length > 0 && (
-              <button onClick={exportDaily} className="text-xs px-4 py-1.5 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal transition-colors">
+              <button onClick={exportDaily} aria-label="Export daily revenue as CSV" className="text-xs px-4 py-1.5 border border-charcoal/10 text-muted hover:border-gold/40 hover:text-charcoal transition-colors">
                 Export CSV
               </button>
             )}

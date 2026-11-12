@@ -8,9 +8,13 @@ import AnalyticsChart from "@/components/admin/AnalyticsChart";
 async function getStats() {
   const db = getAdminClient();
 
-  // Start of current month for "this month" revenue
+  // Use Eastern Time for "this month" boundary (venue timezone)
   const now = new Date();
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const etNow = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const monthStart = new Date(Date.UTC(etNow.getFullYear(), etNow.getMonth(), 1)).toISOString();
+
+  // Use start of today (ET) for upcoming shows — include today's events
+  const todayET = `${etNow.getFullYear()}-${String(etNow.getMonth() + 1).padStart(2, "0")}-${String(etNow.getDate()).padStart(2, "0")}`;
 
   const [
     { count: eventCount },
@@ -29,7 +33,7 @@ async function getStats() {
     { data: allCompletedOrders },
     { data: thisMonthOrders },
   ] = await Promise.all([
-    db.from("events").select("*", { count: "exact", head: true }).gte("date", now.toISOString()),
+    db.from("events").select("*", { count: "exact", head: true }).gte("date", todayET),
     db.from("comedians").select("*", { count: "exact", head: true }),
     db.from("past_events").select("*", { count: "exact", head: true }),
     db.from("orders").select("*", { count: "exact", head: true }).eq("status", "completed"),
@@ -63,7 +67,7 @@ export default async function DashboardPage() {
   const tiles = [
     { label: "Upcoming Shows", value: stats.eventCount ?? 0, href: "/admin/events", color: "text-gold" },
     { label: "Comedians", value: stats.comedianCount ?? 0, href: "/admin/comedians", color: "text-charcoal" },
-    { label: "Ticket Orders", value: stats.orderCount ?? 0, href: "/admin/orders", color: "text-charcoal" },
+    { label: "Completed Orders", value: stats.orderCount ?? 0, href: "/admin/orders", color: "text-charcoal" },
     { label: "Past Shows", value: stats.pastCount ?? 0, href: "/admin/past-events", color: "text-charcoal" },
     { label: "Unread Inquiries", value: stats.unreadCount ?? 0, href: "/admin/inquiries", color: "text-gold" },
     { label: "Unread Messages", value: stats.unreadMessages ?? 0, href: "/admin/messages", color: "text-gold" },

@@ -12,7 +12,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
   const [{ data: event }, { data: orders }] = await Promise.all([
     db.from("events").select("*").eq("id", id).single(),
     db.from("orders")
-      .select("name, email, quantity, amount_cents, status, created_at")
+      .select("id, name, email, quantity, amount_cents, status, created_at, table_preference, member_id")
       .eq("event_id", id)
       .eq("order_type", "ticket")
       .eq("status", "completed")
@@ -26,13 +26,22 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
   const totalRevenueCents = attendees.reduce((s, o) => s + o.amount_cents, 0);
   const revenue = (totalRevenueCents / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
 
-  const csvHeader = ["Name", "Email", "Quantity", "Amount", "Date"];
+  // CSV uses raw numbers so spreadsheets can sort/sum properly
+  const csvHeader = ["Name", "Email", "Quantity", "Amount", "Table Preference", "Member", "Order ID", "Date"];
   const csvRows = attendees.map((a) => [
-    a.name || "—",
+    a.name || "",
     a.email,
     String(a.quantity),
-    a.amount_cents > 0 ? `$${(a.amount_cents / 100).toFixed(2)}` : "RSVP",
-    new Date(a.created_at).toLocaleDateString(),
+    (a.amount_cents / 100).toFixed(2),
+    a.table_preference || "",
+    a.member_id ? "Yes" : "No",
+    a.id?.slice(0, 8) || "",
+    new Date(a.created_at).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: "America/New_York",
+    }),
   ]);
 
   return (
@@ -74,13 +83,17 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
                   <th className="text-left px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Email</th>
                   <th className="text-center px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Qty</th>
                   <th className="text-right px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Amount</th>
+                  <th className="text-left px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Table</th>
                   <th className="text-right px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Date</th>
                 </tr>
               </thead>
               <tbody>
-                {attendees.map((guest, i) => (
-                  <tr key={i} className="border-b border-charcoal/5 last:border-0">
-                    <td className="px-3 py-2 text-charcoal">{guest.name || "—"}</td>
+                {attendees.map((guest) => (
+                  <tr key={guest.id} className="border-b border-charcoal/5 last:border-0">
+                    <td className="px-3 py-2 text-charcoal">
+                      {guest.name || "—"}
+                      {guest.member_id && <span className="ml-1 text-xs text-gold" title="Member">*</span>}
+                    </td>
                     <td className="px-3 py-2 text-muted">{guest.email}</td>
                     <td className="px-3 py-2 text-center text-charcoal">{guest.quantity}</td>
                     <td className="px-3 py-2 text-right text-charcoal font-mono">
@@ -88,10 +101,12 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
                         ? `$${(guest.amount_cents / 100).toFixed(2)}`
                         : "RSVP"}
                     </td>
+                    <td className="px-3 py-2 text-muted text-xs">{guest.table_preference || "—"}</td>
                     <td className="px-3 py-2 text-right text-muted text-xs">
                       {new Date(guest.created_at).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
+                        timeZone: "America/New_York",
                       })}
                     </td>
                   </tr>
