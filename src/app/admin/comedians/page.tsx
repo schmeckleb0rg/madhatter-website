@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { getAdminClient } from "@/lib/supabase";
 import Link from "next/link";
 import type { Comedian } from "@/lib/supabase";
+import PageVisibilityToggle from "@/components/admin/PageVisibilityToggle";
 
 async function getComedians(): Promise<Comedian[]> {
   const db = getAdminClient();
@@ -15,6 +16,7 @@ export default async function AdminComediansPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+      <PageVisibilityToggle pageKey="comedians" label="Comedians" />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
         <h1 className="text-2xl font-bold text-charcoal font-display">
           Comedians

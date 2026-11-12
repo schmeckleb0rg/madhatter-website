@@ -11,19 +11,35 @@ export type SocialLinks = {
   youtube?: string;
 };
 
+// Map hidden page keys to footer hrefs they should hide
+const hiddenPageFooterMap: Record<string, string[]> = {
+  comedians: ["/comedians"],
+  past_events: ["/past-events"],
+  classes: ["/classes"],
+  merch: ["/merch"],
+  press: ["/press"],
+};
+
 export default function Footer({
   venue,
   socialLinks,
   accessibilityStatement,
   termsStatement,
   privacyStatement,
+  hiddenPages = [],
 }: {
   venue: VenueInfo;
   socialLinks?: SocialLinks;
   accessibilityStatement?: string;
   termsStatement?: string;
   privacyStatement?: string;
+  hiddenPages?: string[];
 }) {
+  const hiddenHrefs = new Set<string>();
+  for (const key of hiddenPages) {
+    const hrefs = hiddenPageFooterMap[key];
+    if (hrefs) hrefs.forEach((h) => hiddenHrefs.add(h));
+  }
   return (
     <footer className="bg-charcoal dark:bg-[#080706] mt-16 sm:mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
@@ -99,7 +115,7 @@ export default function Footer({
                 { href: "/past-events", label: "Past Productions" },
                 { href: "/classes", label: "Comedy Classes" },
                 { href: "/gift-cards", label: "Gift Cards" },
-              ].map((link) => (
+              ].filter((link) => !hiddenHrefs.has(link.href)).map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -125,7 +141,7 @@ export default function Footer({
                 { href: "/visitor-info", label: "Visitor Info" },
                 { href: "/about", label: "About" },
                 { href: "/faqs", label: "FAQs" },
-              ].map((link) => (
+              ].filter((link) => !hiddenHrefs.has(link.href)).map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

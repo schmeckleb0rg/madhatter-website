@@ -61,13 +61,41 @@ async function getPrivacyStatement(): Promise<string | undefined> {
   return data?.content || undefined;
 }
 
+const PAGE_VISIBILITY_KEYS = [
+  "page_visible_festivals",
+  "page_visible_classes",
+  "page_visible_staff",
+  "page_visible_patrons",
+  "page_visible_press",
+  "page_visible_past_events",
+  "page_visible_comedians",
+  "page_visible_merch",
+];
+
+async function getHiddenPages(): Promise<string[]> {
+  const { data } = await supabase
+    .from("site_settings")
+    .select("key, value")
+    .in("key", PAGE_VISIBILITY_KEYS);
+
+  const hidden: string[] = [];
+  (data ?? []).forEach((row: { key: string; value: string }) => {
+    if (row.value === "false") {
+      // Extract key name: "page_visible_festivals" → "festivals"
+      hidden.push(row.key.replace("page_visible_", ""));
+    }
+  });
+  return hidden;
+}
+
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const [venue, socialLinks, accessibilityStatement, termsStatement, privacyStatement] = await Promise.all([
+  const [venue, socialLinks, accessibilityStatement, termsStatement, privacyStatement, hiddenPages] = await Promise.all([
     getVenueInfo(),
     getSocialLinks(),
     getAccessibilityStatement(),
     getTermsStatement(),
     getPrivacyStatement(),
+    getHiddenPages(),
   ]);
 
   return (
@@ -79,10 +107,10 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       >
         Skip to main content
       </a>
-      <Navbar />
+      <Navbar hiddenPages={hiddenPages} />
       <div className="lg:ml-[220px]">
         <main id="main-content">{children}</main>
-        <Footer venue={venue} socialLinks={socialLinks} accessibilityStatement={accessibilityStatement} termsStatement={termsStatement} privacyStatement={privacyStatement} />
+        <Footer venue={venue} socialLinks={socialLinks} accessibilityStatement={accessibilityStatement} termsStatement={termsStatement} privacyStatement={privacyStatement} hiddenPages={hiddenPages} />
       </div>
     </ThemeProvider>
   );

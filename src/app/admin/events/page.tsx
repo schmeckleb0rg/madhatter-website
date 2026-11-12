@@ -4,6 +4,7 @@ import { getAdminClient } from "@/lib/supabase";
 import Link from "next/link";
 import type { Event } from "@/lib/supabase";
 import EventsListAdmin from "@/components/admin/EventsListAdmin";
+import PageVisibilityToggle from "@/components/admin/PageVisibilityToggle";
 
 async function getEvents(): Promise<Event[]> {
   const db = getAdminClient();
@@ -16,6 +17,7 @@ export default async function AdminEventsPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+      <PageVisibilityToggle pageKey="festivals" label="Festivals" />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
         <h1 className="text-2xl font-bold text-charcoal font-display">
           Events

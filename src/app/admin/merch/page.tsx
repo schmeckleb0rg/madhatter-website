@@ -4,6 +4,7 @@ import { getAdminClient } from "@/lib/supabase";
 import type { MerchItem } from "@/lib/supabase";
 import Link from "next/link";
 import Image from "next/image";
+import PageVisibilityToggle from "@/components/admin/PageVisibilityToggle";
 
 async function getMerch(): Promise<MerchItem[]> {
   const db = getAdminClient();
@@ -16,6 +17,7 @@ export default async function AdminMerchPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+      <PageVisibilityToggle pageKey="merch" label="Merch" />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
         <div>
           <h1 className="font-display text-2xl font-semibold text-charcoal">

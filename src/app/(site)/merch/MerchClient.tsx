@@ -187,6 +187,31 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
           </div>
         </div>
 
+        {/* Gift Cards */}
+        <div className="bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-8 sm:p-10 mb-10">
+          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+            <div className="flex-shrink-0 w-16 h-16 bg-gold/10 dark:bg-gold/5 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-gold" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.25-9.75h16.5M3.75 7.5h16.5c.828 0 1.5.672 1.5 1.5v2.25H2.25V9a1.5 1.5 0 011.5-1.5z" />
+              </svg>
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+              <h2 className="font-display text-xl font-semibold text-charcoal dark:text-[#F0ECE3] mb-1">
+                Gift Cards
+              </h2>
+              <p className="text-sm text-muted dark:text-[#C4BDA8] mb-4">
+                Give the gift of laughter. Mad Hatter gift cards can be used for tickets, merch, and more.
+              </p>
+              <Link
+                href="/gift-cards"
+                className="inline-block px-6 py-2.5 bg-charcoal dark:bg-gold text-off-white dark:text-[#0D0C0A] text-sm font-semibold hover:bg-charcoal-2 dark:hover:bg-[#D4A84B] transition-colors btn-shimmer"
+              >
+                Buy a Gift Card
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div className="bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-5">

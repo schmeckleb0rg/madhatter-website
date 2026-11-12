@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -16,7 +16,21 @@ type SimpleNav = {
   label: string;
 };
 
-const navSections: NavSection[] = [
+const allNavSections: NavSection[] = [
+  {
+    label: "About",
+    items: [
+      { href: "/about", label: "About MadHatter" },
+      { href: "/staff", label: "Our Staff" },
+      { href: "/patrons", label: "Our Patrons" },
+      { href: "/contact", label: "Contact" },
+      { href: "/press", label: "In The News" },
+      { href: "/past-events", label: "Past Productions" },
+      { href: "/employment", label: "Employment" },
+      { href: "/policies", label: "Policies & Procedures" },
+      { href: "/faqs", label: "FAQs" },
+    ],
+  },
   {
     label: "Events",
     items: [
@@ -43,32 +57,75 @@ const navSections: NavSection[] = [
       { href: "/event-spaces/podcast", label: "Podcast Studio" },
     ],
   },
-  {
-    label: "About",
-    items: [
-      { href: "/about", label: "About MadHatter" },
-      { href: "/staff", label: "Our Staff" },
-      { href: "/patrons", label: "Our Patrons" },
-      { href: "/contact", label: "Contact" },
-      { href: "/press", label: "In The News" },
-      { href: "/past-events", label: "Past Productions" },
-      { href: "/employment", label: "Employment" },
-      { href: "/policies", label: "Policies & Procedures" },
-      { href: "/faqs", label: "FAQs" },
-    ],
-  },
 ];
 
-const simpleNavs: SimpleNav[] = [
+const allSimpleNavs: SimpleNav[] = [
   { href: "/comedians", label: "Comedians" },
   { href: "/merch", label: "Merch" },
   { href: "/visitor-info", label: "Visitor Info" },
 ];
 
-export default function Navbar() {
+// Map of hidden page keys to the href patterns they hide
+const hiddenPageHrefMap: Record<string, string[]> = {
+  festivals: ["/events?filter=festival"],
+  classes: ["/classes", "/classes?type=improv", "/classes?type=standup"],
+  staff: ["/staff"],
+  patrons: ["/patrons"],
+  press: ["/press"],
+  past_events: ["/past-events"],
+  comedians: ["/comedians"],
+  merch: ["/merch"],
+};
+
+// Sections that should be entirely hidden when their key is hidden
+const hiddenSectionMap: Record<string, string> = {
+  classes: "Classes",
+};
+
+type Props = {
+  hiddenPages?: string[];
+};
+
+export default function Navbar({ hiddenPages = [] }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const pathname = usePathname();
+
+  // Build set of hidden hrefs
+  const hiddenHrefs = useMemo(() => {
+    const set = new Set<string>();
+    for (const key of hiddenPages) {
+      const hrefs = hiddenPageHrefMap[key];
+      if (hrefs) hrefs.forEach((h) => set.add(h));
+    }
+    return set;
+  }, [hiddenPages]);
+
+  // Build set of hidden section labels
+  const hiddenSections = useMemo(() => {
+    const set = new Set<string>();
+    for (const key of hiddenPages) {
+      const sectionLabel = hiddenSectionMap[key];
+      if (sectionLabel) set.add(sectionLabel);
+    }
+    return set;
+  }, [hiddenPages]);
+
+  // Filter nav sections and their items
+  const navSections = useMemo(() => {
+    return allNavSections
+      .filter((s) => !hiddenSections.has(s.label))
+      .map((s) => ({
+        ...s,
+        items: s.items.filter((item) => !hiddenHrefs.has(item.href)),
+      }))
+      .filter((s) => s.items.length > 0);
+  }, [hiddenHrefs, hiddenSections]);
+
+  // Filter simple nav links
+  const simpleNavs = useMemo(() => {
+    return allSimpleNavs.filter((link) => !hiddenHrefs.has(link.href));
+  }, [hiddenHrefs]);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -106,7 +163,7 @@ export default function Navbar() {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname, navSections]);
 
   const navContent = (
     <nav className="flex-1 overflow-y-auto py-4 px-3" aria-label="Main navigation">
@@ -186,17 +243,6 @@ export default function Navbar() {
           </Link>
         );
       })}
-
-      {/* Gift Cards CTA */}
-      <div className="px-3 mt-4 nav-item-enter" style={{ animationDelay: `${(navSections.length + simpleNavs.length) * 60}ms` }}>
-        <Link
-          href="/gift-cards"
-          className="block py-3 bg-charcoal dark:bg-gold text-off-white dark:text-[#0D0C0A] text-sm font-semibold text-center rounded-md hover:bg-charcoal-2 dark:hover:bg-[#D4A84B] transition-all duration-200 active:scale-[0.98] btn-shimmer"
-          onClick={() => setMobileOpen(false)}
-        >
-          Gift Cards
-        </Link>
-      </div>
     </nav>
   );
 
