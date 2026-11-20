@@ -27,11 +27,17 @@ const allNavSections: NavSection[] = [
     ],
   },
   {
-    label: "Classes",
+    label: "Visitor Info",
     items: [
-      { href: "/classes", label: "All Classes" },
-      { href: "/classes?type=improv", label: "Improv" },
-      { href: "/classes?type=standup", label: "Standup" },
+      { href: "/visitor-info", label: "Plan Your Visit" },
+      { href: "/contact", label: "Contact" },
+      { href: "/press", label: "In The News" },
+      { href: "/past-events", label: "Past Productions" },
+      { href: "/staff", label: "Our Staff" },
+      { href: "/patrons", label: "Our Patrons" },
+      { href: "/employment", label: "Employment" },
+      { href: "/policies", label: "Policies & Procedures" },
+      { href: "/faqs", label: "FAQs" },
     ],
   },
   {
@@ -44,17 +50,11 @@ const allNavSections: NavSection[] = [
     ],
   },
   {
-    label: "Visitor Info",
+    label: "Classes",
     items: [
-      { href: "/visitor-info", label: "Plan Your Visit" },
-      { href: "/contact", label: "Contact" },
-      { href: "/press", label: "In The News" },
-      { href: "/past-events", label: "Past Productions" },
-      { href: "/staff", label: "Our Staff" },
-      { href: "/patrons", label: "Our Patrons" },
-      { href: "/employment", label: "Employment" },
-      { href: "/policies", label: "Policies & Procedures" },
-      { href: "/faqs", label: "FAQs" },
+      { href: "/classes", label: "All Classes" },
+      { href: "/classes?type=improv", label: "Improv" },
+      { href: "/classes?type=standup", label: "Standup" },
     ],
   },
 ];
@@ -173,15 +173,38 @@ export default function Navbar({ hiddenPages = [] }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, navSections]);
 
+  // Split About from other simple links so it renders first
+  const aboutNav = simpleNavs.find((link) => link.label === "About");
+  const otherSimpleNavs = simpleNavs.filter((link) => link.label !== "About");
+
   const navContent = (
     <nav className="flex-1 overflow-y-auto py-4 px-3" aria-label="Main navigation">
+      {/* About link at top */}
+      {aboutNav && (() => {
+        const active = isLinkActive(aboutNav.href);
+        return (
+          <Link
+            href={aboutNav.href}
+            className={`nav-link-glow nav-section-hover block px-3 py-2.5 text-sm rounded-md transition-colors nav-item-enter ${
+              active
+                ? "text-charcoal dark:text-[#F0ECE3] font-medium active"
+                : "text-charcoal/70 dark:text-[#C4BDA8] hover:text-charcoal dark:hover:text-[#F0ECE3]"
+            }`}
+            style={{ animationDelay: "0ms" }}
+            onClick={() => setMobileOpen(false)}
+          >
+            {aboutNav.label}
+          </Link>
+        );
+      })()}
+
       {/* Accordion sections */}
       {navSections.map((section, sectionIndex) => {
         const isExpanded = expandedSection === section.label;
         const isActive = isSectionActive(section);
 
         return (
-          <div key={section.label} className="nav-item-enter" style={{ animationDelay: `${sectionIndex * 60}ms` }}>
+          <div key={section.label} className="nav-item-enter" style={{ animationDelay: `${(sectionIndex + 1) * 60}ms` }}>
             <button
               onClick={() => setExpandedSection(isExpanded ? null : section.label)}
               aria-expanded={isExpanded}
@@ -233,7 +256,7 @@ export default function Navbar({ hiddenPages = [] }: Props) {
       <div className="mx-3 my-2 border-t border-charcoal/10 dark:border-gold/10" />
 
       {/* Simple nav links */}
-      {simpleNavs.map((link, i) => {
+      {otherSimpleNavs.map((link, i) => {
         const active = isLinkActive(link.href);
         return (
           <Link
@@ -244,7 +267,7 @@ export default function Navbar({ hiddenPages = [] }: Props) {
                 ? "text-charcoal dark:text-[#F0ECE3] font-medium active"
                 : "text-charcoal/70 dark:text-[#C4BDA8] hover:text-charcoal dark:hover:text-[#F0ECE3]"
             }`}
-            style={{ animationDelay: `${(navSections.length + i) * 60}ms` }}
+            style={{ animationDelay: `${(navSections.length + 1 + i) * 60}ms` }}
             onClick={() => setMobileOpen(false)}
           >
             {link.label}
