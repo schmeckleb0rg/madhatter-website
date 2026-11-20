@@ -117,8 +117,11 @@ function StatsPanel({ eventId, onClose }: { eventId: string; onClose: () => void
 
   useEffect(() => {
     fetch(`/api/admin/events/${eventId}/stats`)
-      .then((r) => {
-        if (!r.ok) throw new Error("Failed to load stats");
+      .then(async (r) => {
+        if (!r.ok) {
+          const body = await r.json().catch(() => ({}));
+          throw new Error(body.error || `Failed to load stats (${r.status})`);
+        }
         return r.json();
       })
       .then(setStats)
