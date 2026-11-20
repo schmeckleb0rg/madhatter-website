@@ -17,7 +17,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
     // Fetch event basic info
     const { data: event, error: eventError } = await db
       .from("events")
-      .select("id, ticket_capacity, tickets_sold, is_rsvp")
+      .select("id, ticket_capacity, is_rsvp")
       .eq("id", id)
       .single();
 
@@ -56,7 +56,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
       : 0;
 
     return NextResponse.json({
-      ticketsSold: event.tickets_sold ?? 0,
+      ticketsSold: attendeesCount,
       ticketCapacity: event.ticket_capacity,
       totalRevenueCents,
       rsvpCount,
