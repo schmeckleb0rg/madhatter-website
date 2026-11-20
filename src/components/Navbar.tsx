@@ -18,20 +18,6 @@ type SimpleNav = {
 
 const allNavSections: NavSection[] = [
   {
-    label: "About",
-    items: [
-      { href: "/about", label: "About MadHatter" },
-      { href: "/staff", label: "Our Staff" },
-      { href: "/patrons", label: "Our Patrons" },
-      { href: "/contact", label: "Contact" },
-      { href: "/press", label: "In The News" },
-      { href: "/past-events", label: "Past Productions" },
-      { href: "/employment", label: "Employment" },
-      { href: "/policies", label: "Policies & Procedures" },
-      { href: "/faqs", label: "FAQs" },
-    ],
-  },
-  {
     label: "Events",
     items: [
       { href: "/events", label: "All Events" },
@@ -57,12 +43,26 @@ const allNavSections: NavSection[] = [
       { href: "/event-spaces/podcast", label: "Podcast Studio" },
     ],
   },
+  {
+    label: "Visitor Info",
+    items: [
+      { href: "/visitor-info", label: "Plan Your Visit" },
+      { href: "/contact", label: "Contact" },
+      { href: "/press", label: "In The News" },
+      { href: "/past-events", label: "Past Productions" },
+      { href: "/staff", label: "Our Staff" },
+      { href: "/patrons", label: "Our Patrons" },
+      { href: "/employment", label: "Employment" },
+      { href: "/policies", label: "Policies & Procedures" },
+      { href: "/faqs", label: "FAQs" },
+    ],
+  },
 ];
 
 const allSimpleNavs: SimpleNav[] = [
+  { href: "/about", label: "About" },
   { href: "/comedians", label: "Comedians" },
   { href: "/merch", label: "Merch" },
-  { href: "/visitor-info", label: "Visitor Info" },
 ];
 
 // Map of hidden page keys to the href patterns they hide
@@ -87,6 +87,7 @@ const hiddenPageHrefMap: Record<string, string[]> = {
 const hiddenSectionMap: Record<string, string> = {
   classes: "Classes",
   event_spaces: "Event Space",
+  visitor_info: "Visitor Info",
 };
 
 type Props = {

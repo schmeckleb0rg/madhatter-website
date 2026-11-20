@@ -143,7 +143,7 @@ export default function Footer({
                 { href: "/event-spaces", label: "Event Spaces" },
                 { href: "/merch", label: "Merch" },
                 { href: "/press", label: "In The News" },
-                { href: "/visitor-info", label: "Visitor Info" },
+                { href: "/visitor-info", label: "Plan Your Visit" },
                 { href: "/about", label: "About" },
                 { href: "/faqs", label: "FAQs" },
               ].filter((link) => !hiddenHrefs.has(link.href)).map((link) => (
