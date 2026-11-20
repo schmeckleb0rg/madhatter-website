@@ -82,6 +82,7 @@ export type TicketInquiry = {
   party_size: number;
   message: string | null;
   is_read: boolean;
+  is_archived: boolean;
   created_at: string;
   events?: { title: string; date: string } | null;
 };
@@ -219,6 +220,24 @@ export type EmailQueueItem = {
   event_id: string | null;
   created_at: string;
   sent_at: string | null;
+  scheduled_for: string | null;
+  recipient_count: number;
+};
+
+export type EmailRecipient = {
+  id: string;
+  queue_id: string;
+  email: string;
+  sent_at: string;
+};
+
+export type EmailTrackingEvent = {
+  id: string;
+  queue_id: string;
+  recipient_email: string;
+  event_type: "open" | "click";
+  url: string | null;
+  created_at: string;
 };
 
 export type EventSlideshow = {
