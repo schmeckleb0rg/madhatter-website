@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const room = await getRoom(slug);
   if (!room) return { title: "Space Not Found" };
   return {
-    title: `${room.name} | Event Spaces | Mad Hatter Comedy Club`,
-    description: room.description || `${room.name} at Mad Hatter Comedy Club`,
+    title: `MadHatter Comedy Club | ${room.name}`,
+    description: room.description || `${room.name} at MadHatter Comedy Club`,
   };
 }
 

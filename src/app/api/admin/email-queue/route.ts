@@ -81,7 +81,7 @@ export async function PUT(request: Request) {
   if (resendKey) {
     try {
       const emails = subscribers.map((s) => s.email);
-      const fromEmail = process.env.RESEND_FROM_EMAIL ?? "Mad Hatter Comedy <noreply@madhattercomedy.com>";
+      const fromEmail = process.env.RESEND_FROM_EMAIL ?? "MadHatter Comedy <noreply@madhattercomedy.com>";
 
       // Send in batches of 50 using BCC to protect subscriber privacy
       const batchSize = 50;

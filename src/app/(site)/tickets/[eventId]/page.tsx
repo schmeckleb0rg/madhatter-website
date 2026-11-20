@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ eventId: 
   const { eventId } = await params;
   const { data: event } = await supabase.from("events").select("title").eq("id", eventId).single();
   return {
-    title: event ? `Buy Tickets — ${event.title} | Mad Hatter Comedy Club` : "Buy Tickets | Mad Hatter Comedy Club",
+    title: event ? `MadHatter Comedy Club | Buy Tickets — ${event.title}` : "MadHatter Comedy Club | Buy Tickets",
   };
 }
 
@@ -147,7 +147,7 @@ export default async function TicketPurchasePage({ params }: { params: Promise<{
 
         {/* Image upload hint for admin */}
         <p className="text-xs text-muted dark:text-[#7A7264] text-center mt-4">
-          Mad Hatter Comedy Club &bull; 21+ show &bull; Full bar available
+          MadHatter Comedy Club &bull; 21+ show &bull; Full bar available
         </p>
       </div>
     </div>

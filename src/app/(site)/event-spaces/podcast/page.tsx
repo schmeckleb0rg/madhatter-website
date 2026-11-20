@@ -3,9 +3,9 @@ import Reveal from "@/components/Reveal";
 import PodcastBookingForm from "@/components/PodcastBookingForm";
 
 export const metadata = {
-  title: "Podcast Studio | Mad Hatter Comedy Club",
+  title: "MadHatter Comedy Club | Podcast Studio",
   description:
-    "Record your podcast at Mad Hatter Comedy Club. Professional setup, club atmosphere, live audience options.",
+    "Record your podcast at MadHatter Comedy Club. Professional setup, club atmosphere, live audience options.",
 };
 
 const equipment = [

@@ -260,7 +260,7 @@ export default function Navbar({ hiddenPages = [] }: Props) {
         <Link href="/" className="flex items-center" onClick={() => setMobileOpen(false)}>
           <Image
             src="/MH LOGO.png"
-            alt="Mad Hatter Comedy Club"
+            alt="MadHatter Comedy Club"
             width={100}
             height={40}
             className="h-10 w-auto object-contain"
@@ -311,7 +311,7 @@ export default function Navbar({ hiddenPages = [] }: Props) {
           <Link href="/" className="nav-logo block">
             <Image
               src="/MH LOGO.png"
-              alt="Mad Hatter Comedy Club"
+              alt="MadHatter Comedy Club"
               width={160}
               height={120}
               className="w-auto h-auto max-h-24 object-contain"

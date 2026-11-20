@@ -25,7 +25,7 @@ function buildDescription(props: AddToCalendarProps): string {
   const parts: string[] = [];
   if (props.description) parts.push(props.description);
   if (props.doorsTime) parts.push(`Doors open at ${props.doorsTime}.`);
-  parts.push("Enjoy live comedy at Mad Hatter Comedy Club. Full bar available. 21+ show.");
+  parts.push("Enjoy live comedy at MadHatter Comedy Club. Full bar available. 21+ show.");
   if (props.eventUrl) parts.push(`Tickets & Info: ${props.eventUrl}`);
   return parts.join("\n");
 }
@@ -61,7 +61,7 @@ export default function AddToCalendar(props: AddToCalendarProps) {
     const icsContent = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
-      "PRODID:-//Mad Hatter Comedy Club//Events//EN",
+      "PRODID:-//MadHatter Comedy Club//Events//EN",
       "CALSCALE:GREGORIAN",
       "METHOD:PUBLISH",
       "BEGIN:VEVENT",

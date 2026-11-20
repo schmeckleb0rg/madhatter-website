@@ -29,10 +29,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     year: "numeric",
   });
 
-  const title = `${event.title} | Mad Hatter Comedy Club`;
+  const title = `MadHatter Comedy Club | ${event.title}`;
   const description = event.performer
-    ? `${event.performer} — ${dateStr} at Mad Hatter Comedy Club`
-    : `${dateStr} at Mad Hatter Comedy Club`;
+    ? `${event.performer} — ${dateStr} at MadHatter Comedy Club`
+    : `${dateStr} at MadHatter Comedy Club`;
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 

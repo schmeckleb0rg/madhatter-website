@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     {
       title: "Improv Jam",
       description: "Unscripted, unrehearsed, and absolutely unpredictable. Our house improv team takes your suggestions and runs with them.",
-      performer: "Mad Hatter House Team",
+      performer: "MadHatter House Team",
       date: futureDate(17),
       doors_time: "7:00 PM",
       show_time: "8:00 PM",
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
   const comedians = [
     {
       name: "Marcus Chen",
-      bio: "Marcus Chen has been making audiences laugh for over a decade. Known for his razor-sharp observations and effortless crowd work, he's performed at clubs and festivals across the country. A Mad Hatter regular since day one.",
+      bio: "Marcus Chen has been making audiences laugh for over a decade. Known for his razor-sharp observations and effortless crowd work, he's performed at clubs and festivals across the country. A MadHatter regular since day one.",
       featured: true,
       social_links: { instagram: "https://instagram.com/marcuschen" },
     },
@@ -115,7 +115,7 @@ export async function POST(req: Request) {
     },
     {
       name: "Sarah Kim",
-      bio: "Sarah Kim is a rising star in the Chicago comedy scene. Her high-energy sets and fearless material have made her a crowd favorite at Mad Hatter and beyond.",
+      bio: "Sarah Kim is a rising star in the Chicago comedy scene. Her high-energy sets and fearless material have made her a crowd favorite at MadHatter and beyond.",
       featured: true,
       social_links: { instagram: "https://instagram.com/sarahkimcomedy" },
     },
@@ -131,7 +131,7 @@ export async function POST(req: Request) {
   const pastEvents = [
     {
       title: "Grand Opening Night",
-      description: "The night it all began. A sold-out crowd welcomed Mad Hatter to the Chicago comedy scene.",
+      description: "The night it all began. A sold-out crowd welcomed MadHatter to the Chicago comedy scene.",
       performer: "Marcus Chen, Jasmine Rodriguez & Friends",
       date: pastDate(90),
     },
@@ -149,7 +149,7 @@ export async function POST(req: Request) {
     },
     {
       title: "Chicago Comedy Festival Kickoff",
-      description: "Mad Hatter hosted the opening night of the Chicago Comedy Festival with a stacked lineup.",
+      description: "MadHatter hosted the opening night of the Chicago Comedy Festival with a stacked lineup.",
       performer: "Devon Park & Tommy Novak",
       date: pastDate(14),
     },
@@ -158,8 +158,8 @@ export async function POST(req: Request) {
   // ── Merch Items ────────────────────────────────────────────────────
   const merchItems = [
     {
-      name: "Mad Hatter Logo Tee",
-      description: "Classic black tee with the Mad Hatter logo. 100% cotton, unisex fit.",
+      name: "MadHatter Logo Tee",
+      description: "Classic black tee with the MadHatter logo. 100% cotton, unisex fit.",
       price_cents: 2800,
       tag: "Best Seller",
       is_active: true,
@@ -174,7 +174,7 @@ export async function POST(req: Request) {
       sort_order: 2,
     },
     {
-      name: "Mad Hatter Dad Hat",
+      name: "MadHatter Dad Hat",
       description: "Embroidered logo on a classic dad hat. Adjustable strap, one size fits all.",
       price_cents: 2200,
       is_active: true,
@@ -182,13 +182,13 @@ export async function POST(req: Request) {
     },
     {
       name: "Comedy Club Enamel Pin",
-      description: "A sleek enamel pin featuring the Mad Hatter top hat. Perfect for jackets, bags, or lanyards.",
+      description: "A sleek enamel pin featuring the MadHatter top hat. Perfect for jackets, bags, or lanyards.",
       price_cents: 1200,
       is_active: true,
       sort_order: 4,
     },
     {
-      name: "Mad Hatter Pint Glass",
+      name: "MadHatter Pint Glass",
       description: "16oz pint glass with frosted logo. Dishwasher safe.",
       price_cents: 1500,
       tag: "Limited",
@@ -212,12 +212,12 @@ export async function POST(req: Request) {
     {
       section_key: "hero",
       title: "Chicago's Premier Comedy Club",
-      content: "Mad Hatter Comedy Club is the home of live stand-up, improv, and sketch in the heart of Chicago. We've been bringing the city's best laughs since day one.",
+      content: "MadHatter Comedy Club is the home of live stand-up, improv, and sketch in the heart of Chicago. We've been bringing the city's best laughs since day one.",
     },
     {
       section_key: "story",
       title: "Our Story",
-      content: "Mad Hatter started with a simple idea: give Chicago a comedy club that feels like home. A place where the drinks are strong, the laughs are real, and every seat in the house is a good one. What began as a small room above a bar has grown into one of the city's most beloved comedy venues — but we've never lost that intimate, anything-can-happen energy that made us special from the start.",
+      content: "MadHatter started with a simple idea: give Chicago a comedy club that feels like home. A place where the drinks are strong, the laughs are real, and every seat in the house is a good one. What began as a small room above a bar has grown into one of the city's most beloved comedy venues — but we've never lost that intimate, anything-can-happen energy that made us special from the start.",
     },
     {
       section_key: "venue",

@@ -7,8 +7,8 @@ import PrivateEventForm from "@/components/PrivateEventForm";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Private Events | Mad Hatter Comedy Club",
-  description: "Host your next event at Mad Hatter Comedy Club. Corporate events, birthdays, weddings, and private shows.",
+  title: "MadHatter Comedy Club | Private Events",
+  description: "Host your next event at MadHatter Comedy Club. Corporate events, birthdays, weddings, and private shows.",
 };
 
 async function getRooms(): Promise<Room[]> {
@@ -47,7 +47,7 @@ export default async function PrivateEventsPage() {
               <span className="font-display font-semibold text-charcoal dark:text-[#F0ECE3] block">Events</span>
             </h1>
             <p className="mt-6 text-lg text-muted dark:text-[#7A7264] max-w-2xl mx-auto leading-relaxed">
-              From corporate gatherings to birthday celebrations, Mad Hatter Comedy Club is the perfect
+              From corporate gatherings to birthday celebrations, MadHatter Comedy Club is the perfect
               venue for your next private event. Our spaces offer a unique, unforgettable experience
               with world-class entertainment.
             </p>

@@ -5,9 +5,9 @@ import Reveal from "@/components/Reveal";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Comedy Classes | Mad Hatter Comedy Club",
+  title: "MadHatter Comedy Club | Comedy Classes",
   description:
-    "Learn stand-up, improv, and sketch comedy at Mad Hatter Comedy Club in Chicago. Beginner to advanced classes and workshops.",
+    "Learn stand-up, improv, and sketch comedy at MadHatter Comedy Club in Chicago. Beginner to advanced classes and workshops.",
 };
 
 type ClassItem = {
@@ -67,7 +67,7 @@ export default async function ClassesPage() {
         <Reveal>
           <div className="bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-6 sm:p-8 mt-12">
             <h3 className="font-display text-lg font-semibold text-charcoal dark:text-[#F0ECE3] mb-6">
-              Why Learn at Mad Hatter?
+              Why Learn at MadHatter?
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
               <div>

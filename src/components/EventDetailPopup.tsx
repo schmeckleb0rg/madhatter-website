@@ -203,14 +203,14 @@ export default function EventDetailPopup({ event, onClose }: EventDetailPopupPro
               </>
             )}
             <AddToCalendar title={event.title} date={event.date} durationMinutes={event.event_duration_minutes}
-              location="Mad Hatter Comedy Club" description={event.calendar_description || event.description || undefined}
+              location="MadHatter Comedy Club" description={event.calendar_description || event.description || undefined}
               eventUrl={eventUrl} doorsTime={event.doors_time || undefined} />
           </div>
 
           {/* Share */}
           <div className="mt-4">
             <ShareBar url={eventUrl} title={event.title}
-              description={event.performer ? `${event.performer} — ${dateStr} at Mad Hatter Comedy Club` : `${dateStr} at Mad Hatter Comedy Club`}
+              description={event.performer ? `${event.performer} — ${dateStr} at MadHatter Comedy Club` : `${dateStr} at MadHatter Comedy Club`}
               imageUrl={event.image_url || undefined} />
           </div>
         </div>

@@ -53,7 +53,7 @@ export default function Footer({
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
               <span className="font-display text-xl font-semibold text-off-white">
-                Mad Hatter
+                MadHatter
               </span>
             </div>
             <p className="text-sm text-muted-dark leading-relaxed">
@@ -189,7 +189,7 @@ export default function Footer({
 
         <div className="mt-10 pt-6 border-t border-off-white/10 dark:border-gold/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-dark">
-            &copy; {new Date().getFullYear()} Mad Hatter Comedy Club. All rights reserved.
+            &copy; {new Date().getFullYear()} MadHatter Comedy Club. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <AccessibilityButton statement={accessibilityStatement} />

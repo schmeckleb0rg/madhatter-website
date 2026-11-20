@@ -57,7 +57,7 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
             </span>
           </h1>
           <p className="mt-4 text-muted dark:text-[#7A7264] max-w-xl mx-auto">
-            {content.description || "Official Mad Hatter gear. Available at the venue and online soon."}
+            {content.description || "Official MadHatter gear. Available at the venue and online soon."}
           </p>
           <div className="flex items-center gap-4 mt-4 justify-center">
             <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
@@ -200,7 +200,7 @@ export default function MerchClient({ products, merchEmail, content }: Props) {
                 Gift Cards
               </h2>
               <p className="text-sm text-muted dark:text-[#C4BDA8] mb-4">
-                Give the gift of laughter. Mad Hatter gift cards can be used for tickets, merch, and more.
+                Give the gift of laughter. MadHatter gift cards can be used for tickets, merch, and more.
               </p>
               <Link
                 href="/gift-cards"

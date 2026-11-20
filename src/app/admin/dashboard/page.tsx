@@ -105,7 +105,7 @@ export default async function DashboardPage() {
         <h1 className="font-display text-2xl font-semibold text-charcoal">
           Dashboard
         </h1>
-        <p className="text-sm text-muted mt-1">Welcome back to Mad Hatter Admin.</p>
+        <p className="text-sm text-muted mt-1">Welcome back to MadHatter Admin.</p>
       </div>
 
       {/* Pending email alert */}

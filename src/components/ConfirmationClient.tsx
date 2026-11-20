@@ -32,14 +32,14 @@ export default function ConfirmationClient({
           <AddToCalendar
             title={eventTitle}
             date={eventDate}
-            location="Mad Hatter Comedy Club, 1046 W Kinzie St, Chicago, IL 60642"
+            location="MadHatter Comedy Club, 1046 W Kinzie St, Chicago, IL 60642"
             doorsTime={eventDoorsTime || undefined}
             eventUrl={eventUrl}
           />
         )}
         <ShareBar
           url={eventUrl}
-          title={`I'm going to see ${eventTitle} at Mad Hatter Comedy Club!`}
+          title={`I'm going to see ${eventTitle} at MadHatter Comedy Club!`}
           description={eventShowTime ? `Show at ${eventShowTime}` : undefined}
         />
       </div>

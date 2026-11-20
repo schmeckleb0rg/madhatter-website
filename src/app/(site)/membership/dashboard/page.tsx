@@ -107,7 +107,7 @@ export default function MemberDashboard() {
         <div className={`bg-gradient-to-br ${gradient} rounded-lg p-6 sm:p-8 mb-8 text-white shadow-lg`}>
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-xs uppercase tracking-widest opacity-70 mb-1">Mad Hatter Comedy Club</p>
+              <p className="text-xs uppercase tracking-widest opacity-70 mb-1">MadHatter Comedy Club</p>
               <p className="font-display text-2xl font-bold">{member.name}</p>
               <p className="text-sm opacity-80 mt-1">{member.email}</p>
             </div>

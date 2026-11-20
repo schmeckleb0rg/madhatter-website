@@ -150,7 +150,7 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-sm mx-4 sm:mx-auto">
         <div className="text-center mb-8">
           <p className="font-display text-4xl font-semibold text-charcoal tracking-wide uppercase mb-1">
-            Mad Hatter
+            MadHatter
           </p>
           <h1 className="font-mono text-xs font-medium text-muted uppercase tracking-widest">
             Set New Password

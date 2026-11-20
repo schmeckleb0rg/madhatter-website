@@ -5,8 +5,8 @@ import type { PastEvent } from "@/lib/supabase";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "Past Shows | Mad Hatter Comedy Club",
-  description: "A look back at the incredible comedians who've graced the Mad Hatter stage.",
+  title: "MadHatter Comedy Club | Past Shows",
+  description: "A look back at the incredible comedians who've graced the MadHatter stage.",
 };
 
 type PastShowCard = {
@@ -40,17 +40,18 @@ async function getPastShows(): Promise<PastShowCard[]> {
   const all: PastShowCard[] = [...(manualPastEvents ?? []), ...(archivedEvents ?? [])];
   const seen = new Set<string>();
   const deduped = all.filter((e) => {
-    const key = `${e.title}::${e.date}`;
+    const key = `${e.title}::${e.date.slice(0, 10)}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
-  deduped.sort((a, b) => b.date.localeCompare(a.date));
+  deduped.sort((a, b) => b.date.slice(0, 10).localeCompare(a.date.slice(0, 10)));
   return deduped;
 }
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr + "T12:00:00").toLocaleDateString("en-US", {
+  const dateOnly = dateStr.slice(0, 10); // extract YYYY-MM-DD from possible ISO timestamp
+  return new Date(dateOnly + "T12:00:00").toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",

@@ -28,9 +28,9 @@ export async function GET() {
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>From The Stage | Mad Hatter Comedy Club</title>
+    <title>MadHatter Comedy Club | From The Stage</title>
     <link>${siteUrl}/blog</link>
-    <description>Stories, spotlights, and updates from Mad Hatter Comedy Club.</description>
+    <description>Stories, spotlights, and updates from MadHatter Comedy Club.</description>
     <language>en-us</language>
     <atom:link href="${siteUrl}/blog/rss.xml" rel="self" type="application/rss+xml"/>
     ${items}

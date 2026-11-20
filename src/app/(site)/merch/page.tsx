@@ -6,8 +6,8 @@ import MerchClient from "./MerchClient";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Merch | Mad Hatter Comedy Club",
-  description: "Official Mad Hatter Comedy Club merchandise. Hats, tees, and more.",
+  title: "MadHatter Comedy Club | Merch",
+  description: "Official MadHatter Comedy Club merchandise. Hats, tees, and more.",
 };
 
 async function getMerch(): Promise<MerchItem[]> {

@@ -6,8 +6,8 @@ import Reveal from "@/components/Reveal";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Comedians | Mad Hatter Comedy Club",
-  description: "Meet the comedians who perform at Mad Hatter Comedy Club in Chicago.",
+  title: "MadHatter Comedy Club | Comedians",
+  description: "Meet the comedians who perform at MadHatter Comedy Club in Chicago.",
 };
 
 async function getComedians(): Promise<Comedian[]> {

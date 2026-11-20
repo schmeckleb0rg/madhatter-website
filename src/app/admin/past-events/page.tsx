@@ -3,26 +3,28 @@ export const dynamic = "force-dynamic";
 import { getAdminClient } from "@/lib/supabase";
 import Link from "next/link";
 import PageVisibilityToggle from "@/components/admin/PageVisibilityToggle";
+import PastShowsClient from "@/components/admin/PastShowsClient";
 
-type PastShowEntry = {
+export type PastShowEntry = {
   id: string;
   title: string;
   performer: string | null;
   date: string;
+  image_url: string | null;
   source: "manual" | "auto";
 };
 
 async function getPastShows(): Promise<PastShowEntry[]> {
   const db = getAdminClient();
 
-  // Use Eastern Time for "today" boundary
+  // Use Central Time for "today" boundary (venue timezone)
   const now = new Date();
-  const etNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
-  const todayET = `${etNow.getFullYear()}-${String(etNow.getMonth() + 1).padStart(2, "0")}-${String(etNow.getDate()).padStart(2, "0")}`;
+  const ctNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
+  const todayCT = `${ctNow.getFullYear()}-${String(ctNow.getMonth() + 1).padStart(2, "0")}-${String(ctNow.getDate()).padStart(2, "0")}`;
 
   const [{ data: manualPastEvents }, { data: archivedEvents }] = await Promise.all([
-    db.from("past_events").select("id, title, performer, date").order("date", { ascending: false }),
-    db.from("events").select("id, title, performer, date").lt("date", todayET).order("date", { ascending: false }),
+    db.from("past_events").select("id, title, performer, date, image_url").order("date", { ascending: false }),
+    db.from("events").select("id, title, performer, date, image_url").lt("date", todayCT).order("date", { ascending: false }),
   ]);
 
   const manual: PastShowEntry[] = (manualPastEvents ?? []).map((e) => ({ ...e, source: "manual" as const }));
@@ -32,12 +34,12 @@ async function getPastShows(): Promise<PastShowEntry[]> {
   const all = [...manual, ...auto];
   const seen = new Set<string>();
   const deduped = all.filter((e) => {
-    const key = `${e.title}::${e.date}`;
+    const key = `${e.title}::${e.date.slice(0, 10)}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
-  deduped.sort((a, b) => b.date.localeCompare(a.date));
+  deduped.sort((a, b) => b.date.slice(0, 10).localeCompare(a.date.slice(0, 10)));
   return deduped;
 }
 
@@ -62,38 +64,7 @@ export default async function AdminPastEventsPage() {
       {events.length === 0 ? (
         <div className="text-center py-20 text-muted">No past shows yet.</div>
       ) : (
-        <div className="space-y-2">
-          {events.map((event) => (
-            <Link
-              key={`${event.source}-${event.id}`}
-              href={event.source === "auto" ? `/admin/events/${event.id}` : `/admin/past-events/${event.id}`}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-charcoal/10 px-4 sm:px-5 py-3 sm:py-4 hover:border-gold/30 transition-colors group"
-            >
-              <div className="flex items-center gap-4 min-w-0">
-                <div className="text-center w-10 flex-shrink-0">
-                  <div className="text-xs text-gold font-bold">
-                    {new Date(event.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", timeZone: "America/Chicago" }).toUpperCase()}
-                  </div>
-                  <div className="text-xl font-bold text-charcoal leading-none">
-                    {new Date(event.date + "T12:00:00").toLocaleDateString("en-US", { day: "numeric", timeZone: "America/Chicago" })}
-                  </div>
-                </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold text-charcoal truncate">
-                    {event.title}
-                    {event.source === "auto" && (
-                      <span className="ml-2 text-xs text-gold font-normal">(from Events)</span>
-                    )}
-                  </div>
-                  {event.performer && (
-                    <div className="text-xs text-muted">{event.performer}</div>
-                  )}
-                </div>
-              </div>
-              <span className="text-muted text-sm group-hover:text-charcoal transition-colors">&rarr;</span>
-            </Link>
-          ))}
-        </div>
+        <PastShowsClient events={events} />
       )}
     </div>
   );

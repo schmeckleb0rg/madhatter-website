@@ -6,8 +6,8 @@ import { getVenueInfo } from "@/lib/venue";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Request Tickets | Mad Hatter Comedy Club",
-  description: "Request tickets for upcoming shows at Mad Hatter Comedy Club in Chicago.",
+  title: "MadHatter Comedy Club | Request Tickets",
+  description: "Request tickets for upcoming shows at MadHatter Comedy Club in Chicago.",
 };
 
 async function getUpcomingEvents() {

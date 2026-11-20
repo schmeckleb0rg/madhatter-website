@@ -39,7 +39,7 @@ export async function GET(
     descParts.push(event.calendar_description || event.description);
   }
   if (event.doors_time) descParts.push(`Doors open at ${event.doors_time}.`);
-  descParts.push("Enjoy live comedy at Mad Hatter Comedy Club. Full bar available. 21+ show.");
+  descParts.push("Enjoy live comedy at MadHatter Comedy Club. Full bar available. 21+ show.");
   descParts.push(`Tickets & Info: ${siteUrl}/events/${eventId}`);
 
   const description = escapeICS(descParts.join("\n"));
@@ -49,7 +49,7 @@ export async function GET(
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Mad Hatter Comedy Club//Events//EN",
+    "PRODID:-//MadHatter Comedy Club//Events//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",

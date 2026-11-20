@@ -5,9 +5,9 @@ import JobApplicationForm from "@/components/JobApplicationForm";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "Employment | Mad Hatter Comedy Club",
+  title: "MadHatter Comedy Club | Employment",
   description:
-    "Join the Mad Hatter Comedy Club team. Browse open positions and apply today.",
+    "Join the MadHatter Comedy Club team. Browse open positions and apply today.",
 };
 
 type JobListing = {
@@ -62,7 +62,7 @@ export default async function EmploymentPage() {
               What It&apos;s Like to Work Here
             </h2>
             <p className="text-muted dark:text-[#C4BDA8] leading-relaxed mb-4">
-              Mad Hatter Comedy Club is more than a venue — it&apos;s a community of people who love making audiences
+              MadHatter Comedy Club is more than a venue — it&apos;s a community of people who love making audiences
               laugh. Whether you&apos;re behind the bar, on the stage, or running the show behind the scenes, you&apos;ll
               be part of something electric every single night.
             </p>

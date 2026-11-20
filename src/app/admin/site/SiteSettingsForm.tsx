@@ -526,7 +526,7 @@ export default function SiteSettingsForm({ initial }: { initial: Settings }) {
             <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Page Title</label>
             <input type="text" maxLength={200} value={seo.seo_title}
               onChange={(e) => setSeo({ ...seo, seo_title: e.target.value })} className={inputClass}
-              placeholder="Mad Hatter Comedy Club | Chicago" />
+              placeholder="MadHatter Comedy Club | Chicago" />
           </div>
           <div>
             <label className="block font-mono text-xs uppercase tracking-widest text-muted mb-1.5">Meta Description</label>

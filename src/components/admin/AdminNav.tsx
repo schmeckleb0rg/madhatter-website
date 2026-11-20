@@ -147,8 +147,12 @@ export default function AdminNav() {
     });
   }, []);
 
-  // Hide nav on login page
-  if (pathname === "/admin/login") return null;
+  // Hide nav on unauthenticated pages
+  if (
+    pathname === "/admin/login" ||
+    pathname === "/admin/forgot-password" ||
+    pathname === "/admin/reset-password"
+  ) return null;
 
   const navContent = (
     <>
@@ -262,7 +266,7 @@ export default function AdminNav() {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-charcoal flex items-center justify-between px-4 z-50">
         <Link href="/admin/dashboard" className="flex items-center gap-2">
-          <span className="font-display text-sm font-semibold text-off-white">Mad Hatter</span>
+          <span className="font-display text-sm font-semibold text-off-white">MadHatter</span>
           <span className="font-mono text-[9px] text-muted-dark uppercase tracking-widest">Admin</span>
         </Link>
         <button
@@ -303,7 +307,7 @@ export default function AdminNav() {
         <div className="px-5 py-5 border-b border-off-white/10">
           <Link href="/admin/dashboard">
             <span className="font-display text-base font-semibold text-off-white leading-tight block">
-              Mad Hatter
+              MadHatter
             </span>
             <span className="font-mono text-[10px] text-muted-dark uppercase tracking-widest">
               Admin

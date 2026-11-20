@@ -5,9 +5,9 @@ import Reveal from "@/components/Reveal";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "Policies & Procedures | Mad Hatter Comedy Club",
+  title: "MadHatter Comedy Club | Policies & Procedures",
   description:
-    "Venue policies, ticket terms, code of conduct, and accessibility information for Mad Hatter Comedy Club.",
+    "Venue policies, ticket terms, code of conduct, and accessibility information for MadHatter Comedy Club.",
 };
 
 type PolicySection = {

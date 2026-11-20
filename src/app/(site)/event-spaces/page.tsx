@@ -8,9 +8,9 @@ import MasonryGallery from "@/components/MasonryGallery";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Event Spaces | Mad Hatter Comedy Club",
+  title: "MadHatter Comedy Club | Event Spaces",
   description:
-    "Host your next event at Mad Hatter Comedy Club. Private events, corporate gatherings, podcast recording, and more.",
+    "Host your next event at MadHatter Comedy Club. Private events, corporate gatherings, podcast recording, and more.",
 };
 
 async function getRooms(): Promise<Room[]> {

@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Open Mic | Mad Hatter Comedy Club",
-  description: "Sign up for Open Mic Night at Mad Hatter Comedy Club in Chicago. Every Wednesday — all levels welcome.",
+  title: "MadHatter Comedy Club | Open Mic",
+  description: "Sign up for Open Mic Night at MadHatter Comedy Club in Chicago. Every Wednesday — all levels welcome.",
 };
 
 export default function OpenMicPage() {

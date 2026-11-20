@@ -6,8 +6,8 @@ import Reveal from "@/components/Reveal";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "Our Staff | Mad Hatter Comedy Club",
-  description: "Meet the team behind Mad Hatter Comedy Club in Chicago.",
+  title: "MadHatter Comedy Club | Our Staff",
+  description: "Meet the team behind MadHatter Comedy Club in Chicago.",
 };
 
 async function getStaffMembers(): Promise<StaffMember[]> {

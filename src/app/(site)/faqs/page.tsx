@@ -7,8 +7,8 @@ import { FAQPageSchema } from "@/components/StructuredData";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "FAQs | Mad Hatter Comedy Club",
-  description: "Frequently asked questions about Mad Hatter Comedy Club in Chicago.",
+  title: "MadHatter Comedy Club | FAQs",
+  description: "Frequently asked questions about MadHatter Comedy Club in Chicago.",
 };
 
 async function getFAQs(): Promise<FAQ[]> {

@@ -3,9 +3,9 @@ import Reveal from "@/components/Reveal";
 import CorporateInquiryForm from "@/components/CorporateInquiryForm";
 
 export const metadata = {
-  title: "Corporate Events | Mad Hatter Comedy Club",
+  title: "MadHatter Comedy Club | Corporate Events",
   description:
-    "Host your corporate event at Mad Hatter Comedy Club. Team-building, holiday parties, client entertainment, and more.",
+    "Host your corporate event at MadHatter Comedy Club. Team-building, holiday parties, client entertainment, and more.",
 };
 
 const packages = [

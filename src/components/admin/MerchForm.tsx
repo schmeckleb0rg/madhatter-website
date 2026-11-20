@@ -97,7 +97,7 @@ export default function MerchForm({ initialData, id }: { initialData?: Partial<M
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           className={inputClass}
-          placeholder="Mad Hatter Logo Tee"
+          placeholder="MadHatter Logo Tee"
         />
       </div>
 

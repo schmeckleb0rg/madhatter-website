@@ -9,7 +9,7 @@ function getResend(): Resend | null {
   return resend;
 }
 
-const FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || "Mad Hatter <notifications@madhattercomedy.com>";
+const FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || "MadHatter <notifications@madhattercomedy.com>";
 const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || "hello@madhattercomedy.com";
 
 export async function notifyContactMessage(data: {
@@ -178,7 +178,7 @@ export async function sendTicketConfirmation(data: {
         <p style="color: #6E6759; font-size: 12px; margin-top: 4px;">Order #${data.orderId.slice(0, 8).toUpperCase()}</p>
       </div>
       <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(27,26,23,0.1);">
-        <p style="color: #B8934A; font-size: 16px; font-family: Georgia, serif; margin: 0;">Mad Hatter Comedy Club</p>
+        <p style="color: #B8934A; font-size: 16px; font-family: Georgia, serif; margin: 0;">MadHatter Comedy Club</p>
         <p style="color: #6E6759; font-size: 12px; margin-top: 4px;">1046 W Kinzie St, Chicago, IL 60642</p>
         <p style="color: #B8934A; font-size: 12px; margin-top: 8px;">Full bar available. 21+ show.</p>
       </div>
@@ -188,7 +188,7 @@ export async function sendTicketConfirmation(data: {
   await r.emails.send({
     from: FROM_EMAIL,
     to: data.email,
-    subject: `Your Mad Hatter Tickets — ${data.eventTitle}`,
+    subject: `Your MadHatter Tickets — ${data.eventTitle}`,
     html,
   }).catch((err) => {
     console.error("Failed to send ticket confirmation email:", err);
@@ -244,7 +244,7 @@ export async function sendPasswordResetEmail(data: {
       </div>
       <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(27,26,23,0.1);">
         <p style="color: #6E6759; font-size: 12px; line-height: 1.5;">If you did not request this password reset, you can safely ignore this email. Your password will remain unchanged.</p>
-        <p style="color: #B8934A; font-size: 14px; font-family: Georgia, serif; margin-top: 16px;">Mad Hatter Comedy Club</p>
+        <p style="color: #B8934A; font-size: 14px; font-family: Georgia, serif; margin-top: 16px;">MadHatter Comedy Club</p>
       </div>
     </div>
   `;
@@ -252,7 +252,7 @@ export async function sendPasswordResetEmail(data: {
   await r.emails.send({
     from: FROM_EMAIL,
     to: data.email,
-    subject: "Reset Your Mad Hatter Admin Password",
+    subject: "Reset Your MadHatter Admin Password",
     html,
   }).catch((err) => {
     console.error("Failed to send password reset email:", err);
@@ -275,7 +275,7 @@ export async function sendEventCancellationEmail(data: {
     <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #F6F2E9; padding: 40px 24px;">
       <div style="text-align: center; margin-bottom: 32px;">
         <h1 style="color: #1B1A17; font-size: 28px; margin: 0; font-family: Georgia, serif;">Event Cancellation</h1>
-        <p style="color: #6E6759; font-size: 14px; margin-top: 8px;">Mad Hatter Comedy Club</p>
+        <p style="color: #6E6759; font-size: 14px; margin-top: 8px;">MadHatter Comedy Club</p>
       </div>
       <div style="background: white; border: 1px solid rgba(27,26,23,0.1); padding: 24px;">
         <p style="color: #1B1A17; font-size: 14px; margin: 0 0 16px;">${greeting},</p>
@@ -289,7 +289,7 @@ export async function sendEventCancellationEmail(data: {
       </div>
       <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(27,26,23,0.1);">
         <p style="color: #6E6759; font-size: 12px;">Questions? Contact us at ${process.env.ADMIN_NOTIFICATION_EMAIL || "hello@madhattercomedy.com"}</p>
-        <p style="color: #B8934A; font-size: 14px; font-family: Georgia, serif; margin-top: 16px;">Mad Hatter Comedy Club</p>
+        <p style="color: #B8934A; font-size: 14px; font-family: Georgia, serif; margin-top: 16px;">MadHatter Comedy Club</p>
       </div>
     </div>
   `;
@@ -323,7 +323,7 @@ export async function sendGiftCardEmail(data: {
   const html = `
     <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1B1A17; padding: 40px 24px; color: #F6F2E9;">
       <div style="text-align: center; margin-bottom: 32px;">
-        <h1 style="color: #B8934A; font-size: 28px; margin: 0;">Mad Hatter</h1>
+        <h1 style="color: #B8934A; font-size: 28px; margin: 0;">MadHatter</h1>
         <p style="font-size: 14px; margin-top: 4px; color: #F6F2E9;">Comedy Club Gift Card</p>
       </div>
       <div style="background: #252420; border: 1px solid rgba(184,147,74,0.2); padding: 32px; text-align: center;">
@@ -347,7 +347,7 @@ export async function sendGiftCardEmail(data: {
   await r.emails.send({
     from: FROM_EMAIL,
     to: data.recipientEmail,
-    subject: "You've Received a Mad Hatter Gift Card!",
+    subject: "You've Received a MadHatter Gift Card!",
     html,
   }).catch((err) => {
     console.error("Failed to send gift card email:", err);

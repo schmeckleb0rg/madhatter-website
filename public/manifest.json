@@ -1,6 +1,6 @@
 {
-  "name": "Mad Hatter Comedy Club",
-  "short_name": "Mad Hatter",
+  "name": "MadHatter Comedy Club",
+  "short_name": "MadHatter",
   "description": "Chicago's premier comedy club",
   "start_url": "/",
   "display": "standalone",

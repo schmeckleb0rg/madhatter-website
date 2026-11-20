@@ -6,8 +6,8 @@ import EventsClient from "@/components/EventsClient";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Upcoming Events | Mad Hatter Comedy Club",
-  description: "See what's coming up at Mad Hatter Comedy Club in Chicago.",
+  title: "MadHatter Comedy Club | Upcoming Events",
+  description: "See what's coming up at MadHatter Comedy Club in Chicago.",
 };
 
 async function getEvents(): Promise<Event[]> {

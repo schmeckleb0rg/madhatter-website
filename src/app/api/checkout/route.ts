@@ -112,7 +112,7 @@ export async function POST(request: Request) {
     }
 
     itemName = item.name;
-    itemDescription = item.description || "Mad Hatter Merch";
+    itemDescription = item.description || "MadHatter Merch";
     unitAmountCents = item.price_cents;
   }
 

@@ -7,8 +7,8 @@ import Reveal from "@/components/Reveal";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Press & In The News | Mad Hatter Comedy Club",
-  description: "Press coverage, media inquiries, and gallery for Mad Hatter Comedy Club in Chicago.",
+  title: "MadHatter Comedy Club | Press & In The News",
+  description: "Press coverage, media inquiries, and gallery for MadHatter Comedy Club in Chicago.",
 };
 
 const fallbackPress = [
@@ -269,7 +269,7 @@ export default async function PressPage() {
                   >
                     <Image
                       src={img.image_url}
-                      alt={img.caption ?? "Mad Hatter Comedy Club"}
+                      alt={img.caption ?? "MadHatter Comedy Club"}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       sizes="(max-width: 640px) 50vw, 33vw"
@@ -293,7 +293,7 @@ export default async function PressPage() {
         {/* CTA */}
         <Reveal delay={500}>
           <div className="text-center">
-            <p className="text-muted dark:text-[#7A7264] text-sm mb-4">Want to feature Mad Hatter in your publication?</p>
+            <p className="text-muted dark:text-[#7A7264] text-sm mb-4">Want to feature MadHatter in your publication?</p>
             <Link
               href="/contact"
               className="inline-block px-8 py-3 bg-charcoal text-off-white font-bold hover:bg-charcoal-2 transition-colors dark:bg-gold dark:text-[#0D0C0A] btn-shimmer"

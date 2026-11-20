@@ -47,7 +47,7 @@ export const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 // --- Email addresses ---
 export const NOTIFICATION_FROM_EMAIL = optionalEnv(
   "NOTIFICATION_FROM_EMAIL",
-  "Mad Hatter <notifications@madhattercomedy.com>"
+  "MadHatter <notifications@madhattercomedy.com>"
 );
 export const ADMIN_NOTIFICATION_EMAIL = optionalEnv(
   "ADMIN_NOTIFICATION_EMAIL",

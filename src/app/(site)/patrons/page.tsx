@@ -6,8 +6,8 @@ import Reveal from "@/components/Reveal";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "Our Patrons | Mad Hatter Comedy Club",
-  description: "Donors, VIP members, and sponsors who support Mad Hatter Comedy Club.",
+  title: "MadHatter Comedy Club | Our Patrons",
+  description: "Donors, VIP members, and sponsors who support MadHatter Comedy Club.",
 };
 
 async function getPatrons(): Promise<Patron[]> {
@@ -92,7 +92,7 @@ export default async function PatronsPage() {
               <div className="w-12 h-px bg-charcoal/10 dark:bg-gold/15" />
             </div>
             <p className="mt-6 text-muted dark:text-[#7A7264] max-w-xl mx-auto text-sm leading-relaxed">
-              Mad Hatter Comedy Club is made possible by the generous support of our donors, VIP members, and sponsors.
+              MadHatter Comedy Club is made possible by the generous support of our donors, VIP members, and sponsors.
             </p>
           </div>
         </Reveal>

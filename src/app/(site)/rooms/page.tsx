@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Event Spaces | Mad Hatter Comedy Club",
+  title: "MadHatter Comedy Club | Event Spaces",
 };
 
 export default function RoomsPage() {

@@ -9,13 +9,17 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
   const { id } = await params;
   const db = getAdminClient();
 
-  const [{ data: event }, { data: orders }] = await Promise.all([
+  const [{ data: event }, { data: orders }, { data: inquiries }] = await Promise.all([
     db.from("events").select("*").eq("id", id).single(),
     db.from("orders")
       .select("id, name, email, quantity, amount_cents, status, created_at, table_preference, member_id")
       .eq("event_id", id)
       .eq("order_type", "ticket")
       .eq("status", "completed")
+      .order("created_at", { ascending: false }),
+    db.from("ticket_inquiries")
+      .select("id, name, email, phone, party_size, message, is_read, created_at")
+      .eq("event_id", id)
       .order("created_at", { ascending: false }),
   ]);
 
@@ -25,6 +29,9 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
   const totalAttendees = attendees.reduce((s, o) => s + o.quantity, 0);
   const totalRevenueCents = attendees.reduce((s, o) => s + o.amount_cents, 0);
   const revenue = (totalRevenueCents / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
+
+  const ticketInquiries = inquiries ?? [];
+  const totalPartySize = ticketInquiries.reduce((s, i) => s + (i.party_size ?? 1), 0);
 
   // CSV uses raw numbers so spreadsheets can sort/sum properly
   const csvHeader = ["Name", "Email", "Quantity", "Amount", "Table Preference", "Member", "Order ID", "Date"];
@@ -37,6 +44,22 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
     a.member_id ? "Yes" : "No",
     a.id?.slice(0, 8) || "",
     new Date(a.created_at).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: "America/Chicago",
+    }),
+  ]);
+
+  const inquiryCsvHeader = ["Name", "Email", "Phone", "Party Size", "Message", "Read", "Date"];
+  const inquiryCsvRows = ticketInquiries.map((i) => [
+    i.name,
+    i.email,
+    i.phone || "",
+    String(i.party_size ?? 1),
+    i.message || "",
+    i.is_read ? "Yes" : "No",
+    new Date(i.created_at).toLocaleDateString("en-US", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -104,6 +127,66 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
                     <td className="px-3 py-2 text-muted text-xs">{guest.table_preference || "—"}</td>
                     <td className="px-3 py-2 text-right text-muted text-xs">
                       {new Date(guest.created_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        timeZone: "America/Chicago",
+                      })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Ticket Inquiries */}
+      <div className="mt-10">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h2 className="font-mono text-xs uppercase tracking-widest text-muted">
+              Ticket Inquiries ({ticketInquiries.length})
+            </h2>
+            {ticketInquiries.length > 0 && (
+              <p className="text-xs text-muted mt-1">{totalPartySize} total party size</p>
+            )}
+          </div>
+          {ticketInquiries.length > 0 && (
+            <ExportCsvButton
+              filename={`inquiries-${event.title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}.csv`}
+              rows={[inquiryCsvHeader, ...inquiryCsvRows]}
+            />
+          )}
+        </div>
+
+        {ticketInquiries.length === 0 ? (
+          <p className="text-sm text-muted italic py-6">No ticket inquiries for this event.</p>
+        ) : (
+          <div className="bg-white border border-charcoal/10 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-charcoal/10">
+                  <th className="text-left px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Name</th>
+                  <th className="text-left px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Email</th>
+                  <th className="text-left px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Phone</th>
+                  <th className="text-center px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Party</th>
+                  <th className="text-left px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Message</th>
+                  <th className="text-right px-3 py-2 text-xs text-muted font-medium uppercase tracking-wide">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ticketInquiries.map((inq) => (
+                  <tr key={inq.id} className="border-b border-charcoal/5 last:border-0">
+                    <td className="px-3 py-2 text-charcoal">
+                      {inq.name}
+                      {!inq.is_read && <span className="ml-1 w-1.5 h-1.5 bg-gold rounded-full inline-block" title="Unread" />}
+                    </td>
+                    <td className="px-3 py-2 text-muted">{inq.email}</td>
+                    <td className="px-3 py-2 text-muted text-xs">{inq.phone || "—"}</td>
+                    <td className="px-3 py-2 text-center text-charcoal">{inq.party_size ?? 1}</td>
+                    <td className="px-3 py-2 text-muted text-xs max-w-[200px] truncate">{inq.message || "—"}</td>
+                    <td className="px-3 py-2 text-right text-muted text-xs">
+                      {new Date(inq.created_at).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
                         timeZone: "America/Chicago",

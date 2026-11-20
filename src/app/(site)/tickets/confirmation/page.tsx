@@ -6,7 +6,7 @@ import ConfirmationClient from "@/components/ConfirmationClient";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Order Confirmed | Mad Hatter Comedy Club",
+  title: "MadHatter Comedy Club | Order Confirmed",
 };
 
 async function getSiteSetting(key: string): Promise<string | null> {
@@ -119,7 +119,7 @@ export default async function ConfirmationPage({
           {/* Ticket header strip */}
           <div className="bg-charcoal dark:bg-gold px-6 py-3 flex items-center justify-between">
             <span className="font-display text-sm text-off-white dark:text-[#0D0C0A] font-semibold tracking-wide">
-              Mad Hatter
+              MadHatter
             </span>
             <span className="font-mono text-xs text-off-white/70 dark:text-[#0D0C0A]/70 uppercase tracking-wider">
               Admit {order.quantity}

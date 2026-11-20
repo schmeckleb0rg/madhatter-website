@@ -69,7 +69,7 @@ export async function POST(request: Request) {
         locationId,
         lineItems: [
           {
-            name: "Mad Hatter Gift Card",
+            name: "MadHatter Gift Card",
             quantity: "1",
             note: `Gift card for ${recipient_name || recipient_email}`,
             basePriceMoney: {

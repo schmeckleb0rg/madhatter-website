@@ -30,11 +30,12 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
     .eq("order_type", "ticket")
     .order("created_at", { ascending: false });
 
-  // Fetch inquiry count
-  const { count: inquiryCount } = await db
+  // Fetch inquiries (full list for display + count)
+  const { data: inquiryData, count: inquiryCount } = await db
     .from("ticket_inquiries")
-    .select("id", { count: "exact", head: true })
-    .eq("event_id", id);
+    .select("id, name, email, phone, party_size, message, is_read, created_at", { count: "exact" })
+    .eq("event_id", id)
+    .order("created_at", { ascending: false });
 
   const completedOrders = (orders ?? []).filter((o) => o.status === "completed");
   const totalRevenueCents = completedOrders.reduce((sum, o) => sum + o.amount_cents, 0);
@@ -65,6 +66,15 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
       amount_cents: o.amount_cents,
       status: o.status,
       created_at: o.created_at,
+    })),
+    inquiries: (inquiryData ?? []).map((i) => ({
+      name: i.name,
+      email: i.email,
+      phone: i.phone,
+      party_size: i.party_size,
+      message: i.message,
+      is_read: i.is_read,
+      created_at: i.created_at,
     })),
   });
 }

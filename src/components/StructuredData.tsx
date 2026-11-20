@@ -4,7 +4,7 @@ export function LocalBusinessSchema({ venue }: { venue: VenueInfo }) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "ComedyClub",
-    name: "Mad Hatter Comedy Club",
+    name: "MadHatter Comedy Club",
     description: `${venue.city}'s premier comedy club. Live stand-up, improv, and more.`,
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://madhattercomedy.com",
     telephone: venue.phone,
@@ -55,11 +55,11 @@ export function EventSchema({ event }: {
     "@context": "https://schema.org",
     "@type": "ComedyEvent",
     name: event.title,
-    description: event.description || `Live comedy show at Mad Hatter Comedy Club`,
+    description: event.description || `Live comedy show at MadHatter Comedy Club`,
     startDate: event.date,
     location: {
       "@type": "Place",
-      name: "Mad Hatter Comedy Club",
+      name: "MadHatter Comedy Club",
     },
     ...(event.performer && {
       performer: {
@@ -79,7 +79,7 @@ export function EventSchema({ event }: {
     }),
     organizer: {
       "@type": "Organization",
-      name: "Mad Hatter Comedy Club",
+      name: "MadHatter Comedy Club",
       url: process.env.NEXT_PUBLIC_SITE_URL || "https://madhattercomedy.com",
     },
   };
@@ -114,7 +114,7 @@ export function ArticleSchema({ article }: {
     }),
     publisher: {
       "@type": "Organization",
-      name: "Mad Hatter Comedy Club",
+      name: "MadHatter Comedy Club",
       url: siteUrl,
     },
   };
@@ -139,13 +139,13 @@ export function CourseSchema({ course }: {
     "@context": "https://schema.org",
     "@type": "Course",
     name: course.title,
-    description: course.description || "Comedy class at Mad Hatter Comedy Club",
+    description: course.description || "Comedy class at MadHatter Comedy Club",
     ...(course.instructor && {
       instructor: { "@type": "Person", name: course.instructor },
     }),
     provider: {
       "@type": "Organization",
-      name: "Mad Hatter Comedy Club",
+      name: "MadHatter Comedy Club",
       url: process.env.NEXT_PUBLIC_SITE_URL || "https://madhattercomedy.com",
     },
     ...(course.price_cents && {

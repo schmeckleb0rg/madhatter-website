@@ -5,8 +5,8 @@ import GiftCardClient from "@/components/GiftCardClient";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Gift Cards | Mad Hatter Comedy Club",
-  description: "Give the gift of laughter. Purchase a Mad Hatter Comedy Club gift card for any occasion.",
+  title: "MadHatter Comedy Club | Gift Cards",
+  description: "Give the gift of laughter. Purchase a MadHatter Comedy Club gift card for any occasion.",
 };
 
 async function getGiftCardSettings() {
@@ -48,7 +48,7 @@ export default async function GiftCardsPage() {
             <span className="font-display font-semibold text-charcoal block dark:text-[#F0ECE3]">of Laughter</span>
           </h1>
           <p className="text-muted dark:text-[#7A7264] mt-4 max-w-md mx-auto text-sm leading-relaxed">
-            Mad Hatter gift cards can be redeemed for tickets, merch, and more — online or at the box office.
+            MadHatter gift cards can be redeemed for tickets, merch, and more — online or at the box office.
           </p>
         </div>
 

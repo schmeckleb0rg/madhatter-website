@@ -6,8 +6,8 @@ import { supabase } from "@/lib/supabase";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "Contact | Mad Hatter Comedy Club",
-  description: "Get in touch with Mad Hatter Comedy Club in Chicago. Private events, bookings, and general inquiries.",
+  title: "MadHatter Comedy Club | Contact",
+  description: "Get in touch with MadHatter Comedy Club in Chicago. Private events, bookings, and general inquiries.",
 };
 
 async function getSocialLinks() {
@@ -199,7 +199,7 @@ export default async function ContactPage() {
         <div className="mt-10">
           <div className="bg-white dark:bg-[#1C1A16] border border-charcoal/10 dark:border-gold/10 overflow-hidden">
             <iframe
-              title="Mad Hatter Comedy Club Location"
+              title="MadHatter Comedy Club Location"
               src={mapEmbedUrl(venue)}
               width="100%"
               height="500"

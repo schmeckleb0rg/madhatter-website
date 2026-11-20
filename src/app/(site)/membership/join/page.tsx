@@ -92,7 +92,7 @@ function JoinForm() {
         <div className="text-center mb-8">
           <p className="font-mono text-xs tracking-widest uppercase text-gold mb-3">Create Account</p>
           <h1 className="font-display text-3xl font-semibold text-charcoal dark:text-[#F0ECE3]">
-            Join Mad Hatter
+            Join MadHatter
           </h1>
           <p className="text-sm text-muted dark:text-[#7A7264] mt-2">
             {isPaid ? `Signing up for ${selectedTier.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())}` : "Create your free membership"}

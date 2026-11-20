@@ -171,7 +171,7 @@ async function sendUsageAlert(
 
   const resend = new Resend(apiKey);
   const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || "hello@madhattercomedy.com";
-  const fromEmail = process.env.NOTIFICATION_FROM_EMAIL || "Mad Hatter <notifications@madhattercomedy.com>";
+  const fromEmail = process.env.NOTIFICATION_FROM_EMAIL || "MadHatter <notifications@madhattercomedy.com>";
   const percentage = Math.round((currentCount / maxCount) * 100);
 
   const subject = period === "daily"

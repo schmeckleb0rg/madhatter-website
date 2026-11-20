@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = post.body.replace(/<[^>]*>/g, "").slice(0, 160);
 
   return {
-    title: `${post.title} | Mad Hatter Comedy Club`,
+    title: `MadHatter Comedy Club | ${post.title}`,
     description,
     openGraph: {
       title: post.title,
@@ -141,7 +141,7 @@ export default async function BlogPostPage({ params }: Props) {
             <ShareBar
               url={postUrl}
               title={post.title}
-              description={`${post.title} — From The Stage at Mad Hatter Comedy Club`}
+              description={`${post.title} — From The Stage at MadHatter Comedy Club`}
               imageUrl={post.cover_image_url || undefined}
             />
           </div>

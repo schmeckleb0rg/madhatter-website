@@ -5,9 +5,9 @@ import Reveal from "@/components/Reveal";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "Membership | Mad Hatter Comedy Club",
+  title: "MadHatter Comedy Club | Membership",
   description:
-    "Join the Mad Hatter Comedy Club loyalty program. Earn points, get discounts, and enjoy exclusive perks.",
+    "Join the MadHatter Comedy Club loyalty program. Earn points, get discounts, and enjoy exclusive perks.",
 };
 
 type Tier = {
@@ -47,7 +47,7 @@ export default async function MembershipPage() {
               Join The Club
             </p>
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-light leading-none tracking-tight">
-              <span className="font-display italic text-muted block dark:text-[#7A7264]">Mad Hatter</span>
+              <span className="font-display italic text-muted block dark:text-[#7A7264]">MadHatter</span>
               <span className="font-display font-semibold text-charcoal block dark:text-[#F0ECE3]">Membership</span>
             </h1>
             <div className="flex items-center gap-4 mt-6 justify-center">

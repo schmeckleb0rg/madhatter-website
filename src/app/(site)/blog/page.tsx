@@ -5,9 +5,9 @@ import Reveal from "@/components/Reveal";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "From The Stage | Mad Hatter Comedy Club Blog",
+  title: "MadHatter Comedy Club | From The Stage",
   description:
-    "Stories, spotlights, and updates from Mad Hatter Comedy Club. Comedian features, show recaps, and behind-the-scenes.",
+    "Stories, spotlights, and updates from MadHatter Comedy Club. Comedian features, show recaps, and behind-the-scenes.",
 };
 
 type BlogPost = {

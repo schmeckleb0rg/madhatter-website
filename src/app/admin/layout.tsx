@@ -4,7 +4,7 @@ import AdminContent from "@/components/admin/AdminContent";
 import AdminProviders from "@/components/admin/AdminProviders";
 
 export const metadata: Metadata = {
-  title: "Admin | Mad Hatter Comedy Club",
+  title: "Admin | MadHatter Comedy Club",
   robots: { index: false, follow: false },
 };
 

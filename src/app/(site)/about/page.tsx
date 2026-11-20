@@ -7,8 +7,8 @@ import Reveal from "@/components/Reveal";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "About | Mad Hatter Comedy Club",
-  description: "Learn about Mad Hatter Comedy Club, Chicago's premier comedy venue.",
+  title: "MadHatter Comedy Club | About",
+  description: "Learn about MadHatter Comedy Club, Chicago's premier comedy venue.",
 };
 
 async function getAboutContent(): Promise<Record<string, AboutContent>> {
@@ -53,7 +53,7 @@ export default async function AboutPage() {
             <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-light leading-none tracking-tight">
               <span className="font-display italic text-muted dark:text-[#7A7264] block">About</span>
               <span className="font-display font-semibold text-charcoal dark:text-[#F0ECE3] block">
-                {hero?.title ?? "Mad Hatter"}
+                {hero?.title ?? "MadHatter"}
               </span>
             </h1>
             {hero?.content && (
@@ -84,7 +84,7 @@ export default async function AboutPage() {
                   <div className="relative aspect-square border border-charcoal/10 dark:border-gold/10 overflow-hidden">
                     <Image
                       src={story.image_url}
-                      alt={story.title ?? "About Mad Hatter"}
+                      alt={story.title ?? "About MadHatter"}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
