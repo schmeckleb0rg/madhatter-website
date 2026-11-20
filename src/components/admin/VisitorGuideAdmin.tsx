@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 type Partner = {
   id: string;
@@ -204,16 +205,13 @@ export default function VisitorGuideAdmin({ initialPartners }: { initialPartners
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClass}>Image URL</label>
-            <input
-              type="text"
-              value={form.image_url}
-              onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-              className={inputClass}
-              placeholder="https://..."
-            />
-          </div>
+          <MediaUpload
+            value={form.image_url}
+            onChange={(url) => setForm({ ...form, image_url: url })}
+            folder="visitor-guide"
+            hint="Recommended: 600 × 400 px (3:2) · PNG or JPEG · Max 100 MB"
+            label="Image"
+          />
           <div>
             <label className={labelClass}>Website Link</label>
             <input

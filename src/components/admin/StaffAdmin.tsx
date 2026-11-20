@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { StaffMember } from "@/lib/supabase";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 type Props = {
   initialStaff: StaffMember[];
@@ -108,11 +109,17 @@ export default function StaffAdmin({ initialStaff }: Props) {
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name *" className={inputClass} />
             <input value={role} onChange={(e) => setRole(e.target.value)} placeholder="Role / Title *" className={inputClass} />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="From (Location)" className={inputClass} />
-            <input value={photoUrl} onChange={(e) => setPhotoUrl(e.target.value)} placeholder="Photo URL" className={inputClass} />
             <input type="number" value={sortOrder} onChange={(e) => setSortOrder(Number(e.target.value))} placeholder="Sort Order" className={inputClass} />
           </div>
+          <MediaUpload
+            value={photoUrl}
+            onChange={setPhotoUrl}
+            folder="staff"
+            hint="Recommended: 600 × 800 px portrait (3:4) · PNG or JPEG · Max 100 MB"
+            label="Photo"
+          />
           <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Bio" rows={3} className={inputClass} />
           <div className="flex gap-2">
             <button onClick={saveMember} className="px-4 py-2 bg-gold text-charcoal text-sm font-semibold hover:bg-gold/90 transition-colors">

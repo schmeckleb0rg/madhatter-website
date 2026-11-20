@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 type BlogPost = {
   id: string;
@@ -151,7 +152,13 @@ export default function BlogAdmin({ initialPosts }: { initialPosts: BlogPost[] }
             <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Category" className={inputClass} />
             <input type="date" value={publishDate} onChange={(e) => setPublishDate(e.target.value)} className={inputClass} />
           </div>
-          <input value={coverImageUrl} onChange={(e) => setCoverImageUrl(e.target.value)} placeholder="Cover Image URL" className={inputClass} />
+          <MediaUpload
+            value={coverImageUrl}
+            onChange={setCoverImageUrl}
+            folder="blog"
+            hint="Recommended: 1200 × 630 px (16:9) · PNG or JPEG · Max 100 MB"
+            label="Cover Image"
+          />
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}

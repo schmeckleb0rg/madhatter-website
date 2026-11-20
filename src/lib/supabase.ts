@@ -123,6 +123,7 @@ export type AboutContent = {
   section_key: string;
   title: string | null;
   content: string | null;
+  image_url: string | null;
   updated_at: string;
 };
 

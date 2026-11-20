@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Patron } from "@/lib/supabase";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 type Props = {
   initialPatrons: Patron[];
@@ -138,11 +139,17 @@ export default function PatronsAdmin({ initialPatrons }: Props) {
               <option value="sponsor">Sponsor</option>
             </select>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input value={tier} onChange={(e) => setTier(e.target.value)} placeholder="Tier (e.g. Gold, Platinum)" className={inputClass} />
-            <input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="Logo URL" className={inputClass} />
             <input type="number" value={sortOrder} onChange={(e) => setSortOrder(Number(e.target.value))} placeholder="Sort Order" className={inputClass} />
           </div>
+          <MediaUpload
+            value={logoUrl}
+            onChange={setLogoUrl}
+            folder="patrons"
+            hint="Recommended: 200 × 200 px square · PNG with transparent background · Max 100 MB"
+            label="Logo"
+          />
           <input value={websiteUrl} onChange={(e) => setWebsiteUrl(e.target.value)} placeholder="Website URL" className={inputClass} />
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" rows={2} className={inputClass} />
           <div className="flex gap-2">

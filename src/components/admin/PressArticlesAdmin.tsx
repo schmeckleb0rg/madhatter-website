@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PressArticle } from "@/lib/supabase";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 type Props = {
   initialArticles: PressArticle[];
@@ -121,8 +122,17 @@ export default function PressArticlesAdmin({ initialArticles }: Props) {
             <input type="date" value={publicationDate} onChange={(e) => setPublicationDate(e.target.value)} className={inputClass} />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input value={thumbnailUrl} onChange={(e) => setThumbnailUrl(e.target.value)} placeholder="Thumbnail URL" className={inputClass} />
-            <input type="number" value={sortOrder} onChange={(e) => setSortOrder(Number(e.target.value))} placeholder="Sort Order" className={inputClass} />
+            <MediaUpload
+              value={thumbnailUrl}
+              onChange={setThumbnailUrl}
+              folder="press"
+              hint="Recommended: 680 × 384 px (16:9) · PNG or JPEG · Max 100 MB"
+              label="Thumbnail"
+            />
+            <div>
+              <label className="block font-mono text-xs uppercase tracking-widest text-muted-dark mb-2">Sort Order</label>
+              <input type="number" value={sortOrder} onChange={(e) => setSortOrder(Number(e.target.value))} placeholder="Sort Order" className={inputClass} />
+            </div>
           </div>
           <textarea value={featuredQuote} onChange={(e) => setFeaturedQuote(e.target.value)} placeholder="Featured Quote" rows={2} className={inputClass} />
           <label className="flex items-center gap-2 text-sm text-off-white">

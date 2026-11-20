@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 type ClassItem = {
   id: string;
@@ -59,6 +60,7 @@ export default function ClassesAdmin({ initialClasses }: { initialClasses: Class
   const [cohortStartDate, setCohortStartDate] = useState("");
   const [pathOrder, setPathOrder] = useState(0);
   const [isActive, setIsActive] = useState(true);
+  const [imageUrl, setImageUrl] = useState("");
 
   function resetForm() {
     setTitle("");
@@ -74,6 +76,7 @@ export default function ClassesAdmin({ initialClasses }: { initialClasses: Class
     setCohortStartDate("");
     setPathOrder(0);
     setIsActive(true);
+    setImageUrl("");
     setEditingId(null);
     setShowForm(false);
   }
@@ -92,6 +95,7 @@ export default function ClassesAdmin({ initialClasses }: { initialClasses: Class
     setCohortStartDate(c.cohort_start_date || "");
     setPathOrder(c.path_order);
     setIsActive(c.is_active);
+    setImageUrl(c.image_url || "");
     setEditingId(c.id);
     setShowForm(true);
   }
@@ -112,6 +116,7 @@ export default function ClassesAdmin({ initialClasses }: { initialClasses: Class
       path_order: pathOrder,
       is_active: isActive,
       sort_order: pathOrder,
+      image_url: imageUrl || null,
     };
 
     const url = editingId ? `/api/admin/classes/${editingId}` : "/api/admin/classes";
@@ -219,6 +224,13 @@ export default function ClassesAdmin({ initialClasses }: { initialClasses: Class
             <input type="number" value={pathOrder} onChange={(e) => setPathOrder(Number(e.target.value))} placeholder="Path Order" className={inputClass} />
           </div>
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" rows={3} className={inputClass} />
+          <MediaUpload
+            value={imageUrl}
+            onChange={setImageUrl}
+            folder="classes"
+            hint="Recommended: 1200 × 400 px (3:1 banner) · PNG or JPEG · Max 100 MB"
+            label="Class Image"
+          />
           <label className="flex items-center gap-2 text-sm text-off-white">
             <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
             Active

@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import type { AboutContent } from "@/lib/supabase";
 import Link from "next/link";
+import Image from "next/image";
 import Reveal from "@/components/Reveal";
 
 export const revalidate = 300;
@@ -79,15 +80,27 @@ export default async function AboutPage() {
                   </h2>
                   <p className="text-muted dark:text-[#C4BDA8] leading-loose">{story.content}</p>
                 </div>
-                <div className="bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-8 text-center aspect-square flex items-center justify-center">
-                  <div>
-                    <svg className="w-16 h-16 text-gold/20 mx-auto mb-3" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 1.5a3 3 0 013 3v6a3 3 0 01-6 0v-6a3 3 0 013-3z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5A7.5 7.5 0 0112 18m0 0v3m0 0H9m3 0h3" />
-                    </svg>
-                    <span className="font-display text-3xl text-muted/20">MH</span>
+                {story.image_url ? (
+                  <div className="relative aspect-square border border-charcoal/10 dark:border-gold/10 overflow-hidden">
+                    <Image
+                      src={story.image_url}
+                      alt={story.title ?? "About Mad Hatter"}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
                   </div>
-                </div>
+                ) : (
+                  <div className="bg-off-white-2 dark:bg-[#161412] border border-charcoal/10 dark:border-gold/10 p-8 text-center aspect-square flex items-center justify-center">
+                    <div>
+                      <svg className="w-16 h-16 text-gold/20 mx-auto mb-3" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 1.5a3 3 0 013 3v6a3 3 0 01-6 0v-6a3 3 0 013-3z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5A7.5 7.5 0 0112 18m0 0v3m0 0H9m3 0h3" />
+                      </svg>
+                      <span className="font-display text-3xl text-muted/20">MH</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </Reveal>
           )}

@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AboutContent } from "@/lib/supabase";
+import MediaUpload from "@/components/admin/MediaUpload";
 
 export default function AboutEditor({ section }: { section: AboutContent }) {
   const router = useRouter();
   const [title, setTitle] = useState(section.title ?? "");
   const [content, setContent] = useState(section.content ?? "");
+  const [imageUrl, setImageUrl] = useState(section.image_url ?? "");
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   async function handleSave() {
@@ -15,7 +17,7 @@ export default function AboutEditor({ section }: { section: AboutContent }) {
     const res = await fetch("/api/admin/about", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: section.id, title, content }),
+      body: JSON.stringify({ id: section.id, title, content, image_url: imageUrl || null }),
     });
 
     if (res.ok) {
@@ -56,6 +58,13 @@ export default function AboutEditor({ section }: { section: AboutContent }) {
           onChange={(e) => setContent(e.target.value)}
           className={`${inputClass} resize-none`}
           placeholder="Section content"
+        />
+        <MediaUpload
+          value={imageUrl}
+          onChange={setImageUrl}
+          folder="about"
+          hint="Recommended: 900 × 900 px square · PNG or JPEG · Max 100 MB"
+          label="Section Image"
         />
       </div>
       {status === "error" && <p className="text-xs mt-2" style={{ color: "#9C4A38" }}>Failed to save.</p>}
